@@ -13,7 +13,7 @@ export default function Welcome(props) {
     return (
         <AuthenticatedLayout auth={props.auth} errors={props.errors}>
             <div className="relative sm:flex sm:justify-center sm:items-center bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-                <Head title="Dashboard" />
+                <Head title="Beranda" />
                 <div className="max-w-7xl mx-auto p-6 lg:p-8">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-5 lg:gap-8">
                         <Link
