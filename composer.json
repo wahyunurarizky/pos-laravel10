@@ -20,6 +20,7 @@
         "yaza/laravel-repository-service": "^4.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.8",
         "fakerphp/faker": "^1.9.1",
         "laravel-lang/common": "^3.1",
         "laravel/breeze": "^1.19",

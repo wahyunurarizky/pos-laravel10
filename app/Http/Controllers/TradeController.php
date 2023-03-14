@@ -26,6 +26,6 @@ class TradeController extends Controller
             return to_route('trade.index', ['q' => $q]);
         }
 
-        return Inertia::render('Trade/Index', ['items' => $items]);
+        return Inertia::render('Trade/Index', ['items' => $items, 'q' => $q]);
     }
 }

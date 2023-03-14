@@ -3,11 +3,12 @@ import { useState } from "react";
 
 export default function Paginate({ data }) {
     const [currentPage, setCurrentPage] = useState(data.current_page);
-    console.log(data.next_page_url);
 
     const movePage = () => {
         if (currentPage >= 1 && currentPage <= data.last_page)
-            router.get(data.links[currentPage].url);
+            router.get(
+                data?.first_page_url.replace("page=1", `page=${currentPage}`)
+            );
     };
 
     return (

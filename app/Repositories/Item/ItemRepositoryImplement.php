@@ -28,8 +28,8 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         if ($q) {
             $query->where('name', 'LIKE', "%$q%");
         }
-        $itemPaginate = $query->paginate($n);
-        $itemPaginate->appends(['q' => $q]);
+        $itemPaginate = $query->paginate($n, ['*']);
+        $itemPaginate->withQueryString();
         return $itemPaginate;
     }
 

@@ -10,7 +10,9 @@ make sure you already have these
 
 lets go
 1. composer install
+1.5. npm install
 2. copy env
+2.5. php artisan migrate:fresh --seed
 3. php artisan serve
 4. npm run dev
 5. php artisan queue:work
