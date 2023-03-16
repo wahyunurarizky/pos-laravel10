@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Item;
 
+use App\Http\Resources\ItemResource;
 use LaravelEasyRepository\Implementations\Eloquent;
 use App\Models\Item;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,15 +23,19 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         $this->model = $model;
     }
 
-    public function paginate($n, $q): LengthAwarePaginator
+    public function paginate($n, $q)
     {
         $query = $this->model->query();
+
+        // searching
         if ($q) {
             $query->where('name', 'LIKE', "%$q%");
         }
-        $itemPaginate = $query->paginate($n, ['*']);
-        $itemPaginate->withQueryString();
-        return $itemPaginate;
+
+        // populate bottomUnit
+        $query->with('bottomUnit');
+
+        return ItemResource::collection($query->paginate($n)->withQueryString());
     }
 
     // Write something awesome :)

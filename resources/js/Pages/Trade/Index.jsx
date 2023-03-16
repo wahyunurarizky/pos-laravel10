@@ -1,12 +1,22 @@
 import ButtonMain from "@/Components/ButtonMain";
+import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Paginate from "@/Components/Table/Paginate";
 import Search from "@/Components/Table/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
+import { useState } from "react";
 
 export default function Index({ auth, items, q }) {
+    const [showJual, setShowJual] = useState(false);
+    const [showBeli, setShowBeli] = useState(false);
+
+    const closeModal = () => {
+        setShowJual(false);
+    };
+
     console.log(items);
+
     return (
         <AuthenticatedLayout auth={auth} className>
             <div className="p-6">
@@ -17,7 +27,14 @@ export default function Index({ auth, items, q }) {
                     </Link>
                 </div>
                 <div className="my-4 rounded-md bg-white p-4">
-                    <ButtonMain className="mb-3 w-full">Jual</ButtonMain>
+                    <ButtonMain
+                        className="mb-3 w-full"
+                        onClick={() => {
+                            setShowJual(true);
+                        }}
+                    >
+                        Jual
+                    </ButtonMain>
                     <ButtonMain className="mb-3 w-full">Beli</ButtonMain>
                     <div className="mt-10">
                         <Search q={q} />
@@ -55,7 +72,8 @@ export default function Index({ auth, items, q }) {
                                                     {d.name}
                                                 </th>
                                                 <td className="px-6 py-4">
-                                                    {d.bottom_unit_qty}
+                                                    {d.bottom_unit_qty}{" "}
+                                                    {d.bottomUnit.name}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <a
@@ -80,9 +98,16 @@ export default function Index({ auth, items, q }) {
                                 </tbody>
                             </table>
                         </div>
-                        {items?.data?.length ? <Paginate data={items} /> : ""}
+                        {items?.data?.length ? (
+                            <Paginate links={items?.links} meta={items?.meta} />
+                        ) : (
+                            ""
+                        )}
                     </div>
                 </div>
+                <Modal show={showJual} onClose={closeModal}>
+                    wkwk
+                </Modal>
             </div>
         </AuthenticatedLayout>
     );

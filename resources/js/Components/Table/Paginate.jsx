@@ -1,14 +1,14 @@
 import { Link, router } from "@inertiajs/react";
 import { useState } from "react";
 
-export default function Paginate({ data }) {
-    const [currentPage, setCurrentPage] = useState(data.current_page);
+export default function Paginate({ links, meta }) {
+    const [currentPage, setCurrentPage] = useState(meta.current_page);
 
     const movePage = () => {
-        if (currentPage >= 1 && currentPage <= data.last_page)
-            router.get(
-                data?.first_page_url.replace("page=1", `page=${currentPage}`)
-            );
+        if (currentPage >= 1 && currentPage <= meta.last_page)
+            router.visit(links.first.replace("page=1", `page=${currentPage}`), {
+                preserveScroll: true,
+            });
     };
 
     return (
@@ -19,17 +19,18 @@ export default function Paginate({ data }) {
             <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 Showing{" "}
                 <span className="font-semibold text-gray-900 dark:text-white">
-                    {`${data.from}-${data.to}`}
+                    {`${meta.from}-${meta.to}`}
                 </span>{" "}
                 of{" "}
                 <span className="font-semibold text-gray-900 dark:text-white">
-                    {data.total}
+                    {meta.total}
                 </span>
             </span>
             <div className="my-3 flex">
-                {data.prev_page_url && (
+                {links.prev && (
                     <Link
-                        href={data.prev_page_url}
+                        preserveScroll
+                        href={links.prev}
                         className="ml-0 block rounded-l-lg border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                     >
                         <span className="sr-only">Previous</span>
@@ -67,12 +68,13 @@ export default function Paginate({ data }) {
                     />
                     <span className="text-xl">/</span>
                     <span className="text-base font-thin">
-                        {data.last_page}
+                        {meta.last_page}
                     </span>
                 </div>
-                {data.next_page_url && (
+                {links.next && (
                     <Link
-                        href={data.next_page_url}
+                        preserveScroll
+                        href={links.next}
                         className="block rounded-r-lg border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                     >
                         <span className="sr-only">Next</span>
