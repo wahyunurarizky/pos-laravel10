@@ -20,4 +20,14 @@ class Unit extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    public function grandchildren()
+    {
+        return $this->children()->with('grandchildren');
+    }
 }

@@ -28,4 +28,9 @@ class TradeController extends Controller
 
         return Inertia::render('Trade/Index', ['items' => $items, 'q' => $q]);
     }
+
+    public function buy()
+    {
+        return Inertia::render('Trade/Buy');
+    }
 }

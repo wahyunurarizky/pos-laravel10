@@ -23,6 +23,6 @@ class Item extends Model
 
     public function bottomUnit()
     {
-        return $this->hasOne(Unit::class)->orderBy('id');
+        return $this->hasOne(Unit::class)->orderBy('id', 'DESC');
     }
 }

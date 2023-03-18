@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Services\Item\ItemService;
+use Illuminate\Http\Request;
+
+class ApiItemController extends Controller
+{
+    public function __construct(protected ItemService $itemService)
+    {
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            $items = $this->itemService->getAll(whereClause: [], limit: 10, q: $request->q);
+            return response()->json($items);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ], $th->getCode());
+        }
+    }
+}

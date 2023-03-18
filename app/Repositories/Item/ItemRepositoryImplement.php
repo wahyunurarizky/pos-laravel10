@@ -38,5 +38,24 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         return ItemResource::collection($query->paginate($n)->withQueryString());
     }
 
+    public function findAll(array $where, int $limit, string|null $q)
+    {
+        $query = $this->model->query();
+        // searching
+        if ($q) {
+            $query->where('name', 'LIKE', "%$q%");
+        }
+
+        // populate bottomUnit
+        $query->with('bottomUnit');
+
+        if (!empty($where)) {
+            $query->where($where);
+        }
+
+        return ItemResource::collection($query->get());
+    }
+
+
     // Write something awesome :)
 }

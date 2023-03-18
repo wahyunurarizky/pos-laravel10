@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TradeController;
 use Illuminate\Foundation\Application;
@@ -27,6 +28,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/trade', [TradeController::class, 'index'])->name('trade.index');
+    // Route::get('/trade/sell', [TradeController::class, 'index'])->name('trade.sell');
+    Route::get('/trade/buy', [TradeController::class, 'buy'])->name('trade.buy');
+
+
+    Route::post('/api/items', [ApiItemController::class, 'index'])->name('api.items.index');
 });
 
 

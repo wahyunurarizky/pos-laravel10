@@ -15,13 +15,18 @@ class ItemSeeder extends Seeder
      */
     public function run(): void
     {
-        $masterUnitId = MasterUnit::firstOrCreate(['name' => 'pcs'])->id;
+        $masterUnitId = 6;
 
         Item::factory(50)->has(Unit::factory()->count(1))->create([
             'master_unit_id' => $masterUnitId
         ]);
         Item::factory(50)->has(Unit::factory()->count(1))->beverage()->create([
             'master_unit_id' => $masterUnitId
+        ]);
+
+        $masterUnit2Id = 3;
+        Item::factory(50)->has(Unit::factory()->rokok())->create([
+            'master_unit_id' => $masterUnit2Id
         ]);
     }
 }

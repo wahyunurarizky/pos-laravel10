@@ -35,7 +35,9 @@ export default function Index({ auth, items, q }) {
                     >
                         Jual
                     </ButtonMain>
-                    <ButtonMain className="mb-3 w-full">Beli</ButtonMain>
+                    <Link href={route("trade.buy")}>
+                        <ButtonMain className="mb-3 w-full">Beli</ButtonMain>
+                    </Link>
                     <div className="mt-10">
                         <Search q={q} />
                         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -53,7 +55,7 @@ export default function Index({ auth, items, q }) {
                                         </th>
                                         <th scope="col" className="px-6 py-3">
                                             <span className="sr-only">
-                                                Edit
+                                                Action
                                             </span>
                                         </th>
                                     </tr>
@@ -76,6 +78,12 @@ export default function Index({ auth, items, q }) {
                                                     {d.bottomUnit.name}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
+                                                    <a
+                                                        href="#"
+                                                        className="mr-1 font-medium text-blue-600 hover:underline dark:text-blue-500"
+                                                    >
+                                                        Lihat
+                                                    </a>
                                                     <a
                                                         href="#"
                                                         className="font-medium text-blue-600 hover:underline dark:text-blue-500"
