@@ -23,13 +23,17 @@ class ItemFactory extends Factory
         ];
     }
 
-    /**
-     * Indicate that the user is suspended.
-     */
     public function beverage(): static
     {
         return $this->state(fn (array $attributes) => [
             'name' => myFake()->beverageName(),
+        ]);
+    }
+
+    public function vegetable(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => myFake()->vegetableName(),
         ]);
     }
 }

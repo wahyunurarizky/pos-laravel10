@@ -47,7 +47,7 @@ class UnitFactory extends Factory
         ]);
     }
 
-    public function rokok(): static
+    public function dusSlopBksBtg(): static
     {
         return $this->state(
             fn (array $attributes, Item $item) =>

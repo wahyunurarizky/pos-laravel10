@@ -17,15 +17,15 @@ class ItemSeeder extends Seeder
     {
         $masterUnitId = 6;
 
-        Item::factory(50)->has(Unit::factory()->count(1))->create([
+        Item::factory(10)->has(Unit::factory())->create([
             'master_unit_id' => $masterUnitId
         ]);
-        Item::factory(50)->has(Unit::factory()->count(1))->beverage()->create([
+        Item::factory(10)->has(Unit::factory())->beverage()->create([
             'master_unit_id' => $masterUnitId
         ]);
 
         $masterUnit2Id = 3;
-        Item::factory(50)->has(Unit::factory()->rokok())->create([
+        Item::factory(10)->has(Unit::factory()->dusSlopBksBtg())->vegetable()->create([
             'master_unit_id' => $masterUnit2Id
         ]);
     }
