@@ -16,6 +16,10 @@ class Item extends Model
 
     protected $table = 'items';
 
+    protected $casts = [
+        'sub_name' => 'json',
+    ];
+
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);

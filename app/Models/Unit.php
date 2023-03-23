@@ -23,7 +23,7 @@ class Unit extends Model
 
     public function children()
     {
-        return $this->hasMany(self::class, 'parent_id');
+        return $this->hasOne(self::class, 'parent_id');
     }
 
     public function grandchildren()

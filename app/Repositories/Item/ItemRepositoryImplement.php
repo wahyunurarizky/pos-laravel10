@@ -53,9 +53,20 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
             $query->where($where);
         }
 
+        if ($limit) {
+            $query->limit($limit);
+        }
+
         return ItemResource::collection($query->get());
     }
 
+    public function checkExistBy(array $q): bool
+    {
+        $query = $this->model->query();
+        if (!empty($query)) {
+            $query->where($q);
+        }
 
-    // Write something awesome :)
+        return $query->exists();
+    }
 }

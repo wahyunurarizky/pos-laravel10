@@ -30,9 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/trade', [TradeController::class, 'index'])->name('trade.index');
     // Route::get('/trade/sell', [TradeController::class, 'index'])->name('trade.sell');
     Route::get('/trade/buy', [TradeController::class, 'buy'])->name('trade.buy');
+    Route::post('trade/buy', [TradeController::class, 'store'])->name('trade.buy.store');
 
-
-    Route::post('/api/items', [ApiItemController::class, 'index'])->name('api.items.index');
+    Route::post('/api/items/search', [ApiItemController::class, 'index'])->name('api.items.index');
+    Route::post('/api/items/check-unique-name', [ApiItemController::class, 'checkUniqueName'])->name('api.items.check-unique-name');
 });
 
 

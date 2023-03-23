@@ -1,33 +1,57 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import _debounce from "lodash/debounce";
 import axios from "axios";
+import ButtonMain from "../ButtonMain";
 
-export default function SearchBox() {
+function DataItem({ data, ...props }) {
+    return (
+        <div className="my-2 cursor-pointer rounded-md bg-mycolor-dark p-4 text-gray-100">
+            {data.name}
+        </div>
+    );
+}
+
+export default function SearchBox({ setIsSearch }) {
+    const searchInputElement = useRef(null);
+
     const [searchValue, setSearchValue] = useState("");
+    const [items, setItems] = useState([]);
+    const [isLoading, setLoading] = useState(false);
+    useEffect(() => {
+        console.log("useeffects");
+        if (searchInputElement.current) {
+            searchInputElement.current.focus();
+        }
+        searchItems(searchValue);
+    }, []);
 
     const searchItems = useCallback(
         _debounce((value) => {
             axios
                 .post(route("api.items.index", { q: value }))
                 .then((response) => {
-                    console.log("res", response);
+                    setItems(response.data);
+                    setLoading(false);
                 })
-                .catch((error) => {
-                    console.log(error);
+                .catch((_error) => {
+                    setItems([]);
+                    setLoading(false);
                 });
-        }, 1000),
+        }, 500),
         []
     );
 
     const onChangeSearchValue = ({ target: { value } }) => {
+        setLoading(true);
+        setItems([]);
         setSearchValue(value);
-        if (value.length > 1) {
+        if (value.length >= 0) {
             searchItems(value);
         }
     };
 
     return (
-        <div>
+        <>
             <form>
                 <label
                     htmlFor="default-search"
@@ -54,6 +78,7 @@ export default function SearchBox() {
                         </svg>
                     </div>
                     <input
+                        ref={searchInputElement}
                         autoFocus
                         type="search"
                         id="default-search"
@@ -65,7 +90,37 @@ export default function SearchBox() {
                     />
                 </div>
             </form>
-            <ul></ul>
-        </div>
+            <div className="rounded-md p-4 shadow-md">
+                {isLoading ? (
+                    <div>Loading...</div>
+                ) : items.length > 0 ? (
+                    <div>
+                        {items.map((d) => (
+                            <DataItem data={d} key={d.id} />
+                        ))}
+                        <ButtonMain
+                            onClick={() => {
+                                setIsSearch(false);
+                            }}
+                            className="w-full"
+                        >
+                            Tambah Baru +
+                        </ButtonMain>
+                    </div>
+                ) : (
+                    <div>
+                        <h2 className="text-center">Data Kosong</h2>
+                        <ButtonMain
+                            onClick={() => {
+                                setIsSearch(false);
+                            }}
+                            className="w-full"
+                        >
+                            Tambah Baru +
+                        </ButtonMain>
+                    </div>
+                )}
+            </div>
+        </>
     );
 }

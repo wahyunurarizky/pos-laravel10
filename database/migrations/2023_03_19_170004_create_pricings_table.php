@@ -11,22 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('pricings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id')->nullable();
-            $table->unsignedDecimal('bottom_unit_qty')->default(0);
-            $table->unsignedDecimal('per_unit_qty');
+            $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('unit_id')->nullable();
-            $table->unsignedDecimal('price_per_unit', 19, 2);
-            $table->unsignedDecimal('total', 19, 2);
-            $table->string('seller')->nullable();
-            $table->unsignedDecimal('bottom_unit_qty_left')->default(0);
+            $table->unsignedDecimal('price', 19, 2)->default(0);
             $table->timestamps();
 
             $table->foreign('item_id')->references('id')->on('items')
-                ->nullOnDelete()
+                ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-
             $table->foreign('unit_id')->references('id')->on('units')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
@@ -38,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('pricings');
     }
 };

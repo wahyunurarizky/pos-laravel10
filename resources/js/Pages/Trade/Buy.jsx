@@ -1,9 +1,14 @@
 import PrimaryButton from "@/Components/PrimaryButton";
-import SearchBox from "@/Components/input/SearchBox";
+import BuyForm from "@/Components/Trade/BuyForm";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
+import { useState, createContext, useContext } from "react";
 
-export default function Buy({ auth, items, q }) {
+const BuyContext = createContext();
+
+export default function Buy({ auth, master_units }) {
+    const [box, setBox] = useState(["1"]);
+
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="Beli Barang" />
@@ -18,10 +23,16 @@ export default function Buy({ auth, items, q }) {
                     <div></div>
                 </div>
 
-                <div className="my-2 min-h-screen rounded-md bg-white p-4 shadow-lg">
-                    <SearchBox />
-                </div>
+                <BuyContext.Provider value={{ master_units }}>
+                    <div className="my-2 min-h-screen rounded-md bg-white p-4 shadow-lg">
+                        {box.map((d, i) => (
+                            <BuyForm key={i} />
+                        ))}
+                    </div>
+                </BuyContext.Provider>
             </div>
         </AuthenticatedLayout>
     );
 }
+
+export const useBuy = () => useContext(BuyContext);

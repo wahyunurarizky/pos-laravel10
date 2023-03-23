@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use FakerRestaurant\Provider\id_ID\Restaurant;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Item>
@@ -18,7 +19,7 @@ class ItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => myFake()->foodName(),
+            'name' => Str::upper(myFake()->foodName()),
             'bottom_unit_qty' => myFake()->randomNumber(1)
         ];
     }
@@ -26,14 +27,14 @@ class ItemFactory extends Factory
     public function beverage(): static
     {
         return $this->state(fn (array $attributes) => [
-            'name' => myFake()->beverageName(),
+            'name' => Str::upper(myFake()->beverageName()),
         ]);
     }
 
     public function vegetable(): static
     {
         return $this->state(fn (array $attributes) => [
-            'name' => myFake()->vegetableName(),
+            'name' => Str::upper(myFake()->vegetableName()),
         ]);
     }
 }

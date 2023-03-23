@@ -55,4 +55,18 @@ class ItemServiceImplement extends Service implements ItemService
 
         return $this->itemRepository->findAll($where, $limit, $q);
     }
+    public function checkNameAlreadyExists($name): bool
+    {
+        $validator = Validator::make(
+            ['name' => $name],
+            [
+                'name' => 'required|string',
+            ]
+        );
+
+        if ($validator->fails()) {
+            throw new Error($validator->messages(), 400);
+        }
+        return $this->itemRepository->checkExistBy(['name' => $name]);
+    }
 }
