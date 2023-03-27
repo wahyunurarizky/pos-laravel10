@@ -121,6 +121,18 @@ class TradeController extends Controller
                 $bottomUnitQty = $bottomUnitQty * $this->calcChildren($unitPurchase->children);
             }
 
+            collect($d['units'])->each(function ($unit) {
+                $price = Pricing::where('unit_id', $unit['unit_id'])->latest('created_at')->first();
+
+                if ($price->price != $unit['price']) {
+                    Pricing::create([
+                        'unit_id' => $unit['unit_id'],
+                        'price' => $unit['price'],
+                    ]);
+                }
+            });
+
+
             return [
                 'item_id' => $d['item_id'],
                 'per_unit_qty' => $d['per_unit_qty'],
@@ -133,7 +145,6 @@ class TradeController extends Controller
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
-
             // TODO: pricing not yet implemented
         })->toArray());
 
@@ -163,8 +174,6 @@ class TradeController extends Controller
                     'price' => $unit['price'],
                 ]);
             }
-
-
 
             $bottomUnitQty = $data['per_unit_qty'];
             if ($unitPurchase->children) {

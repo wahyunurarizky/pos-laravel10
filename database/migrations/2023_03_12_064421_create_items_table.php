@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedInteger('master_unit_id')->nullable();
             $table->json('sub_name')->nullable();
-            $table->decimal('bottom_unit_qty')->default(0);
+            $table->decimal('bottom_unit_qty', 19, 2)->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

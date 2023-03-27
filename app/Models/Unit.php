@@ -39,6 +39,6 @@ class Unit extends Model
     }
     public function pricing(): HasOne
     {
-        return $this->hasOne(Pricing::class)->orderBy('created_at', 'ASC');
+        return $this->hasOne(Pricing::class)->latest('created_at');
     }
 }
