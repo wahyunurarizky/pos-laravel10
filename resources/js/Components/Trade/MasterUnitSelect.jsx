@@ -45,7 +45,6 @@ export default function MasterUnitSelect({
                 id="master_unit_id"
                 inputRef={inputRef}
                 onChange={(data) => {
-                    console.log(data);
                     setValue("units", data?.units);
                     setValue("unit_name", data?.units[0].name);
                     onChange(data?.value);

@@ -25,6 +25,7 @@ class Item extends Model
         return $this->hasMany(Unit::class);
     }
 
+
     public function bottomUnit()
     {
         return $this->hasOne(Unit::class)->orderBy('id', 'DESC');

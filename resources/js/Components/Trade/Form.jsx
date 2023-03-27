@@ -11,6 +11,7 @@ import InputNumberQtyBuy from "./BuyField/InputNumberQtyBuy";
 import InputPriceBuy from "./BuyField/InputPriceBuy";
 import InputPriceTotal from "./BuyField/InputPriceTotal";
 import InputPriceEstimatedSell from "./BuyField/InputPriceEstimatedSell";
+import { useBuy } from "@/Pages/Trade/Buy";
 
 export const useBuyForm = useFormContext;
 
@@ -28,35 +29,73 @@ const schema = yup
         sub_name: yup.array().of(yup.string()),
         per_unit_qty: yup.string().required(),
         price_per_unit: yup.number().required(),
+        total: yup.number().positive("the total not valid"),
     })
     .required();
 
-export default function Form() {
+export default function Form({ setIsForm, updateBox, i, d }) {
     const method = useForm({
         defaultValues: {
-            sub_name: [],
-            units: [],
-            price_per_unit: 0,
-            total: 0,
+            master_unit_id: d.master_unit_id,
+            name: d.name,
+            per_unit_qty: d.per_unit_qty,
+            unit_name: d.unit_name,
+            sub_name: d.sub_name || [],
+            units: d.units || [],
+            price_per_unit: d.price_per_unit || 0,
+            total: d.total || 0,
         },
+        shouldFocusError: true,
+        mode: "onSubmit",
         resolver: yupResolver(schema),
     });
 
-    const { register, handleSubmit, watch } = method;
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+        setError,
+        reset,
+        getValues,
+    } = method;
 
-    const [inputByTotal, setInputByTotal] = useState(false);
-
-    const errorPage = usePage().props.errors;
-    console.log(errorPage);
-
-    console.log(method.watch());
+    const [inputByTotal, setInputByTotal] = useState(d.inputByTotal || false);
+    const [nameIsUsed, setNameIsUsed] = useState(false);
 
     const onSubmit = (data) => {
-        router.post(route("trade.buy.store"), {
-            ...data,
-            name: data.name.toUpperCase(),
-        });
+        if (nameIsUsed) {
+            setError(
+                "name",
+                { message: "name already exists" },
+                { shouldFocus: true }
+            );
+            return;
+        }
+
+        data.edit = false;
+        data.isNew = true;
+        data.inputByTotal = inputByTotal;
+        data.isSaved = true;
+
+        updateBox({ ...data, name: data.name.toUpperCase() }, i);
+        // setIsSearch(true);
+
+        // router.post(
+        //     route("trade.buy.store"),
+        //     {
+        //         ...data,
+        //         name: data.name.toUpperCase(),
+        //     },
+        //     {
+        //         onError: (err) => {
+        //             console.log(err[0]);
+        //         },
+        //     }
+        // );
     };
+
+    console.log(errors, watch());
 
     register("units");
 
@@ -65,12 +104,19 @@ export default function Form() {
             <h4 className="mb-3 inline-block rounded-sm bg-mycolor-dark px-2 text-base font-bold text-white">
                 Buat Baru Barang
             </h4>
+            <button
+                onClick={() => {
+                    setIsForm(false);
+                }}
+            >
+                ganti
+            </button>
 
             {/* FORM PEMBELIAN JIKA BARANG BARU */}
             <FormProvider {...method}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     {/* NAME */}
-                    <InputTextName />
+                    <InputTextName setNameIsUsed={setNameIsUsed} />
                     {/* SUB NAME */}
                     <InputDropdownSubName />
                     {watch("name") && (
@@ -108,7 +154,7 @@ export default function Form() {
                         type="submit"
                         className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
                     >
-                        Submit
+                        Simpan
                     </button>
                 </form>
             </FormProvider>

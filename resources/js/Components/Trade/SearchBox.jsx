@@ -5,13 +5,16 @@ import ButtonMain from "../ButtonMain";
 
 function DataItem({ data, ...props }) {
     return (
-        <div className="my-2 cursor-pointer rounded-md bg-mycolor-dark p-4 text-gray-100">
+        <div
+            {...props}
+            className="my-1 cursor-pointer rounded-md bg-mycolor-dark p-2 text-sm text-gray-100"
+        >
             {data.name}
         </div>
     );
 }
 
-export default function SearchBox({ setIsSearch }) {
+export default function SearchBox({ setIsForm, updateBox, i, d }) {
     const searchInputElement = useRef(null);
 
     const [searchValue, setSearchValue] = useState("");
@@ -95,12 +98,33 @@ export default function SearchBox({ setIsSearch }) {
                     <div>Loading...</div>
                 ) : items.length > 0 ? (
                     <div>
-                        {items.map((d) => (
-                            <DataItem data={d} key={d.id} />
+                        {items.map((data) => (
+                            <DataItem
+                                data={data}
+                                key={data.id}
+                                onClick={() => {
+                                    updateBox(
+                                        {
+                                            item_id: data.id,
+                                            edit: true,
+                                            isNew: false,
+                                        },
+                                        i
+                                    );
+                                    setIsForm(true);
+                                }}
+                            />
                         ))}
                         <ButtonMain
                             onClick={() => {
-                                setIsSearch(false);
+                                updateBox(
+                                    {
+                                        edit: true,
+                                        isNew: true,
+                                    },
+                                    i
+                                );
+                                setIsForm(true);
                             }}
                             className="w-full"
                         >
@@ -112,7 +136,14 @@ export default function SearchBox({ setIsSearch }) {
                         <h2 className="text-center">Data Kosong</h2>
                         <ButtonMain
                             onClick={() => {
-                                setIsSearch(false);
+                                updateBox(
+                                    {
+                                        edit: true,
+                                        isNew: true,
+                                    },
+                                    i
+                                );
+                                setIsForm(true);
                             }}
                             className="w-full"
                         >

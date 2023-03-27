@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Unit extends Model
 {
@@ -29,5 +31,14 @@ class Unit extends Model
     public function grandchildren()
     {
         return $this->children()->with('grandchildren');
+    }
+
+    public function pricings(): HasMany
+    {
+        return $this->hasMany(Pricing::class);
+    }
+    public function pricing(): HasOne
+    {
+        return $this->hasOne(Pricing::class)->orderBy('created_at', 'ASC');
     }
 }

@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/api/items/search', [ApiItemController::class, 'index'])->name('api.items.index');
     Route::post('/api/items/check-unique-name', [ApiItemController::class, 'checkUniqueName'])->name('api.items.check-unique-name');
+    Route::get('/api/items/{id}', [ApiItemController::class, 'show'])->name('api.items.show');
 });
 
 

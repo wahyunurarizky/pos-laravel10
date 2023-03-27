@@ -56,16 +56,23 @@ class UnitFactory extends Factory
                     'parent_id' => Unit::factory()
                         ->state(fn (array $attributes) => [
                             'parent_id' => Unit::factory()
-                                ->create(['name' => 'dus', 'item_id' => $item->id])->id,
+                                ->create([
+                                    'name' => 'dus',
+                                    'item_id' => $item->id,
+                                    'parent_ref_qty' => 10,
+                                ])->id,
                         ])
                         ->create([
                             'name' => 'slop',
-                            'item_id' => $item->id
+                            'item_id' => $item->id,
+                            'parent_ref_qty' => 10,
                         ])->id,
                     'name' => 'bks',
                     'item_id' => $item->id,
+                    'parent_ref_qty' => 10,
                 ])->id,
                 'item_id' => $item->id,
+                'parent_ref_qty' => 10,
                 'name' => 'btg'
             ]
         );

@@ -32,6 +32,8 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
             $query->where('name', 'LIKE', "%$q%");
         }
 
+        $query->orderBy('updated_at', 'desc');
+
         // populate bottomUnit
         $query->with('bottomUnit');
 
@@ -68,5 +70,13 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         }
 
         return $query->exists();
+    }
+
+    public function findById($id, $with = ['units', 'units.pricing'])
+    {
+        $query = $this->model->query();
+        $query->with(...$with);
+
+        return $query->findOrFail($id);
     }
 }

@@ -33,7 +33,7 @@ class ItemServiceImplement extends Service implements ItemService
         return $this->itemRepository->paginate($perPage, $q);
     }
 
-    public function getAll(array $whereClause = [], int $limit = 10, string|null $q)
+    public function getAll(array $whereClause = [], int $limit = 10, string|null $q = null)
     {
         $where = [];
         if (isset($whereClause['name'])) $where['name'] = $whereClause['name'];
@@ -68,5 +68,10 @@ class ItemServiceImplement extends Service implements ItemService
             throw new Error($validator->messages(), 400);
         }
         return $this->itemRepository->checkExistBy(['name' => $name]);
+    }
+
+    public function findByIdWithPricing(int $id)
+    {
+        return $this->itemRepository->findById($id, ['units', 'units.pricing']);
     }
 }

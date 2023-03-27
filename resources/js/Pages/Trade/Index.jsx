@@ -5,9 +5,11 @@ import Paginate from "@/Components/Table/Paginate";
 import Search from "@/Components/Table/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function Index({ auth, items, q }) {
+export default function Index({ auth, items, q, flash }) {
     const [showJual, setShowJual] = useState(false);
     const [showBeli, setShowBeli] = useState(false);
 
@@ -15,10 +17,26 @@ export default function Index({ auth, items, q }) {
         setShowJual(false);
     };
 
-    console.log(items);
+    useEffect(() => {
+        if (flash.message) {
+            toast.success(flash.message);
+        }
+    }, []);
 
     return (
         <AuthenticatedLayout auth={auth} className>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <div className="p-6">
                 <div>
                     <Head title="Jual Beli" />

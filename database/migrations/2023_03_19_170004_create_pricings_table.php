@@ -13,14 +13,10 @@ return new class extends Migration
     {
         Schema::create('pricings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->unsignedDecimal('price', 19, 2)->default(0);
             $table->timestamps();
 
-            $table->foreign('item_id')->references('id')->on('items')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
             $table->foreign('unit_id')->references('id')->on('units')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();

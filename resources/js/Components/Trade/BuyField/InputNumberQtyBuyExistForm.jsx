@@ -1,8 +1,8 @@
 import React from "react";
-import { useBuyForm } from "../Form";
 import Label from "@/Components/Field/Label";
+import { useBuyForm } from "../ExistForm";
 
-export default function InputNumberQtyBuy({ className }) {
+export default function InputNumberQtyBuyExistForm({ className }) {
     const {
         watch,
         setValue,
@@ -33,11 +33,11 @@ export default function InputNumberQtyBuy({ className }) {
             />
             <select
                 className="ml-3 w-16 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                {...register("unit_name")}
+                {...register("unit_id")}
             >
                 {watch("units").map((d, i) => (
-                    <option key={i} value={d.name}>
-                        {d.name}
+                    <option key={i} value={d.unit_id}>
+                        {d.unit_name}
                     </option>
                 ))}
             </select>

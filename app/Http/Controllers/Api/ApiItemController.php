@@ -35,4 +35,17 @@ class ApiItemController extends Controller
             ], $th->getCode() ?: 500);
         }
     }
+
+    public function show($id)
+    {
+        try {
+            $item = $this->itemService->findByIdWithPricing($id);
+
+            return response()->json($item);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ], $th->getCode() ?: 500);
+        }
+    }
 }
