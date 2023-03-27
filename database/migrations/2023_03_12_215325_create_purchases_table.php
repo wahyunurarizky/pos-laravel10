@@ -21,7 +21,8 @@ return new class extends Migration
             $table->unsignedDecimal('total', 19, 2);
             $table->string('seller')->nullable();
             $table->unsignedDecimal('bottom_unit_qty_left')->default(0);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('item_id')->references('id')->on('items')
                 ->nullOnDelete()

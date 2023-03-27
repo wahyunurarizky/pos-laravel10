@@ -20,7 +20,8 @@ return new class extends Migration
             $table->unsignedDecimal('price_per_unit');
             $table->unsignedDecimal('total');
             $table->string('sub_name')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('item_id')->references('id')->on('items')
                 ->nullOnDelete()

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->unsignedInteger('master_unit_id')->nullable();
             $table->json('sub_name')->nullable();
             $table->decimal('bottom_unit_qty')->default(0);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('master_unit_id')->references('id')->on('master_units')
                 ->nullOnDelete()
