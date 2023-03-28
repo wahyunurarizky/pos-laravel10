@@ -111,10 +111,15 @@ export default function ExistForm({ setIsForm, updateBox, i, d, item_id }) {
                             unit_id: d.id,
                             unit_name: d.name,
                             price: d.pricing?.price,
+                            price_per_unit: d.purchase?.price_per_unit,
                         };
                     })
                 );
                 setValue("unit_id", response.data?.units[0]?.id);
+                setValue(
+                    "price_per_unit",
+                    response.data?.units[0]?.purchase?.price_per_unit
+                );
                 setIsLoading(false);
             })
             .catch((_error) => {

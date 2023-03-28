@@ -121,6 +121,7 @@ class TradeController extends Controller
                 $bottomUnitQty = $bottomUnitQty * $this->calcChildren($unitPurchase->children);
             }
 
+
             collect($d['units'])->each(function ($unit) {
                 $price = Pricing::where('unit_id', $unit['unit_id'])->latest('created_at')->first();
 
@@ -131,6 +132,12 @@ class TradeController extends Controller
                     ]);
                 }
             });
+
+            $item = Item::find($d['item_id']);
+
+            $item->update([
+                'bottom_unit_qty' => $bottomUnitQty + $item->bottom_unit_qty
+            ]);
 
 
             return [
@@ -145,7 +152,6 @@ class TradeController extends Controller
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
-            // TODO: pricing not yet implemented
         })->toArray());
 
         foreach ($newItemBuys as $data) {

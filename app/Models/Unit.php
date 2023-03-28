@@ -33,12 +33,42 @@ class Unit extends Model
         return $this->children()->with('grandchildren');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function grandparent()
+    {
+        return $this->parent()->with('grandparent');
+    }
+
     public function pricings(): HasMany
     {
         return $this->hasMany(Pricing::class);
     }
+
     public function pricing(): HasOne
     {
         return $this->hasOne(Pricing::class)->latest('created_at');
+    }
+
+    public function purchase(): HasOne
+    {
+        return $this->hasOne(Purchase::class)->latest('created_at');
+    }
+
+    public function getEqualParentStock()
+    {
+        return $this->calcParent($this->grandparent);
+    }
+
+    function calcParent($unit)
+    {
+        if ($unit->grandparent) {
+            return $unit->name . ", " . $this->calcParent($unit->grandparent);
+        } else {
+            return $unit->name;
+        }
     }
 }

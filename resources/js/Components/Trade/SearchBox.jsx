@@ -2,14 +2,19 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import _debounce from "lodash/debounce";
 import axios from "axios";
 import ButtonMain from "../ButtonMain";
+import LoadingSpinner from "../LoadingSpinner";
 
 function DataItem({ data, ...props }) {
+    console.log(data);
     return (
         <div
             {...props}
-            className="my-1 cursor-pointer rounded-md bg-mycolor-dark p-2 text-sm text-gray-100"
+            className="my-1 flex cursor-pointer justify-between border-b-2 p-3 text-sm"
         >
-            {data.name}
+            <div>{data.name}</div>
+            <div>
+                {data.bottom_unit_qty} {data.bottom_unit.name}
+            </div>
         </div>
     );
 }
@@ -19,9 +24,8 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
 
     const [searchValue, setSearchValue] = useState("");
     const [items, setItems] = useState([]);
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     useEffect(() => {
-        console.log("useeffects");
         if (searchInputElement.current) {
             searchInputElement.current.focus();
         }
@@ -30,6 +34,7 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
 
     const searchItems = useCallback(
         _debounce((value) => {
+            setLoading(true);
             axios
                 .post(route("api.items.index", { q: value }))
                 .then((response) => {
@@ -45,8 +50,6 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
     );
 
     const onChangeSearchValue = ({ target: { value } }) => {
-        setLoading(true);
-        setItems([]);
         setSearchValue(value);
         if (value.length >= 0) {
             searchItems(value);
@@ -85,7 +88,8 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
                         autoFocus
                         type="search"
                         id="default-search"
-                        className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                        className="block w-full rounded-sm border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                        autoComplete="off"
                         placeholder="Cari Barang"
                         required
                         value={searchValue}
@@ -93,9 +97,11 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
                     />
                 </div>
             </form>
-            <div className="rounded-md p-4 shadow-md">
+            <div className="">
                 {isLoading ? (
-                    <div>Loading...</div>
+                    <div className="flex w-full justify-center p-5">
+                        <LoadingSpinner />
+                    </div>
                 ) : items.length > 0 ? (
                     <div>
                         {items.map((data) => (
@@ -133,7 +139,9 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
                     </div>
                 ) : (
                     <div>
-                        <h2 className="text-center">Data Kosong</h2>
+                        <div className="my-1 border-b-2 p-3 text-center text-sm">
+                            Data Tidak Ditemukan ...
+                        </div>
                         <ButtonMain
                             onClick={() => {
                                 updateBox(

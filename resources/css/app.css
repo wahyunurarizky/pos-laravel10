@@ -14,3 +14,7 @@
         --tw-ring-shadow: 0 0 #000 !important;
     }
 }
+
+body {
+    margin-bottom: 0 !important;
+}

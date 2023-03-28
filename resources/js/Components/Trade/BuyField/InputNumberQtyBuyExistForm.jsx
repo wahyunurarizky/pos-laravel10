@@ -34,6 +34,13 @@ export default function InputNumberQtyBuyExistForm({ className }) {
             <select
                 className="ml-3 w-16 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                 {...register("unit_id")}
+                onChange={(e) => {
+                    setValue(
+                        "price_per_unit",
+                        watch("units").find((d) => d.unit_id == e.target.value)
+                            ?.price_per_unit
+                    );
+                }}
             >
                 {watch("units").map((d, i) => (
                     <option key={i} value={d.unit_id}>

@@ -51,6 +51,7 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         // populate bottomUnit
         $query->with('bottomUnit');
 
+
         if (!empty($where)) {
             $query->where($where);
         }
@@ -58,6 +59,8 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         if ($limit) {
             $query->limit($limit);
         }
+
+        $query->orderBy('updated_at', 'desc');
 
         return ItemResource::collection($query->get());
     }
@@ -72,7 +75,7 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         return $query->exists();
     }
 
-    public function findById($id, $with = ['units', 'units.pricing'])
+    public function findById($id, $with = ['units', 'units.pricing', 'units.purchase'])
     {
         $query = $this->model->query();
         $query->with(...$with);

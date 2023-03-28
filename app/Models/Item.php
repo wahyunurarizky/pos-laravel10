@@ -25,6 +25,11 @@ class Item extends Model
         return $this->hasMany(Unit::class);
     }
 
+    public function purchases(): HasMany
+    {
+        return $this->hasMany(Purchase::class);
+    }
+
 
     public function bottomUnit()
     {
