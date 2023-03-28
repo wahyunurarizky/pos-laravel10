@@ -6,8 +6,7 @@ import Search from "@/Components/Table/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export default function Index({ auth, items, q, flash }) {
     const [showJual, setShowJual] = useState(false);
@@ -25,18 +24,6 @@ export default function Index({ auth, items, q, flash }) {
 
     return (
         <AuthenticatedLayout auth={auth} className>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
             <div className="p-6">
                 <div>
                     <Head title="Jual Beli" />
@@ -93,7 +80,7 @@ export default function Index({ auth, items, q, flash }) {
                                                 </th>
                                                 <td className="px-6 py-4">
                                                     {d.bottom_unit_qty}{" "}
-                                                    {d.bottomUnit.name}
+                                                    {d.bottom_unit.name}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <a
