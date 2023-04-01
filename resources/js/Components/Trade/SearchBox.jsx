@@ -3,6 +3,7 @@ import _debounce from "lodash/debounce";
 import axios from "axios";
 import ButtonMain from "../ButtonMain";
 import LoadingSpinner from "../LoadingSpinner";
+import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 function DataItem({ data, ...props }) {
     console.log(data);
@@ -19,7 +20,11 @@ function DataItem({ data, ...props }) {
     );
 }
 
-export default function SearchBox({ setIsForm, updateBox, i, d }) {
+export default function SearchBox({
+    makeNewForm,
+    makeExistForm,
+    deleteButtonClick,
+}) {
     const searchInputElement = useRef(null);
 
     const [searchValue, setSearchValue] = useState("");
@@ -57,7 +62,7 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
     };
 
     return (
-        <>
+        <div className="">
             <form>
                 <label
                     htmlFor="default-search"
@@ -65,36 +70,41 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
                 >
                     Search
                 </label>
-                <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <svg
-                            aria-hidden="true"
-                            className="h-5 w-5 text-gray-500 dark:text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                            ></path>
-                        </svg>
+                <div className="flex">
+                    <div className="relative flex-1">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg
+                                aria-hidden="true"
+                                className="h-5 w-5 text-gray-500 dark:text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <input
+                            ref={searchInputElement}
+                            autoFocus
+                            type="search"
+                            id="default-search"
+                            className="block w-full rounded-md border border-gray-300 bg-gray-50 p-3 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                            autoComplete="off"
+                            placeholder="Cari Barang"
+                            required
+                            value={searchValue}
+                            onChange={onChangeSearchValue}
+                        />
                     </div>
-                    <input
-                        ref={searchInputElement}
-                        autoFocus
-                        type="search"
-                        id="default-search"
-                        className="block w-full rounded-sm border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                        autoComplete="off"
-                        placeholder="Cari Barang"
-                        required
-                        value={searchValue}
-                        onChange={onChangeSearchValue}
-                    />
+                    <button className="flex-none" onClick={deleteButtonClick}>
+                        <TrashIcon className="h-7 w-7 pl-2 " />
+                    </button>
                 </div>
             </form>
             <div className="">
@@ -109,31 +119,11 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
                                 data={data}
                                 key={data.id}
                                 onClick={() => {
-                                    updateBox(
-                                        {
-                                            item_id: data.id,
-                                            edit: true,
-                                            isNew: false,
-                                        },
-                                        i
-                                    );
-                                    setIsForm(true);
+                                    makeExistForm(data.id);
                                 }}
                             />
                         ))}
-                        <ButtonMain
-                            onClick={() => {
-                                updateBox(
-                                    {
-                                        edit: true,
-                                        isNew: true,
-                                    },
-                                    i
-                                );
-                                setIsForm(true);
-                            }}
-                            className="w-full"
-                        >
+                        <ButtonMain onClick={makeNewForm} className="w-full">
                             Tambah Baru +
                         </ButtonMain>
                     </div>
@@ -142,24 +132,12 @@ export default function SearchBox({ setIsForm, updateBox, i, d }) {
                         <div className="my-1 border-b-2 p-3 text-center text-sm">
                             Data Tidak Ditemukan ...
                         </div>
-                        <ButtonMain
-                            onClick={() => {
-                                updateBox(
-                                    {
-                                        edit: true,
-                                        isNew: true,
-                                    },
-                                    i
-                                );
-                                setIsForm(true);
-                            }}
-                            className="w-full"
-                        >
+                        <ButtonMain onClick={makeNewForm} className="w-full">
                             Tambah Baru +
                         </ButtonMain>
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 }

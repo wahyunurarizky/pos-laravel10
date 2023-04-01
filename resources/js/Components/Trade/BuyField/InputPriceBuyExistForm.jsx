@@ -26,8 +26,15 @@ export default function InputPriceBuyExistForm({ className, inputByTotal }) {
                         setValue(name, 0);
                     } else {
                         setValue(name, newValue);
-                        setValue("total", watch(name) * watch("per_unit_qty"));
                     }
+                    setValue(
+                        "total",
+                        (
+                            Math.round(
+                                watch(name) * watch("per_unit_qty") * 100
+                            ) / 100
+                        ).toFixed(2)
+                    );
                 }}
                 disabled={inputByTotal}
                 step={1}

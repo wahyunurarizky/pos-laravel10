@@ -1,6 +1,6 @@
 import Label from "@/Components/Field/Label";
 import React from "react";
-import { useBuyForm } from "../Form";
+import { useBuyForm } from "../NewForm";
 import CurrencyInput from "react-currency-input-field";
 
 export default function InputPriceEstimatedSell({ className }) {

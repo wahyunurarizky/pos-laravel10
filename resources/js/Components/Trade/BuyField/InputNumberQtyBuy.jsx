@@ -1,5 +1,5 @@
 import React from "react";
-import { useBuyForm } from "../Form";
+import { useBuyForm } from "../NewForm";
 import Label from "@/Components/Field/Label";
 
 export default function InputNumberQtyBuy({ className }) {
@@ -18,12 +18,16 @@ export default function InputNumberQtyBuy({ className }) {
             <Label name={name} labelName={labelName} />
             <input
                 {...register(name, {
-                    setValueAs: (v) => (v === "" ? null : parseInt(v)),
+                    setValueAs: (v) => (v === "" ? null : v),
                     // valueAsNumber: true,
                     onChange: (e) => {
                         setValue(
                             "total",
-                            watch(name) * watch("price_per_unit")
+                            (
+                                Math.round(
+                                    watch(name) * watch("price_per_unit") * 100
+                                ) / 100
+                            ).toFixed(2)
                         );
                     },
                 })}

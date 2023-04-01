@@ -1,18 +1,14 @@
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { router, usePage } from "@inertiajs/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import InputDropdownUnits from "./BuyField/InputDropdownUnits";
-import InputTextName from "./BuyField/InputTextName";
-import InputDropdownSubName from "./BuyField/InputDropdownSubName";
-import InputUnitsDetail from "./BuyField/InputUnitsDetail";
-import InputNumberQtyBuy from "./BuyField/InputNumberQtyBuy";
 import InputPriceEstimatedSellExistForm from "./BuyField/InputPriceEstimatedSellExistForm";
-import { useBuy } from "@/Pages/Trade/Buy";
 import InputNumberQtyBuyExistForm from "./BuyField/InputNumberQtyBuyExistForm";
 import InputPriceBuyExistForm from "./BuyField/InputPriceBuyExistForm";
 import InputPriceTotalExistForm from "./BuyField/InputPriceTotalExistForm";
+import Edit from "./Button/Edit";
+import Delete from "./Button/Delete";
+import Minimize from "./Button/Minimize";
 
 export const useBuyForm = useFormContext;
 
@@ -31,7 +27,14 @@ const schema = yup
     })
     .required();
 
-export default function ExistForm({ setIsForm, updateBox, i, d, item_id }) {
+export default function ExistForm({
+    minimizeBox,
+    updateBox,
+    deleteButtonClick,
+    editButtonClick,
+    d,
+    item_id,
+}) {
     const [isLoading, setIsLoading] = useState(false);
 
     const method = useForm({
@@ -59,7 +62,6 @@ export default function ExistForm({ setIsForm, updateBox, i, d, item_id }) {
     } = method;
 
     const [inputByTotal, setInputByTotal] = useState(d.inputByTotal || false);
-    // const [nameIsUsed, setNameIsUsed] = useState(false);
 
     const onSubmit = (data) => {
         data.edit = false;
@@ -67,29 +69,7 @@ export default function ExistForm({ setIsForm, updateBox, i, d, item_id }) {
         data.inputByTotal = inputByTotal;
         data.isSaved = true;
 
-        // if (nameIsUsed) {
-        //     setError(
-        //         "name",
-        //         { message: "name already exists" },
-        //         { shouldFocus: true }
-        //     );
-        //     return;
-        // }
-        // data.edit = false;
-        updateBox({ ...d, ...data }, i);
-        // setIsSearch(true);
-        // router.post(
-        //     route("trade.buy.store"),
-        //     {
-        //         ...data,
-        //         name: data.name.toUpperCase(),
-        //     },
-        //     {
-        //         onError: (err) => {
-        //             console.log(err[0]);
-        //         },
-        //     }
-        // );
+        updateBox({ ...d, ...data });
     };
 
     console.log(errors, watch());
@@ -103,7 +83,7 @@ export default function ExistForm({ setIsForm, updateBox, i, d, item_id }) {
             .get(route("api.items.show", item_id))
             .then((response) => {
                 console.log(response.data);
-                updateBox({ ...d, apiData: response.data }, i);
+                updateBox({ ...d, apiData: response.data });
                 setValue(
                     "units",
                     response.data?.units?.map((d) => {
@@ -129,22 +109,19 @@ export default function ExistForm({ setIsForm, updateBox, i, d, item_id }) {
     }, []);
 
     return (
-        <div>
-            <h4 className="mb-3 inline-block rounded-sm bg-mycolor-dark px-2 text-base font-bold text-white">
-                Beli
-            </h4>
+        <div className="shadow-0 mb-2 w-full rounded-md bg-white p-2">
+            {d.total > 0 && <Minimize minimizeBox={minimizeBox} />}
+            <div className="mb-5 flex justify-between align-top">
+                <Edit editButtonClick={editButtonClick} />
+                <span className=""></span>
+
+                <Delete deleteButtonClick={deleteButtonClick} />
+            </div>
 
             {isLoading ? (
                 "loading..."
             ) : (
                 <FormProvider {...method}>
-                    <button
-                        onClick={() => {
-                            setIsForm(false);
-                        }}
-                    >
-                        ganti
-                    </button>
                     <div className="w-full rounded-md bg-white">
                         nama: {d.apiData?.name}
                     </div>

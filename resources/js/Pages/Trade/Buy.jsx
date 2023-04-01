@@ -1,17 +1,11 @@
 import PrimaryButton from "@/Components/PrimaryButton";
-import BuyForm from "@/Components/Trade/BuyForm";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import { useState, createContext, useContext, useRef } from "react";
-import { Disclosure, Transition } from "@headlessui/react";
-import {
-    ChevronRightIcon,
-    MinusIcon,
-    PlusCircleIcon,
-    TrashIcon,
-} from "@heroicons/react/20/solid";
-import clsx from "clsx";
-import { ToastContainer, toast } from "react-toastify";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+
+import {  toast } from "react-toastify";
+import BuyOption from "@/Components/Trade/BuyOption";
 
 const BuyContext = createContext();
 
@@ -35,10 +29,27 @@ export default function Buy({ auth, master_units }) {
         setBox([...box, { edit: true }]);
     };
 
+    const deleteBox = (i) => {
+        setBox(box.filter((d, index) => i !== index));
+    };
+    const minimizeBox = (i) => {
+        const arr = [...box];
+        arr[i] = {
+            ...box[i],
+            edit: false,
+        };
+        console.log(arr);
+        setBox(arr);
+    };
+
+    const currencyFormat = (num) => {
+        return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    };
+
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="Beli Barang" />
-            <div className="p-6">
+            <div className="p-6 pb-16">
                 <div className="mb-2 flex justify-between">
                     <Link href={route("trade.index")}>
                         <PrimaryButton className="">Back</PrimaryButton>
@@ -55,50 +66,20 @@ export default function Buy({ auth, master_units }) {
                     {box.length > 0 &&
                         box.map((d, i) =>
                             d.edit ? (
-                                <div
+                                <BuyOption
                                     key={i}
-                                    className={clsx(
-                                        "w-full rounded-md bg-white p-2 shadow-md"
-                                    )}
-                                >
-                                    <div className="flex justify-end">
-                                        <button
-                                            className="hover:scale-125"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setBox(
-                                                    box.filter(
-                                                        (d, index) =>
-                                                            i !== index
-                                                    )
-                                                );
-                                            }}
-                                        >
-                                            <TrashIcon className="h-5 w-5 text-red-500" />
-                                        </button>
-                                        {d.total > 0 && (
-                                            <button
-                                                onClick={() => {
-                                                    const arr = [...box];
-                                                    arr[i] = {
-                                                        ...box[i],
-                                                        edit: false,
-                                                    };
-                                                    console.log(arr);
-                                                    setBox(arr);
-                                                }}
-                                            >
-                                                <MinusIcon className="h-6 w-6 text-gray-500" />
-                                            </button>
-                                        )}
-                                    </div>
-
-                                    <BuyForm
-                                        updateBox={updateBox}
-                                        i={i}
-                                        d={d}
-                                    />
-                                </div>
+                                    updateBox={(data) => {
+                                        updateBox(data, i);
+                                    }}
+                                    deleteBox={() => {
+                                        deleteBox(i);
+                                    }}
+                                    minimizeBox={() => {
+                                        minimizeBox(i);
+                                    }}
+                                    i={i}
+                                    d={d}
+                                />
                             ) : (
                                 <div
                                     onClick={() => {
@@ -119,16 +100,14 @@ export default function Buy({ auth, master_units }) {
                                         }
                                     }}
                                     key={i}
-                                    className="mb-2 flex w-full cursor-pointer items-center rounded-md bg-white p-2 shadow-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-100 active:bg-gray-300"
+                                    className="mb-2 flex w-full cursor-pointer items-center rounded-md bg-white p-2 shadow-md hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-100 active:bg-gray-100"
                                 >
                                     <div className="w-full">
                                         <div className="font-bold">
-                                            {d.isNew
-                                                ? d.unit_name
-                                                : d.apiData?.name}
+                                            {d.isNew ? d.name : d.apiData?.name}
                                         </div>
-                                        <div className="flex cursor-pointer items-center text-sm">
-                                            <div className="flex-none pr-2">
+                                        <div className="flex cursor-pointer items-end text-sm">
+                                            <div className="basis-1/6 pr-2">
                                                 {d.per_unit_qty}{" "}
                                                 {d.isNew
                                                     ? d.unit_name
@@ -138,27 +117,25 @@ export default function Buy({ auth, master_units }) {
                                                               d.unit_id
                                                       )?.unit_name}
                                             </div>
-                                            <div className="flex-grow basis-1/2 text-right">
-                                                @Rp {d.price_per_unit || "-"}
+                                            <div className="flex-grow basis-1/3 pl-2 text-right">
+                                                @Rp{" "}
+                                                {currencyFormat(
+                                                    d.price_per_unit
+                                                ) || "-"}
                                             </div>
-                                            <div className="flex-grow basis-1/2 text-right">
-                                                Rp {d.total}
+                                            <div className="flex-grow basis-1/3 pl-2 text-right">
+                                                Rp {currencyFormat(d.total)}
                                             </div>
                                         </div>
                                     </div>
-                                    <button
+                                    {/* <button
                                         onClick={(e) => {
-                                            e.stopPropagation();
-                                            setBox(
-                                                box.filter(
-                                                    (d, index) => i !== index
-                                                )
-                                            );
+                                            deleteBox(e, i);
                                         }}
                                         className="ml-5 h-7 w-7 flex-none rounded-xl bg-black hover:scale-125"
                                     >
                                         <TrashIcon className="m-auto h-5 w-5 text-white" />
-                                    </button>
+                                    </button> */}
                                 </div>
                             )
                         )}
@@ -166,22 +143,37 @@ export default function Buy({ auth, master_units }) {
                         return v.edit === true;
                     }).length === 0 && (
                         <button onClick={addNew} className="ml-auto mb-2 block">
-                            <PlusCircleIcon className="h-7 w-7" />
+                            Tambah <PlusCircleIcon className="inline h-7 w-7" />
                         </button>
                     )}
                     {box.filter((v) => {
                         return v.edit === true;
                     }).length === 0 && (
-                        <button
-                            className="mr-2 mb-2 block w-full rounded-lg bg-gradient-to-br from-green-400 to-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800"
-                            onClick={() => {
-                                router.post(route("trade.buy.store"), {
-                                    items: box,
-                                });
-                            }}
-                        >
-                            BELI
-                        </button>
+                        <div className="fixed inset-x-0 bottom-0 px-2 pb-4 pt-2 backdrop-blur-2xl">
+                            <div className="text-right">
+                                <span className="font-semibold">
+                                    Total: Rp{" "}
+                                    {currencyFormat(
+                                        box.reduce(
+                                            (accumulator, currentValue) =>
+                                                accumulator +
+                                                currentValue.total,
+                                            0
+                                        )
+                                    )}
+                                </span>
+                            </div>
+                            <button
+                                className="w-full rounded-lg bg-gradient-to-br from-green-400 to-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800"
+                                onClick={() => {
+                                    router.post(route("trade.buy.store"), {
+                                        items: box,
+                                    });
+                                }}
+                            >
+                                BELI
+                            </button>
+                        </div>
                     )}
                 </BuyContext.Provider>
             </div>

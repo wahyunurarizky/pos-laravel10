@@ -1,6 +1,5 @@
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { useState } from "react";
-import { router, usePage } from "@inertiajs/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputDropdownUnits from "./BuyField/InputDropdownUnits";
@@ -11,7 +10,9 @@ import InputNumberQtyBuy from "./BuyField/InputNumberQtyBuy";
 import InputPriceBuy from "./BuyField/InputPriceBuy";
 import InputPriceTotal from "./BuyField/InputPriceTotal";
 import InputPriceEstimatedSell from "./BuyField/InputPriceEstimatedSell";
-import { useBuy } from "@/Pages/Trade/Buy";
+import Edit from "./Button/Edit";
+import Delete from "./Button/Delete";
+import Minimize from "./Button/Minimize";
 
 export const useBuyForm = useFormContext;
 
@@ -33,7 +34,13 @@ const schema = yup
     })
     .required();
 
-export default function Form({ setIsForm, updateBox, i, d }) {
+export default function NewForm({
+    minimizeBox,
+    updateBox,
+    d,
+    editButtonClick,
+    deleteButtonClick,
+}) {
     const method = useForm({
         defaultValues: {
             master_unit_id: d.master_unit_id,
@@ -50,15 +57,7 @@ export default function Form({ setIsForm, updateBox, i, d }) {
         resolver: yupResolver(schema),
     });
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-        setError,
-        reset,
-        getValues,
-    } = method;
+    const { register, handleSubmit, watch, setError } = method;
 
     const [inputByTotal, setInputByTotal] = useState(d.inputByTotal || false);
     const [nameIsUsed, setNameIsUsed] = useState(false);
@@ -78,41 +77,22 @@ export default function Form({ setIsForm, updateBox, i, d }) {
         data.inputByTotal = inputByTotal;
         data.isSaved = true;
 
-        updateBox({ ...data, name: data.name.toUpperCase() }, i);
-        // setIsSearch(true);
-
-        // router.post(
-        //     route("trade.buy.store"),
-        //     {
-        //         ...data,
-        //         name: data.name.toUpperCase(),
-        //     },
-        //     {
-        //         onError: (err) => {
-        //             console.log(err[0]);
-        //         },
-        //     }
-        // );
+        updateBox({ ...data, name: data.name.toUpperCase() });
     };
-
-    console.log(errors, watch());
 
     register("units");
 
     return (
-        <div>
-            <h4 className="mb-3 inline-block rounded-sm bg-mycolor-dark px-2 text-base font-bold text-white">
-                Buat Baru Barang
-            </h4>
-            <button
-                onClick={() => {
-                    setIsForm(false);
-                }}
-            >
-                ganti
-            </button>
+        <div className="shadow-0 mb-2 w-full rounded-md bg-white p-2">
+            {d.total > 0 && <Minimize minimizeBox={minimizeBox} />}
+            <div className="mb-5 flex justify-between align-top">
+                <Edit editButtonClick={editButtonClick} />
+                <span className="mr-2 self-start rounded bg-yellow-100 px-2.5 py-0.5 align-middle text-base font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                    Baru
+                </span>
 
-            {/* FORM PEMBELIAN JIKA BARANG BARU */}
+                <Delete deleteButtonClick={deleteButtonClick} />
+            </div>
             <FormProvider {...method}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     {/* NAME */}

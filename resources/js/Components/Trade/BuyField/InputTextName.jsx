@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import _debounce from "lodash/debounce";
 import axios from "axios";
 import Label from "@/Components/Field/Label";
-import { useBuyForm } from "../Form";
+import { useBuyForm } from "../NewForm";
 import { usePage } from "@inertiajs/react";
 import { useBuy } from "@/Pages/Trade/Buy";
 
