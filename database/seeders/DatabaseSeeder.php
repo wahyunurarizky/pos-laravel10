@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             BalanceSeeder::class,
             MasterUnitSeeder::class,
             ItemSeeder::class,
+            SellerSeeder::class
         ]);
     }
 }
