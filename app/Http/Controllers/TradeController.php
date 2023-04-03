@@ -45,8 +45,10 @@ class TradeController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
-            'items' => 'required|array'
+            'items' => 'required|array',
+            'seller_id' => 'numeric|required'
         ]);
 
         $newItemBuys = [];
@@ -66,7 +68,7 @@ class TradeController extends Controller
                     'per_unit_qty' => @$item['per_unit_qty'],
                     'price_per_unit' => @$item['price_per_unit'],
                     'total' => @$item['total'],
-                    'seller' => @$item['seller']
+                    'seller_id' => $request->seller_id
                 ];
 
                 $newItemBuys[] = $data;
@@ -79,7 +81,7 @@ class TradeController extends Controller
                     'per_unit_qty' => @$item['per_unit_qty'],
                     'price_per_unit' => @$item['price_per_unit'],
                     'total' => @$item['total'],
-                    'seller' => @$item['seller']
+                    'seller_id' => $request->seller_id
                 ];
 
                 $oldItemBuys[] = $data;
@@ -95,7 +97,6 @@ class TradeController extends Controller
             '*.sub_name.*' => 'string',
             '*.unit_name' => 'required|string',
             '*.total' => 'required',
-            '*.seller' => 'string|nullable',
             '*.units.*.parent_ref_qty' => 'required|numeric|min:0|not_in:0',
             '*.units.*.price' => 'required|numeric',
             '*.units.*.name' => 'required|string',
@@ -108,7 +109,6 @@ class TradeController extends Controller
             '*.price_per_unit' => 'required|numeric',
             '*.total' => 'required',
             '*.unit_id' => 'required|numeric',
-            '*.seller' => 'string|nullable',
             '*.units.*.unit_id' => 'required|numeric',
             '*.units.*.price' => 'required|numeric',
             '*.units.*.unit_name' => 'required|string',
@@ -146,7 +146,7 @@ class TradeController extends Controller
                 'unit_id' => $d['unit_id'],
                 'price_per_unit' => $d['price_per_unit'],
                 'total' => $d['total'],
-                'seller' => $d['seller'],
+                'seller_id' => $d['seller_id'],
                 'bottom_unit_qty' => $bottomUnitQty,
                 'bottom_unit_qty_left' => $bottomUnitQty,
                 'created_at' => date('Y-m-d H:i:s'),
@@ -194,7 +194,7 @@ class TradeController extends Controller
                 'total' => $data['total'],
                 'bottom_unit_qty' => $bottomUnitQty,
                 'bottom_unit_qty_left' => $bottomUnitQty,
-                'seller' => $data['seller'],
+                'seller_id' => $data['seller_id'],
             ]);
 
             $item->update([

@@ -4,8 +4,9 @@ import { Head, Link, router, usePage } from "@inertiajs/react";
 import { useState, createContext, useContext, useRef } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import BuyOption from "@/Components/Trade/BuyOption";
+import Checkout from "@/Components/Trade/Button/Checkout";
 
 const BuyContext = createContext();
 
@@ -44,6 +45,13 @@ export default function Buy({ auth, master_units }) {
 
     const currencyFormat = (num) => {
         return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    };
+
+    const submit = (seller_id) => {
+        router.post(route("trade.buy.store"), {
+            items: box,
+            seller_id,
+        });
     };
 
     return (
@@ -163,16 +171,7 @@ export default function Buy({ auth, master_units }) {
                                     )}
                                 </span>
                             </div>
-                            <button
-                                className="w-full rounded-lg bg-gradient-to-br from-green-400 to-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800"
-                                onClick={() => {
-                                    router.post(route("trade.buy.store"), {
-                                        items: box,
-                                    });
-                                }}
-                            >
-                                BELI
-                            </button>
+                            <Checkout submit={submit} />
                         </div>
                     )}
                 </BuyContext.Provider>

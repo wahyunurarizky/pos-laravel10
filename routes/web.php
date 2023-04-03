@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ApiItemController;
+use App\Http\Controllers\Api\ApiSellerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TradeController;
 use Illuminate\Foundation\Application;
@@ -35,6 +36,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/api/items/search', [ApiItemController::class, 'index'])->name('api.items.index');
     Route::post('/api/items/check-unique-name', [ApiItemController::class, 'checkUniqueName'])->name('api.items.check-unique-name');
     Route::get('/api/items/{id}', [ApiItemController::class, 'show'])->name('api.items.show');
+
+    Route::get('/api/seller', [ApiSellerController::class, 'index'])->name('api.seller.index');
+    Route::post('/api/seller', [ApiSellerController::class, 'store'])->name('api.seller.store');
 });
 
 
