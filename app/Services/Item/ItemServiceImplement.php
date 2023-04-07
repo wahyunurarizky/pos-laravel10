@@ -72,6 +72,6 @@ class ItemServiceImplement extends Service implements ItemService
 
     public function findByIdWithPricing(int $id)
     {
-        return $this->itemRepository->findById($id, ['units', 'units.pricing', 'units.purchase']);
+        return $this->itemRepository->findById($id, ['units', 'units.pricing', 'units.itemPurchase']);
     }
 }

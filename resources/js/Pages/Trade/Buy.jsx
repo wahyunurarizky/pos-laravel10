@@ -12,7 +12,6 @@ const BuyContext = createContext();
 
 export default function Buy({ auth, master_units }) {
     const [box, setBox] = useState([{ edit: true }]);
-    const [total, setTotal] = useState(null);
 
     const ref = useRef(null);
 

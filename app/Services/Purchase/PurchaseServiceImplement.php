@@ -3,6 +3,7 @@
 namespace App\Services\Purchase;
 
 use App\Models\Item;
+use App\Models\ItemPurchase;
 use App\Models\Pricing;
 use App\Models\Purchase;
 use App\Models\Unit;
@@ -92,7 +93,7 @@ class PurchaseServiceImplement extends Service implements PurchaseService
                 $bottomUnitQty = $bottomUnitQty * $this->calcChildren($unitPurchase->children);
             }
 
-            Purchase::create([
+            ItemPurchase::create([
                 'item_id' => $item->id,
                 'unit_id' => $unitPurchase->id,
                 'per_unit_qty' => $data['per_unit_qty'],
@@ -101,7 +102,7 @@ class PurchaseServiceImplement extends Service implements PurchaseService
                 'bottom_unit_qty' => $bottomUnitQty,
                 'bottom_unit_qty_left' => $bottomUnitQty,
                 'seller_id' => $data['seller_id'],
-                'checkout_id' => $data['checkout_id'],
+                'purchase_id' => $data['purchase_id'],
             ]);
 
             $item->update([
@@ -112,7 +113,7 @@ class PurchaseServiceImplement extends Service implements PurchaseService
 
     public function insertOldItem($oldItemBuys)
     {
-        Purchase::insert(collect($oldItemBuys)->map(function ($d) {
+        ItemPurchase::insert(collect($oldItemBuys)->map(function ($d) {
             $bottomUnitQty = $d['per_unit_qty'];
             $unitPurchase = Unit::find($d['unit_id']);
             if ($unitPurchase->children) {
@@ -146,7 +147,7 @@ class PurchaseServiceImplement extends Service implements PurchaseService
                 'seller_id' => $d['seller_id'],
                 'bottom_unit_qty' => $bottomUnitQty,
                 'bottom_unit_qty_left' => $bottomUnitQty,
-                'checkout_id' => $d['checkout_id'],
+                'purchase_id' => $d['purchase_id'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];

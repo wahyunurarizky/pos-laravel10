@@ -9,13 +9,6 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Index({ auth, items, q, flash }) {
-    const [showJual, setShowJual] = useState(false);
-    const [showBeli, setShowBeli] = useState(false);
-
-    const closeModal = () => {
-        setShowJual(false);
-    };
-
     useEffect(() => {
         if (flash.message) {
             toast.success(flash.message);
@@ -32,14 +25,9 @@ export default function Index({ auth, items, q, flash }) {
                     </Link>
                 </div>
                 <div className="my-4 rounded-md bg-white p-4">
-                    <ButtonMain
-                        className="mb-3 w-full"
-                        onClick={() => {
-                            setShowJual(true);
-                        }}
-                    >
-                        Jual
-                    </ButtonMain>
+                    <Link href={route("trade.sell")}>
+                        <ButtonMain className="mb-3 w-full">Jual</ButtonMain>
+                    </Link>
                     <Link href={route("trade.buy")}>
                         <ButtonMain className="mb-3 w-full">Beli</ButtonMain>
                     </Link>
@@ -127,9 +115,6 @@ export default function Index({ auth, items, q, flash }) {
                         )}
                     </div>
                 </div>
-                <Modal show={showJual} onClose={closeModal}>
-                    wkwk
-                </Modal>
             </div>
         </AuthenticatedLayout>
     );

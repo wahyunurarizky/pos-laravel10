@@ -2,19 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Checkout;
-use App\Models\Item;
 use App\Models\MasterUnit;
-use App\Models\Pricing;
 use App\Models\Purchase;
-use App\Models\Unit;
-use App\Rules\ItemNameShouldNotExist;
-use App\Services\Item\ItemServiceImplement;
 use App\Services\Item\ItemService;
 use App\Services\Purchase\PurchaseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -45,7 +38,7 @@ class TradeController extends Controller
         return Inertia::render('Trade/Buy', ['master_units' => $master_units]);
     }
 
-    public function store(Request $request)
+    public function createBuy(Request $request)
     {
 
         $request->validate([
@@ -94,16 +87,16 @@ class TradeController extends Controller
         $this->purchaseService->validateNewItems($newItemValidates);
         $this->purchaseService->validateOldItems($oldItemValidates);
 
-        $checkout = Checkout::create([
+        $purchase = Purchase::create([
             'total' => $request->total,
         ]);
 
-        $oldItemBuys = collect($oldItemBuys)->map(function ($item) use ($checkout) {
-            $item['checkout_id'] = $checkout->id;
+        $oldItemBuys = collect($oldItemBuys)->map(function ($item) use ($purchase) {
+            $item['purchase_id'] = $purchase->id;
             return $item;
         });
-        $newItemBuys = collect($newItemBuys)->map(function ($item) use ($checkout) {
-            $item['checkout_id'] = $checkout->id;
+        $newItemBuys = collect($newItemBuys)->map(function ($item) use ($purchase) {
+            $item['purchase_id'] = $purchase->id;
             return $item;
         });
 
@@ -111,5 +104,10 @@ class TradeController extends Controller
         $this->purchaseService->insertNewItem($newItemBuys);
 
         return to_route('trade.index')->with('message', 'berhasil menambahkan data');
+    }
+
+    public function sell()
+    {
+        return Inertia::render('Trade/Sell');
     }
 }

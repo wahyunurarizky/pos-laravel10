@@ -53,9 +53,9 @@ class Unit extends Model
         return $this->hasOne(Pricing::class)->latest('created_at');
     }
 
-    public function purchase(): HasOne
+    public function itemPurchase(): HasOne
     {
-        return $this->hasOne(Purchase::class)->latest('created_at');
+        return $this->hasOne(ItemPurchase::class)->latest('created_at');
     }
 
     public function calcParent($qty)

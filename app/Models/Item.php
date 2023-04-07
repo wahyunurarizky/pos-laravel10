@@ -25,9 +25,9 @@ class Item extends Model
         return $this->hasMany(Unit::class)->orderBy('id', 'ASC');
     }
 
-    public function purchases(): HasMany
+    public function itemPurchases(): HasMany
     {
-        return $this->hasMany(Purchase::class);
+        return $this->hasMany(ItemPurchase::class);
     }
 
 

@@ -75,7 +75,7 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         return $query->exists();
     }
 
-    public function findById($id, $with = ['units', 'units.pricing', 'units.purchase'])
+    public function findById($id, $with = ['units', 'units.pricing', 'units.itemPurchase'])
     {
         $query = $this->model->query();
         $query->with(...$with);

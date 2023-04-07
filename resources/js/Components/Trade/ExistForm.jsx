@@ -91,14 +91,14 @@ export default function ExistForm({
                             unit_id: d.id,
                             unit_name: d.name,
                             price: d.pricing?.price || 0,
-                            price_per_unit: d.purchase?.price_per_unit || 0,
+                            price_per_unit: d.itemPurchase?.price_per_unit || 0,
                         };
                     })
                 );
                 setValue("unit_id", response.data?.units[0]?.id);
                 setValue(
                     "price_per_unit",
-                    response.data?.units[0]?.purchase?.price_per_unit
+                    response.data?.units[0]?.itemPurchase?.price_per_unit
                 );
                 setIsLoading(false);
             })

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('item_purchases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('item_id')->nullable();
-            $table->unsignedBigInteger('checkout_id')->nullable();
+            $table->unsignedBigInteger('purchase_id')->nullable();
             $table->unsignedDecimal('bottom_unit_qty', 19, 2)->default(0);
             $table->unsignedDecimal('per_unit_qty', 19, 2);
             $table->unsignedBigInteger('unit_id')->nullable();
@@ -29,7 +29,7 @@ return new class extends Migration
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreign('checkout_id')->references('id')->on('checkouts')
+            $table->foreign('purchase_id')->references('id')->on('purchases')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
 
