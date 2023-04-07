@@ -10,11 +10,18 @@ function DataItem({ data, ...props }) {
     return (
         <div
             {...props}
-            className="my-1 flex cursor-pointer justify-between border-b-2 p-3 text-sm"
+            className="my-1 flex cursor-pointer justify-between border-b-2 p-2 text-sm"
         >
-            <div>{data.name}</div>
-            <div>
-                {data.bottom_unit_qty} {data.bottom_unit.name}
+            <div className="mr-3">{data.name}</div>
+            <div className="flex flex-row-reverse flex-wrap">
+                {data.stock.map((s, si) => (
+                    <div
+                        key={si}
+                        className="mr-2 mb-1 rounded border border-green-400 bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-gray-700 dark:text-green-400"
+                    >
+                        {s}
+                    </div>
+                ))}
             </div>
         </div>
     );

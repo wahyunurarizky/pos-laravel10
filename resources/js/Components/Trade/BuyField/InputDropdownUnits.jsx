@@ -2,7 +2,7 @@ import React from "react";
 import Label from "@/Components/Field/Label";
 import { useBuyForm } from "../NewForm";
 import { useBuy } from "@/Pages/Trade/Buy";
-import Select, { components } from "react-select";
+import Select from "react-select";
 
 export default function InputDropdownUnits({ className, ...props }) {
     const name = "master_unit_id";
@@ -26,17 +26,7 @@ export default function InputDropdownUnits({ className, ...props }) {
                 }),
             };
         }),
-        { custom: true },
     ];
-
-    const CustomOption = (p) => {
-        const { data, innerRef, innerProps } = p;
-        return data.custom ? (
-            <span>Tambah baru disini</span>
-        ) : (
-            <components.Option {...p} />
-        );
-    };
 
     return (
         <div className={className || "group relative z-0 mb-6 w-full"}>
@@ -55,7 +45,6 @@ export default function InputDropdownUnits({ className, ...props }) {
                 options={masterUnitOptions}
                 isClearable={true}
                 isSearchable={false}
-                components={{ Option: CustomOption }}
                 defaultValue={masterUnitOptions.find(
                     (d) => d.value === watch("master_unit_id")
                 )}

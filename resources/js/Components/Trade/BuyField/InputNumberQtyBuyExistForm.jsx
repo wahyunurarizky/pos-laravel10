@@ -46,6 +46,14 @@ export default function InputNumberQtyBuyExistForm({ className }) {
                         watch("units").find((d) => d.unit_id == e.target.value)
                             ?.price_per_unit
                     );
+                    setValue(
+                        "total",
+                        (
+                            Math.round(
+                                watch(name) * watch("price_per_unit") * 100
+                            ) / 100
+                        ).toFixed(2)
+                    );
                 }}
             >
                 {watch("units").map((d, i) => (

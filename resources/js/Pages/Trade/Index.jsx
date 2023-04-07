@@ -78,9 +78,18 @@ export default function Index({ auth, items, q, flash }) {
                                                 >
                                                     {d.name}
                                                 </th>
-                                                <td className="px-6 py-4">
-                                                    {d.bottom_unit_qty}{" "}
-                                                    {d.bottom_unit.name}
+                                                <td className="flex px-6 py-4">
+                                                    {d.stock
+                                                        .slice(0)
+                                                        .reverse()
+                                                        .map((s, si) => (
+                                                            <div
+                                                                key={si}
+                                                                className="mr-2 rounded border border-green-400 bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-gray-700 dark:text-green-400"
+                                                            >
+                                                                {s}
+                                                            </div>
+                                                        ))}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <a

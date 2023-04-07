@@ -12,9 +12,9 @@ const BuyContext = createContext();
 
 export default function Buy({ auth, master_units }) {
     const [box, setBox] = useState([{ edit: true }]);
-    const ref = useRef(null);
+    const [total, setTotal] = useState(null);
 
-    console.log("box", box);
+    const ref = useRef(null);
 
     const updateBox = (data, i) => {
         const boxTemp = [...box];
@@ -24,7 +24,6 @@ export default function Buy({ auth, master_units }) {
     };
 
     const { errors } = usePage().props;
-    console.log(errors);
 
     const addNew = () => {
         setBox([...box, { edit: true }]);
@@ -49,8 +48,11 @@ export default function Buy({ auth, master_units }) {
 
     const submit = (seller_id) => {
         router.post(route("trade.buy.store"), {
-            items: box,
-            seller_id,
+            items: box.map((d) => ({ ...d, seller_id })),
+            total: box.reduce(
+                (accumulator, currentValue) => accumulator + currentValue.total,
+                0
+            ),
         });
     };
 
@@ -120,8 +122,8 @@ export default function Buy({ auth, master_units }) {
                                                 {d.isNew
                                                     ? d.unit_name
                                                     : d.units.find(
-                                                          (d) =>
-                                                              d.unit_id ==
+                                                          (data) =>
+                                                              data.unit_id ==
                                                               d.unit_id
                                                       )?.unit_name}
                                             </div>
@@ -136,14 +138,6 @@ export default function Buy({ auth, master_units }) {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* <button
-                                        onClick={(e) => {
-                                            deleteBox(e, i);
-                                        }}
-                                        className="ml-5 h-7 w-7 flex-none rounded-xl bg-black hover:scale-125"
-                                    >
-                                        <TrashIcon className="m-auto h-5 w-5 text-white" />
-                                    </button> */}
                                 </div>
                             )
                         )}

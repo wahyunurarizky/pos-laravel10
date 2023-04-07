@@ -20,6 +20,7 @@ class ItemResource extends JsonResource
             'bottom_unit_qty' => floatval($this->bottom_unit_qty),
             'sub_name' => $this->sub_name,
             'bottom_unit' => $this->whenLoaded('bottomUnit'),
+            'stock' => $this->getStock(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

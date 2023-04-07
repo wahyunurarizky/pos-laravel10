@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('item_id')->nullable();
+            $table->unsignedBigInteger('checkout_id')->nullable();
             $table->unsignedDecimal('bottom_unit_qty', 19, 2)->default(0);
             $table->unsignedDecimal('per_unit_qty', 19, 2);
             $table->unsignedBigInteger('unit_id')->nullable();
@@ -25,6 +26,10 @@ return new class extends Migration
             $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('item_id')->references('id')->on('items')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->foreign('checkout_id')->references('id')->on('checkouts')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
 

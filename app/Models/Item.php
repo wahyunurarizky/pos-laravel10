@@ -22,7 +22,7 @@ class Item extends Model
 
     public function units(): HasMany
     {
-        return $this->hasMany(Unit::class);
+        return $this->hasMany(Unit::class)->orderBy('id', 'ASC');
     }
 
     public function purchases(): HasMany
@@ -34,5 +34,15 @@ class Item extends Model
     public function bottomUnit()
     {
         return $this->hasOne(Unit::class)->orderBy('id', 'DESC');
+    }
+
+    public function topUnit()
+    {
+        return $this->hasOne(Unit::class)->orderBy('id', 'ASC');
+    }
+
+    public function getStock()
+    {
+        return $this->bottomUnit->calcParent($this->bottom_unit_qty);
     }
 }

@@ -90,8 +90,8 @@ export default function ExistForm({
                         return {
                             unit_id: d.id,
                             unit_name: d.name,
-                            price: d.pricing?.price,
-                            price_per_unit: d.purchase?.price_per_unit,
+                            price: d.pricing?.price || 0,
+                            price_per_unit: d.purchase?.price_per_unit || 0,
                         };
                     })
                 );
@@ -122,8 +122,21 @@ export default function ExistForm({
                 "loading..."
             ) : (
                 <FormProvider {...method}>
-                    <div className="w-full rounded-md bg-white">
+                    <div className="mb-4 w-full rounded-md bg-white">
                         nama: {d.apiData?.name}
+                        <h3>keterangan</h3>
+                        <ul>
+                            {d.apiData?.units.map(
+                                (u, ind, arr) =>
+                                    arr[ind + 1] && (
+                                        <li key={ind}>
+                                            1 {u.name} ={" "}
+                                            {arr[ind + 1]?.parent_ref_qty}{" "}
+                                            {arr[ind + 1]?.name}
+                                        </li>
+                                    )
+                            )}
+                        </ul>
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <InputNumberQtyBuyExistForm />

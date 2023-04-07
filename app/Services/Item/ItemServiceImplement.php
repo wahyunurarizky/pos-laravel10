@@ -4,6 +4,7 @@ namespace App\Services\Item;
 
 use LaravelEasyRepository\Service;
 use App\Repositories\Item\ItemRepository;
+use App\Repositories\Purchase\PurchaseRepository;
 use Error;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -15,15 +16,14 @@ class ItemServiceImplement extends Service implements ItemService
      * don't change $this->itemRepository variable name
      * because used in extends service class
      */
-    protected $itemRepository;
 
-    public function __construct(ItemRepository $itemRepository)
+    public function __construct(protected ItemRepository $itemRepository)
     {
-        $this->itemRepository = $itemRepository;
     }
 
     public function getAllPaginate($perPage, $q)
     {
+
         $validator = Validator::make(['perPage' => $perPage, 'q' => $q], [
             'perPage' => 'required|numeric|max:100',
         ]);

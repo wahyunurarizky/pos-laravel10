@@ -62,29 +62,31 @@ export default function Checkout({ submit }) {
                     </button>
                     <div className="p-6">
                         <table className="w-full text-left">
-                            <tr>
-                                <th className="border-b-2" colSpan={4}>
-                                    Order Details
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Dji Sam Soe</td>
-                                <td>@Rp 33000</td>
-                                <td>Rp 120,000</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Dji Sam Soe</td>
-                                <td>@Rp 33000</td>
-                                <td>Rp 120,000</td>
-                            </tr>
-                            <tr className="border-t-2">
-                                <td colSpan={3} className="font-bold">
-                                    TOTAL
-                                </td>
-                                <td>Rp 120.000</td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <th className="border-b-2" colSpan={4}>
+                                        Order Details
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Dji Sam Soe</td>
+                                    <td>@Rp 33000</td>
+                                    <td>Rp 120,000</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Dji Sam Soe</td>
+                                    <td>@Rp 33000</td>
+                                    <td>Rp 120,000</td>
+                                </tr>
+                                <tr className="border-t-2">
+                                    <td colSpan={3} className="font-bold">
+                                        TOTAL
+                                    </td>
+                                    <td>Rp 120.000</td>
+                                </tr>
+                            </tbody>
                         </table>
 
                         <CreatableSelect

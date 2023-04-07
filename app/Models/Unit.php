@@ -58,17 +58,25 @@ class Unit extends Model
         return $this->hasOne(Purchase::class)->latest('created_at');
     }
 
-    public function getEqualParentStock()
+    public function calcParent($qty)
     {
-        return $this->calcParent($this->grandparent);
+
+        if ($this->parent) {
+            $div = intdiv($qty, $this->parent_ref_qty ?? 1);
+            $num = $qty % $this->parent_ref_qty;
+            return [$num . " " . $this->name, ...$this->parent->calcParent($div)];
+        }
+        return [floatval($qty) . " " .  $this->name];
     }
 
-    function calcParent($unit)
+    public function calcChild($qty)
     {
-        if ($unit->grandparent) {
-            return $unit->name . ", " . $this->calcParent($unit->grandparent);
-        } else {
-            return $unit->name;
+
+        if ($this->children) {
+            $num = intdiv($qty, $this->children->parent_ref_qty ?? 1);
+            $mod = $qty % $this->children->parent_ref_qty ?? 1;
+            return $num . ' ' . $this->name . ', ' . $this->children->calcChild($mod);
         }
+        return floatval(number_format($qty, 2)) . ' ' . $this->name;
     }
 }
