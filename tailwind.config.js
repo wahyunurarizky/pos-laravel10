@@ -14,6 +14,9 @@ module.exports = {
             fontFamily: {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
             },
+            transitionProperty: {
+                height: "height",
+            },
             colors: {
                 mycolor: {
                     light: "#67e8f9",

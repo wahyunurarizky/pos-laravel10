@@ -7,6 +7,9 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import BuyOption from "@/Components/Trade/BuyOption";
 import Checkout from "@/Components/Trade/Button/Checkout";
+import ListItemPurchase from "@/Components/Trade/BuyField/ListItemPurchase";
+import { Transition } from "@headlessui/react";
+import clsx from "clsx";
 
 const BuyContext = createContext();
 
@@ -55,11 +58,20 @@ export default function Buy({ auth, master_units }) {
         });
     };
 
+    const [test, setTest] = useState(false);
+
+    console.log(box);
+
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="Beli Barang" />
             <div className="p-6 pb-16">
-                <div className="mb-2 flex justify-between">
+                <div
+                    className="ease mb-2 flex justify-between"
+                    onClick={() => {
+                        setTest((p) => !p);
+                    }}
+                >
                     <Link href={route("trade.index")}>
                         <PrimaryButton className="">Back</PrimaryButton>
                     </Link>
@@ -69,77 +81,54 @@ export default function Buy({ auth, master_units }) {
                     >
                         Beli Barang
                     </h3>
+                    <div
+                        class={`w-2 overflow-hidden bg-blue-500 transition-all duration-500 ${
+                            test ? "max-h-40" : "max-h-0"
+                        }`}
+                    >
+                        <div>a</div>
+                        <div>b</div>
+                        <div>c</div>
+                        <div>c</div>
+                        <div>c</div>
+                    </div>
                 </div>
 
-                <BuyContext.Provider value={{ master_units, box }}>
+                <BuyContext.Provider value={{ master_units, box, setBox }}>
                     {box.length > 0 &&
-                        box.map((d, i) =>
-                            d.edit ? (
-                                <BuyOption
-                                    key={i}
-                                    updateBox={(data) => {
-                                        updateBox(data, i);
-                                    }}
-                                    deleteBox={() => {
-                                        deleteBox(i);
-                                    }}
-                                    minimizeBox={() => {
-                                        minimizeBox(i);
-                                    }}
-                                    i={i}
-                                    d={d}
-                                />
-                            ) : (
+                        box.map((d, i) => (
+                            <div className=" w-full">
                                 <div
-                                    onClick={() => {
-                                        if (!box.find((d) => !d.isSaved)) {
-                                            setBox(
-                                                box.map((data, index) => {
-                                                    const edit = index === i;
-                                                    return {
-                                                        ...data,
-                                                        edit,
-                                                    };
-                                                })
-                                            );
-                                        } else {
-                                            toast.error(
-                                                "ada pembelian yg belum disimpan"
-                                            );
-                                        }
-                                    }}
-                                    key={i}
-                                    className="mb-2 flex w-full cursor-pointer items-center rounded-md bg-white p-2 shadow-md hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-100 active:bg-gray-100"
+                                    className={clsx(
+                                        d.edit ? "max-h-[1000px]" : "max-h-0",
+                                        "overflow-hidden transition-all duration-500"
+                                    )}
                                 >
-                                    <div className="w-full">
-                                        <div className="font-bold">
-                                            {d.isNew ? d.name : d.apiData?.name}
-                                        </div>
-                                        <div className="flex cursor-pointer items-end text-sm">
-                                            <div className="basis-1/6 pr-2">
-                                                {d.per_unit_qty}{" "}
-                                                {d.isNew
-                                                    ? d.unit_name
-                                                    : d.units.find(
-                                                          (data) =>
-                                                              data.unit_id ==
-                                                              d.unit_id
-                                                      )?.unit_name}
-                                            </div>
-                                            <div className="flex-grow basis-1/3 pl-2 text-right">
-                                                @Rp{" "}
-                                                {currencyFormat(
-                                                    d.price_per_unit
-                                                ) || "-"}
-                                            </div>
-                                            <div className="flex-grow basis-1/3 pl-2 text-right">
-                                                Rp {currencyFormat(d.total)}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <BuyOption
+                                        key={i}
+                                        updateBox={(data) => {
+                                            updateBox(data, i);
+                                        }}
+                                        deleteBox={() => {
+                                            deleteBox(i);
+                                        }}
+                                        minimizeBox={() => {
+                                            minimizeBox(i);
+                                        }}
+                                        i={i}
+                                        d={d}
+                                    />
                                 </div>
-                            )
-                        )}
+                                <div
+                                    className={clsx(
+                                        !d.edit ? "max-h-[1000px]" : "max-h-0",
+                                        "overflow-hidden transition-opacity duration-500"
+                                    )}
+                                >
+                                    <ListItemPurchase key={i} d={d} i={i} />
+                                </div>
+                            </div>
+                        ))}
                     {box.filter((v) => {
                         return v.edit === true;
                     }).length === 0 && (

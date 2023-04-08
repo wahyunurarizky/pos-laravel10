@@ -4,8 +4,10 @@ import ExistForm from "./ExistForm";
 import NewForm from "./NewForm";
 import { useBuy } from "@/Pages/Trade/Buy";
 import { toast } from "react-toastify";
+import { Transition } from "@headlessui/react";
 
 export default function BuyOption({ updateBox, d, deleteBox, minimizeBox }) {
+    if (!d.edit) return;
     const [isForm, setIsForm] = useState(Boolean(d.total > 0));
     const { box } = useBuy();
 

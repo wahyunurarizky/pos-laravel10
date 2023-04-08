@@ -109,7 +109,7 @@ export default function ExistForm({
     }, []);
 
     return (
-        <div className="shadow-0 mb-2 w-full rounded-md bg-white p-2">
+        <div className="shadow-0 mb-2 w-full rounded-md bg-white p-2 ">
             {d.total > 0 && <Minimize minimizeBox={minimizeBox} />}
             <div className="mb-5 flex justify-between align-top">
                 <Edit editButtonClick={editButtonClick} />
@@ -117,7 +117,6 @@ export default function ExistForm({
 
                 <Delete deleteButtonClick={deleteButtonClick} />
             </div>
-
             {isLoading ? (
                 "loading..."
             ) : (
