@@ -6,7 +6,12 @@ import { useBuyForm } from "../NewForm";
 import { usePage } from "@inertiajs/react";
 import { useBuy } from "@/Pages/Trade/Buy";
 
-export default function InputTextName({ className, setNameIsUsed, ...props }) {
+export default function InputTextName({
+    className,
+    setNameIsUsed,
+    setIsDisabled,
+    ...props
+}) {
     const [isLoadingNameCheck, setIsLoadingNameCheck] = useState(false);
     const name = "name";
     const labelName = "nama";
@@ -48,6 +53,7 @@ export default function InputTextName({ className, setNameIsUsed, ...props }) {
                         setNameIsUsed(true);
                     }
 
+                    setIsDisabled(false);
                     setIsLoadingNameCheck(false);
                 })
                 .catch((_error) => {
@@ -67,6 +73,7 @@ export default function InputTextName({ className, setNameIsUsed, ...props }) {
             <input
                 {...register(name, {
                     onChange: (e) => {
+                        setIsDisabled(true);
                         setIsLoadingNameCheck(true);
                         checkUniqueName(e.target.value?.toUpperCase());
                     },

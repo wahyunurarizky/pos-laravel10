@@ -58,20 +58,13 @@ export default function Buy({ auth, master_units }) {
         });
     };
 
-    const [test, setTest] = useState(false);
-
     console.log(box);
 
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="Beli Barang" />
             <div className="p-6 pb-16">
-                <div
-                    className="ease mb-2 flex justify-between"
-                    onClick={() => {
-                        setTest((p) => !p);
-                    }}
-                >
+                <div className="ease mb-2 flex justify-between">
                     <Link href={route("trade.index")}>
                         <PrimaryButton className="">Back</PrimaryButton>
                     </Link>
@@ -81,31 +74,19 @@ export default function Buy({ auth, master_units }) {
                     >
                         Beli Barang
                     </h3>
-                    <div
-                        class={`w-2 overflow-hidden bg-blue-500 transition-all duration-500 ${
-                            test ? "max-h-40" : "max-h-0"
-                        }`}
-                    >
-                        <div>a</div>
-                        <div>b</div>
-                        <div>c</div>
-                        <div>c</div>
-                        <div>c</div>
-                    </div>
                 </div>
 
                 <BuyContext.Provider value={{ master_units, box, setBox }}>
                     {box.length > 0 &&
                         box.map((d, i) => (
-                            <div className=" w-full">
+                            <div className=" w-full" key={i}>
                                 <div
                                     className={clsx(
-                                        d.edit ? "max-h-[1000px]" : "max-h-0",
+                                        d.edit ? "max-h-[2000px]" : "max-h-0",
                                         "overflow-hidden transition-all duration-500"
                                     )}
                                 >
                                     <BuyOption
-                                        key={i}
                                         updateBox={(data) => {
                                             updateBox(data, i);
                                         }}
@@ -121,11 +102,16 @@ export default function Buy({ auth, master_units }) {
                                 </div>
                                 <div
                                     className={clsx(
-                                        !d.edit ? "max-h-[1000px]" : "max-h-0",
+                                        !d.edit ? "max-h-[2000px]" : "max-h-0",
                                         "overflow-hidden transition-opacity duration-500"
                                     )}
                                 >
-                                    <ListItemPurchase key={i} d={d} i={i} />
+                                    <ListItemPurchase
+                                        d={d}
+                                        i={i}
+                                        box={box}
+                                        setBox={setBox}
+                                    />
                                 </div>
                             </div>
                         ))}

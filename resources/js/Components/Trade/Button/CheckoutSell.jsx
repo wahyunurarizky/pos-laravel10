@@ -1,43 +1,12 @@
 import Modal from "@/Components/Modal";
 import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import CreatableSelect from "react-select/creatable";
 
-export default function Checkout({ submit }) {
+export default function CheckoutSell({ submit }) {
     const [showModal, setShowModal] = useState(false);
-    const [options, setOptions] = useState([]);
 
     const closeModal = () => {
         setShowModal(false);
-    };
-
-    useEffect(() => {
-        axios.get(route("api.seller.index")).then((r) => {
-            setOptions(r.data.map((d) => ({ label: d.name, value: d.id })));
-        });
-    }, []);
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [value, setValue] = useState();
-
-    const handleCreate = (inputValue) => {
-        setIsLoading(true);
-        axios
-            .post(
-                route("api.seller.store", {
-                    name: inputValue,
-                })
-            )
-            .then((r) => {
-                const newData = { label: r.data.name, value: r.data.id };
-                setOptions((prev) => [...prev, newData]);
-                setValue(newData);
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                setIsLoading(false);
-            });
     };
 
     return (
@@ -47,9 +16,8 @@ export default function Checkout({ submit }) {
                 onClick={() => {
                     setShowModal(true);
                 }}
-                disabled={showModal}
             >
-                BELI
+                JUAL
             </button>
             <Modal show={showModal} onClose={closeModal}>
                 <div className="w-full basis-1 rounded-lg bg-white shadow dark:bg-gray-700">
@@ -90,19 +58,9 @@ export default function Checkout({ submit }) {
                             </tbody>
                         </table>
 
-                        <CreatableSelect
-                            isClearable
-                            isDisabled={isLoading}
-                            isLoading={isLoading}
-                            onChange={(newValue) => setValue(newValue)}
-                            onCreateOption={handleCreate}
-                            options={options}
-                            value={value}
-                        />
-
                         <button
                             onClick={() => {
-                                submit(value?.value);
+                                submit();
                                 setShowModal(false);
                             }}
                             type="button"

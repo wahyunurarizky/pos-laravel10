@@ -13,23 +13,8 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id')->nullable();
-            $table->unsignedDecimal('bottom_unit_qty');
-            $table->unsignedDecimal('per_unit_qty');
-            $table->unsignedBigInteger('unit_id')->nullable();
-            $table->unsignedDecimal('price_per_unit');
-            $table->unsignedDecimal('total');
-            $table->string('sub_name')->nullable();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent();
-
-            $table->foreign('item_id')->references('id')->on('items')
-                ->nullOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->foreign('unit_id')->references('id')->on('units')
-                ->nullOnDelete()
-                ->cascadeOnUpdate();
+            $table->unsignedDecimal('total', 19, 2)->default(0);
+            $table->timestamps();
         });
     }
 

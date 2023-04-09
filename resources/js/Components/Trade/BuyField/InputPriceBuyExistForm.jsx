@@ -4,7 +4,11 @@ import CurrencyInput from "react-currency-input-field";
 import { useBuyForm } from "../ExistForm";
 
 export default function InputPriceBuyExistForm({ className, inputByTotal }) {
-    const { watch, setValue } = useBuyForm();
+    const {
+        watch,
+        setValue,
+        formState: { errors },
+    } = useBuyForm();
     const labelName = `Harga beli per ${
         watch("units").find((d) => d.unit_id == watch("unit_id"))?.unit_name
     }`;
@@ -39,6 +43,9 @@ export default function InputPriceBuyExistForm({ className, inputByTotal }) {
                 disabled={inputByTotal}
                 step={1}
             />
+            <span className="block text-sm text-red-500">
+                {errors.price_per_unit?.message}
+            </span>
         </div>
     );
 }

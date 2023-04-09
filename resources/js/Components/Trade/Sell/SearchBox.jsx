@@ -26,7 +26,7 @@ function DataItem({ data, ...props }) {
     );
 }
 
-export default function SearchBox() {
+export default function SearchBox({ makeExistForm, deleteButtonClick }) {
     const searchInputElement = useRef(null);
 
     const [searchValue, setSearchValue] = useState("");
@@ -104,7 +104,11 @@ export default function SearchBox() {
                             onChange={onChangeSearchValue}
                         />
                     </div>
-                    <button className="flex-none">
+                    <button
+                        type="button"
+                        className="flex-none"
+                        onClick={deleteButtonClick}
+                    >
                         <TrashIcon className="h-7 w-7 pl-2 " />
                     </button>
                 </div>
@@ -121,7 +125,7 @@ export default function SearchBox() {
                                 data={data}
                                 key={data.id}
                                 onClick={() => {
-                                    // makeExistForm(data.id);
+                                    makeExistForm(data.id);
                                 }}
                             />
                         ))}

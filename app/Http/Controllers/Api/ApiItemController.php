@@ -48,4 +48,17 @@ class ApiItemController extends Controller
             ], $th->getCode() ?: 500);
         }
     }
+
+    public function checkAvailableStock(Request $request)
+    {
+        try {
+            $res =  $this->itemService->checkAvailableStock($request->unit_id, $request->per_unit_qty);
+
+            return response()->json($res);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ], $th->getCode() ?: 500);
+        }
+    }
 }

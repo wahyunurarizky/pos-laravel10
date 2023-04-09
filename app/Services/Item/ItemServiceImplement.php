@@ -2,6 +2,7 @@
 
 namespace App\Services\Item;
 
+use App\Models\Unit;
 use LaravelEasyRepository\Service;
 use App\Repositories\Item\ItemRepository;
 use App\Repositories\Purchase\PurchaseRepository;
@@ -73,5 +74,14 @@ class ItemServiceImplement extends Service implements ItemService
     public function findByIdWithPricing(int $id)
     {
         return $this->itemRepository->findById($id, ['units', 'units.pricing', 'units.itemPurchase']);
+    }
+    public function checkAvailableStock($unit_id, $per_unit_qty)
+    {
+        $unit = Unit::find($unit_id);
+        $per_unit_bottom_qty_calc = $unit->calcQtyBottomUnit($per_unit_qty);
+
+        $bottom_unit_qty = $unit->item->bottom_unit_qty;
+
+        return $per_unit_bottom_qty_calc <= $bottom_unit_qty;
     }
 }

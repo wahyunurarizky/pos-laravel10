@@ -79,4 +79,12 @@ class Unit extends Model
         }
         return floatval(number_format($qty, 2)) . ' ' . $this->name;
     }
+
+    public function calcQtyBottomUnit($qty)
+    {
+        if ($this->children) {
+            return $qty * $this->children->calcQtyBottomUnit($this->children->parent_ref_qty);
+        }
+        return $qty;
+    }
 }

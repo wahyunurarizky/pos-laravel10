@@ -80,6 +80,6 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         $query = $this->model->query();
         $query->with(...$with);
 
-        return $query->findOrFail($id);
+        return new ItemResource($query->findOrFail($id));
     }
 }

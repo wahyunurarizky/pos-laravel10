@@ -23,6 +23,7 @@ class ItemResource extends JsonResource
             'stock' => $this->getStock(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'units' => $this->whenLoaded('units'),
         ];
     }
 }

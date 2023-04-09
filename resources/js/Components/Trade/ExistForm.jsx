@@ -22,7 +22,7 @@ const schema = yup
         ),
         unit_id: yup.number().required(),
         per_unit_qty: yup.string().required(),
-        price_per_unit: yup.number().required(),
+        price_per_unit: yup.number().required().positive("the total not valid"),
         total: yup.number().positive("the total not valid"),
     })
     .required();
@@ -91,14 +91,15 @@ export default function ExistForm({
                             unit_id: d.id,
                             unit_name: d.name,
                             price: d.pricing?.price || 0,
-                            price_per_unit: d.itemPurchase?.price_per_unit || 0,
+                            price_per_unit:
+                                d.item_purchase?.price_per_unit || 0,
                         };
                     })
                 );
                 setValue("unit_id", response.data?.units[0]?.id);
                 setValue(
                     "price_per_unit",
-                    response.data?.units[0]?.itemPurchase?.price_per_unit
+                    response.data?.units[0]?.item_purchase?.price_per_unit
                 );
                 setIsLoading(false);
             })

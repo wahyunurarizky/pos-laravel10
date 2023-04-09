@@ -34,10 +34,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('trade/buy', [TradeController::class, 'createBuy'])->name('trade.buy.store');
 
     Route::get('/trade/sell', [TradeController::class, 'sell'])->name('trade.sell');
-    // Route::post('trade/sell', [TradeController::class, 'createSell'])->name('trade.buy.store');
+    Route::post('trade/sell', [TradeController::class, 'createSell'])->name('trade.sell.store');
 
     Route::post('/api/items/search', [ApiItemController::class, 'index'])->name('api.items.index');
     Route::post('/api/items/check-unique-name', [ApiItemController::class, 'checkUniqueName'])->name('api.items.check-unique-name');
+    Route::post('/api/items/check-available-stock', [ApiItemController::class, 'checkAvailableStock'])->name('api.items.check-available-stock');
     Route::get('/api/items/{id}', [ApiItemController::class, 'show'])->name('api.items.show');
 
     Route::get('/api/seller', [ApiSellerController::class, 'index'])->name('api.seller.index');

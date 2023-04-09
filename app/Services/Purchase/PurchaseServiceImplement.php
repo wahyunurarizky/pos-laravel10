@@ -43,7 +43,7 @@ class PurchaseServiceImplement extends Service implements PurchaseService
             '*.units.*.name' => 'required|string',
         ], [
             '*.units.*.parent_ref_qty' => 'input tidak valid',
-        ])->validate();
+        ])->stopOnFirstFailure()->validate();
     }
     public function validateOldItems($oldItemBuyValidates)
     {
@@ -56,7 +56,7 @@ class PurchaseServiceImplement extends Service implements PurchaseService
             '*.units.*.unit_id' => 'required|numeric',
             '*.units.*.price' => 'required|numeric',
             '*.units.*.unit_name' => 'required|string',
-        ])->validate();
+        ])->stopOnFirstFailure()->validate();
     }
 
     public function insertNewItem($newItemBuys)

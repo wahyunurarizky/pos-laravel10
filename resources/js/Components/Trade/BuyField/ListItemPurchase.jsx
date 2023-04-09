@@ -3,10 +3,9 @@ import { Transition } from "@headlessui/react";
 import React from "react";
 import { toast } from "react-toastify";
 
-export default function ListItemPurchase({ d, i }) {
+export default function ListItemPurchase({ d, i, box, setBox }) {
     if (d.edit) return;
 
-    const { box, setBox } = useBuy();
     const currencyFormat = (num) => {
         return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };

@@ -29,7 +29,7 @@ const schema = yup
         ),
         sub_name: yup.array().of(yup.string()),
         per_unit_qty: yup.string().required(),
-        price_per_unit: yup.number().required(),
+        price_per_unit: yup.number().required().positive("the total not valid"),
         total: yup.number().positive("the total not valid"),
     })
     .required();
@@ -57,12 +57,19 @@ export default function NewForm({
         resolver: yupResolver(schema),
     });
 
-    const { register, handleSubmit, watch, setError } = method;
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = method;
 
+    const [isDisabled, setIsDisabled] = useState(false);
     const [inputByTotal, setInputByTotal] = useState(d.inputByTotal || false);
     const [nameIsUsed, setNameIsUsed] = useState(false);
 
     const onSubmit = (data) => {
+        console.log(data);
         if (nameIsUsed) {
             setError(
                 "name",
@@ -82,6 +89,8 @@ export default function NewForm({
 
     register("units");
 
+    console.log(errors);
+
     return (
         <div className="shadow-0 mb-2 w-full rounded-md bg-white p-2">
             {d.total > 0 && <Minimize minimizeBox={minimizeBox} />}
@@ -96,7 +105,10 @@ export default function NewForm({
             <FormProvider {...method}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     {/* NAME */}
-                    <InputTextName setNameIsUsed={setNameIsUsed} />
+                    <InputTextName
+                        setNameIsUsed={setNameIsUsed}
+                        setIsDisabled={setIsDisabled}
+                    />
                     {/* SUB NAME */}
                     <InputDropdownSubName />
                     {watch("name") && (
@@ -132,6 +144,7 @@ export default function NewForm({
 
                     <button
                         type="submit"
+                        disabled={isDisabled}
                         className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
                     >
                         Simpan

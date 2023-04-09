@@ -14,4 +14,6 @@ interface ItemService extends BaseService
     public function checkNameAlreadyExists(string $name): bool;
 
     public function findByIdWithPricing(int $id);
+
+    public function checkAvailableStock($unit_id, $per_unit_qty);
 }
