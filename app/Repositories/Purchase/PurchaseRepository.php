@@ -4,7 +4,8 @@ namespace App\Repositories\Purchase;
 
 use LaravelEasyRepository\Repository;
 
-interface PurchaseRepository extends Repository{
+interface PurchaseRepository extends Repository
+{
 
-    // Write something awesome :)
+    public function paginate($n, $q);
 }

@@ -1,12 +1,16 @@
 import { router } from "@inertiajs/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import _debounce from "lodash/debounce";
 
 export default function Search({ q }) {
     const [value, setValue] = useState(q || "");
 
-    const search = () => {
-        router.get(route(route().current(), { page: 1, q: value }));
-    };
+    const search = useCallback(
+        _debounce((value) => {
+            router.get(route(route().current(), { page: 1, q: value }));
+        }, 500),
+        []
+    );
 
     return (
         <div className="bg-white pb-4 dark:bg-gray-900">
@@ -30,18 +34,14 @@ export default function Search({ q }) {
                     </svg>
                 </div>
                 <input
+                    autoFocus
                     type="text"
                     id="table-search"
                     value={value}
                     onChange={(e) => {
                         setValue(e.target.value);
+                        search(e.target.value);
                     }}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            search();
-                        }
-                    }}
-                    onBlur={search}
                     className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:w-80"
                     placeholder="Search for items"
                 />

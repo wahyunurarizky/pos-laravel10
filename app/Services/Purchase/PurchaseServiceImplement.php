@@ -2,6 +2,7 @@
 
 namespace App\Services\Purchase;
 
+use App\Http\Resources\ItemPurchaseResource;
 use App\Models\Item;
 use App\Models\ItemPurchase;
 use App\Models\Pricing;
@@ -17,14 +18,14 @@ class PurchaseServiceImplement extends Service implements PurchaseService
 {
 
     /**
-     * don't change $this->mainRepository variable name
+     * don't change $this->purchaseRepository variable name
      * because used in extends service class
      */
-    protected $mainRepository;
+    protected $purchaseRepository;
 
-    public function __construct(PurchaseRepository $mainRepository)
+    public function __construct(PurchaseRepository $purchaseRepository)
     {
-        $this->mainRepository = $mainRepository;
+        $this->purchaseRepository = $purchaseRepository;
     }
 
     public function validateNewItems($newItemValidates)
@@ -160,5 +161,17 @@ class PurchaseServiceImplement extends Service implements PurchaseService
             return $model->parent_ref_qty * $this->calcChildren($model->children);
         }
         return $model->parent_ref_qty;
+    }
+
+    public function getAllPaginate($perPage, $q)
+    {
+
+        $validator = Validator::make(['perPage' => $perPage, 'q' => $q], [
+            'perPage' => 'required|numeric|max:100',
+        ]);
+
+        $validator->validate();
+
+        return $this->purchaseRepository->paginate($perPage, $q);
     }
 }

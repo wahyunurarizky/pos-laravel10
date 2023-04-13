@@ -32,6 +32,15 @@ export default function Index({ auth, items, q, flash }) {
                         <ButtonMain className="mb-3 w-full">Beli</ButtonMain>
                     </Link>
                     <div className="mt-10">
+                        <div className="flex justify-between">
+                            <Link href={route("trade.history-sell")}>
+                                history jual
+                            </Link>
+                            <Link href={route("trade.history-buy")}>
+                                history beli
+                            </Link>
+                        </div>
+                        <h3 className="font-bold">Data Dagangan Saat Ini</h3>
                         <Search q={q} />
                         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                             <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">

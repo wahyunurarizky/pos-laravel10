@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\ItemPurchase;
 use App\Models\ItemSale;
 use App\Models\MasterUnit;
 use App\Models\Pricing;
@@ -201,5 +202,23 @@ class TradeController extends Controller
             return $model->parent_ref_qty * $this->calcChildren($model->children);
         }
         return $model->parent_ref_qty;
+    }
+
+    public function historyBuy(Request $request)
+    {
+        $q = $request->q;
+        $page = $request->page;
+        $perPage = $request->per_page ?? 10;
+
+        $item_purchases = $this->purchaseService->getAllPaginate($perPage, $q);
+        if ($page > $item_purchases->lastPage()) {
+            return to_route('trade.history-buy', ['q' => $q]);
+        }
+
+        return Inertia::render('Trade/HistoryBuy', ['item_purchases' => $item_purchases, 'q' => $q]);
+    }
+    public function historySell()
+    {
+        return Inertia::render('Trade/HistorySell');
     }
 }

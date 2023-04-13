@@ -11,4 +11,6 @@ interface PurchaseService extends BaseService
 
     public function insertOldItem($oldItemBuys);
     public function insertNewItem($newItemBuys);
+
+    public function getAllPaginate($perPage, $q);
 }
