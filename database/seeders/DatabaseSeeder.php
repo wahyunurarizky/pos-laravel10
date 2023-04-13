@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             BalanceSeeder::class,
             MasterUnitSeeder::class,
-            ItemSeeder::class,
-            SellerSeeder::class
+            // ItemSeeder::class,
+            // SellerSeeder::class
         ]);
     }
 }

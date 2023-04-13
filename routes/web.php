@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/api/items/check-unique-name', [ApiItemController::class, 'checkUniqueName'])->name('api.items.check-unique-name');
     Route::post('/api/items/check-available-stock', [ApiItemController::class, 'checkAvailableStock'])->name('api.items.check-available-stock');
     Route::get('/api/items/{id}', [ApiItemController::class, 'show'])->name('api.items.show');
+    Route::put('/api/items/{id}', [ApiItemController::class, 'update'])->name('api.items.update');
 
     Route::get('/api/seller', [ApiSellerController::class, 'index'])->name('api.seller.index');
     Route::post('/api/seller', [ApiSellerController::class, 'store'])->name('api.seller.store');

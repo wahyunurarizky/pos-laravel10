@@ -12,6 +12,7 @@ import Minimize from "../Button/Minimize";
 import InputNumberQtySell from "../SellField/InputNumberQtySell";
 import InputPriceSell from "../SellField/InputPriceSell";
 import InputPriceTotal from "../SellField/InputPriceTotal";
+import InputSubName from "../SellField/InputSubName";
 
 export const useSellForm = useFormContext;
 
@@ -27,6 +28,7 @@ const schema = yup
         per_unit_qty: yup.string().required(),
         price_per_unit: yup.number().required().positive("the total not valid"),
         total: yup.number().positive("the total not valid"),
+        sub_name: yup.string(),
     })
     .required();
 
@@ -49,6 +51,7 @@ export default function Form({
             units: d.units || [],
             price_per_unit: d.price_per_unit || 0,
             total: d.total || 0,
+            sub_name: "",
         },
         shouldFocusError: true,
         mode: "onSubmit",
@@ -153,6 +156,12 @@ export default function Form({
                         <p>Stok tersedia: {d.apiData?.stock.join(", ")}</p>
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)}>
+                        <InputSubName
+                            options={d.apiData?.sub_name.map((d) => ({
+                                value: d,
+                                label: d,
+                            }))}
+                        />
                         <InputNumberQtySell
                             setIsDisabled={setIsDisabled}
                             setStockNotAvailable={setStockNotAvailable}

@@ -4,16 +4,49 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import Paginate from "@/Components/Table/Paginate";
 import Search from "@/Components/Table/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Index({ auth, items, q, flash }) {
+    const [showDetail, setShowDetail] = useState(false);
+    const [loadingDetail, setLoadingDetail] = useState(false);
+    const [dataDetail, setDataDetail] = useState(null);
+    const [isEdit, setIsEdit] = useState(false);
+
+    const closeModal = () => {
+        setShowDetail(false);
+    };
+
+    const { data, setData, post, processing, errors, put } = useForm({
+        name: "",
+    });
+
+    const showDetailItem = (id) => {
+        axios
+            .get(route("api.items.show", id))
+            .then((d) => {
+                setDataDetail(d.data);
+                setData("name", d.data.name);
+                setShowDetail(true);
+                setLoadingDetail(false);
+            })
+            .catch((e) => {
+                console.log(e);
+                setLoadingDetail(false);
+            });
+    };
+
     useEffect(() => {
         if (flash.message) {
             toast.success(flash.message);
         }
     }, []);
+
+    function submit(e) {
+        e.preventDefault();
+        put(route("api.items.update", dataDetail.id));
+    }
 
     return (
         <AuthenticatedLayout auth={auth} className>
@@ -89,18 +122,22 @@ export default function Index({ auth, items, q, flash }) {
                                                         ))}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
-                                                    <a
-                                                        href="#"
+                                                    <button
                                                         className="mr-1 font-medium text-blue-600 hover:underline dark:text-blue-500"
+                                                        disabled={loadingDetail}
+                                                        onClick={(e) => {
+                                                            setLoadingDetail(
+                                                                true
+                                                            );
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
+                                                            showDetailItem(
+                                                                d.id
+                                                            );
+                                                        }}
                                                     >
                                                         Lihat
-                                                    </a>
-                                                    <a
-                                                        href="#"
-                                                        className="font-medium text-blue-600 hover:underline dark:text-blue-500"
-                                                    >
-                                                        Edit
-                                                    </a>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))
@@ -122,7 +159,57 @@ export default function Index({ auth, items, q, flash }) {
                         ) : (
                             ""
                         )}
+                        <p>
+                            yang bisa diedit: nama, master unit, qty unitnya
+                            gan, sub_name udah itu aja wkwk
+                        </p>
                     </div>
+                    <Modal show={showDetail} onClose={closeModal}>
+                        {dataDetail && (
+                            <div>
+                                <div className="px-3">{dataDetail.name}</div>
+                                <ul>
+                                    {dataDetail.units?.map(
+                                        (u, ind, arr) =>
+                                            arr[ind + 1] && (
+                                                <li key={ind}>
+                                                    1 {u.name} ={" "}
+                                                    {
+                                                        arr[ind + 1]
+                                                            ?.parent_ref_qty
+                                                    }{" "}
+                                                    {arr[ind + 1]?.name}
+                                                </li>
+                                            )
+                                    )}
+                                </ul>
+                                <div>stok: {dataDetail.stock?.join(", ")}</div>
+                                <div>
+                                    setara dengan {dataDetail.bottom_unit_qty}{" "}
+                                    {dataDetail.bottom_unit?.name}
+                                </div>
+                                <button
+                                    onClick={(e) => {
+                                        setIsEdit((p) => !p);
+                                    }}
+                                >
+                                    edit
+                                </button>
+                                {isEdit && (
+                                    <form onSubmit={submit}>
+                                        <input
+                                            value={data.name}
+                                            onChange={(e) => {
+                                                setData("name", e.target.value);
+                                            }}
+                                            type="name"
+                                        />
+                                        <button type="submit">save</button>
+                                    </form>
+                                )}
+                            </div>
+                        )}
+                    </Modal>
                 </div>
             </div>
         </AuthenticatedLayout>

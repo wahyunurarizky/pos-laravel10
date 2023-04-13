@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('item_sales', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('item_id')->nullable();
-            $table->unsignedDecimal('bottom_unit_qty');
-            $table->unsignedDecimal('per_unit_qty');
+            $table->unsignedDecimal('bottom_unit_qty', 19, 2);
+            $table->unsignedDecimal('per_unit_qty', 19, 2);
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->unsignedBigInteger('sale_id')->nullable();
-            $table->unsignedDecimal('price_per_unit');
-            $table->unsignedDecimal('total');
+            $table->unsignedDecimal('price_per_unit', 19, 2);
+            $table->unsignedDecimal('total', 19, 2);
             $table->string('sub_name')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
