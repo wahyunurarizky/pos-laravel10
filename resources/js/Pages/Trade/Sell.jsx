@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import SearchBox from "@/Components/Trade/Sell/SearchBox";
@@ -43,8 +43,21 @@ export default function Sell({ auth }) {
         return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };
 
+    function handleBeforeUnload(e) {
+        e.preventDefault();
+        e.returnValue = "";
+    }
+
+    useEffect(() => {
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
+
     const submit = () => {
-        router.post(route("trade.sell.store"), {
+        router.post(route("items.sell.save"), {
             items: box,
             total: box.reduce(
                 (accumulator, currentValue) => accumulator + currentValue.total,
@@ -61,8 +74,19 @@ export default function Sell({ auth }) {
             <Head title="Jual Barang" />
             <div className="p-6 pb-16">
                 <div className="mb-2 flex justify-between">
-                    <Link href={route("trade.index")}>
-                        <PrimaryButton className="">Back</PrimaryButton>
+                    <Link href={route("items.index")}>
+                        <PrimaryButton
+                            onClick={(e) => {
+                                if (
+                                    !confirm(
+                                        "Are you sure you want to leave this page?"
+                                    )
+                                )
+                                    e.preventDefault();
+                            }}
+                        >
+                            Back
+                        </PrimaryButton>
                     </Link>
                     <h3
                         className="text-3xl font-bold text-mycolor-dark"

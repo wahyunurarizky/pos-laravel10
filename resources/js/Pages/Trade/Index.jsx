@@ -58,10 +58,10 @@ export default function Index({ auth, items, q, flash }) {
                     </Link>
                 </div>
                 <div className="my-4 rounded-md bg-white p-4">
-                    <Link href={route("trade.sell")}>
+                    <Link href={route("items.sell")}>
                         <ButtonMain className="mb-3 w-full">Jual</ButtonMain>
                     </Link>
-                    <Link href={route("trade.buy")}>
+                    <Link href={route("items.buy")}>
                         <ButtonMain className="mb-3 w-full">Beli</ButtonMain>
                     </Link>
                     <div className="mt-10">

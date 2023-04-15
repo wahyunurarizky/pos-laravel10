@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Repositories\Purchase;
+namespace App\Repositories;
 
 use App\Http\Resources\ItemPurchaseResource;
-use App\Models\Item;
 use App\Models\ItemPurchase;
-use LaravelEasyRepository\Implementations\Eloquent;
 
-class PurchaseRepositoryImplement extends Eloquent implements PurchaseRepository
+class ItemPurchaseRepository
 {
 
     /**
@@ -17,7 +15,7 @@ class PurchaseRepositoryImplement extends Eloquent implements PurchaseRepository
      */
     protected $itemPurchase;
 
-    public function __construct(Item $item, ItemPurchase $itemPurchase)
+    public function __construct(ItemPurchase $itemPurchase)
     {
         $this->itemPurchase = $itemPurchase;
     }
@@ -35,11 +33,21 @@ class PurchaseRepositoryImplement extends Eloquent implements PurchaseRepository
             });
         }
 
-        $query->with('seller', 'unit');
+        $query->with('unit');
 
         $query->orderBy('updated_at', 'desc');
 
 
         return ItemPurchaseResource::collection($query->paginate($n)->withQueryString());
+    }
+
+    public function create($data)
+    {
+        return $this->itemPurchase->create($data);
+    }
+
+    public function createBulk($data)
+    {
+        return $this->itemPurchase->insert($data);
     }
 }

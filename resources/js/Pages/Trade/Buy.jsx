@@ -1,8 +1,9 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import { useState, createContext, useContext, useRef } from "react";
+import { useState, createContext, useContext, useRef, useEffect } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import _ from "lodash";
 
 import { toast } from "react-toastify";
 import BuyOption from "@/Components/Trade/BuyOption";
@@ -25,8 +26,6 @@ export default function Buy({ auth, master_units }) {
         ref.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    const { errors } = usePage().props;
-
     const addNew = () => {
         setBox([...box, { edit: true }]);
     };
@@ -48,25 +47,56 @@ export default function Buy({ auth, master_units }) {
         return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };
 
+    function handleBeforeUnload(e) {
+        e.preventDefault();
+        e.returnValue = "";
+    }
+
+    useEffect(() => {
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
+
     const submit = (seller_id) => {
-        router.post(route("trade.buy.store"), {
-            items: box.map((d) => ({ ...d, seller_id })),
+        router.post(route("items.buy.save"), {
+            items: box,
             total: box.reduce(
                 (accumulator, currentValue) => accumulator + currentValue.total,
                 0
             ),
+            seller_id,
         });
     };
 
-    console.log(box);
+    const { errors } = usePage().props;
+
+    useEffect(() => {
+        if (!_.isEmpty(errors)) {
+            toast.error(_.values(errors).join(", "));
+        }
+    }, [errors]);
 
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="Beli Barang" />
             <div className="p-6 pb-16">
                 <div className="ease mb-2 flex justify-between">
-                    <Link href={route("trade.index")}>
-                        <PrimaryButton className="">Back</PrimaryButton>
+                    <Link href={route("items.index")}>
+                        <PrimaryButton
+                            onClick={(e) => {
+                                if (
+                                    !confirm(
+                                        "Are you sure you want to leave this page?"
+                                    )
+                                )
+                                    e.preventDefault();
+                            }}
+                        >
+                            Back
+                        </PrimaryButton>
                     </Link>
                     <h3
                         className="text-3xl font-bold text-mycolor-dark"

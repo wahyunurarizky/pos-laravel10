@@ -17,7 +17,7 @@ export default function HistoryBuy({ auth, item_purchases, q }) {
             <div className="p-6">
                 <div>
                     <Head title="Riwayat Beli" />
-                    <Link href={route("trade.index")}>
+                    <Link href={route("items.index")}>
                         <PrimaryButton className="m-2">Back</PrimaryButton>
                     </Link>
                 </div>

@@ -1,31 +1,25 @@
 <?php
 
-namespace App\Repositories\Item;
+namespace App\Repositories;
 
 use App\Http\Resources\ItemResource;
-use LaravelEasyRepository\Implementations\Eloquent;
 use App\Models\Item;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
-class ItemRepositoryImplement extends Eloquent implements ItemRepository
+class ItemRepository
 {
 
-    /**
-     * Model class to be used in this repository for the common methods inside Eloquent
-     * Don't remove or change $this->model variable name
-     * @property Model|mixed $model;
-     */
-    protected $model;
-
-    public function __construct(Item $model)
+    public function __construct(protected Item $item)
     {
-        $this->model = $model;
+    }
+
+    public function create($data)
+    {
+        return $this->item->create($data);
     }
 
     public function paginate($n, $q)
     {
-        $query = $this->model->query();
+        $query = $this->item->query();
 
         // searching
         if ($q) {
@@ -37,12 +31,13 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
         // populate bottomUnit
         $query->with('bottomUnit');
 
+
         return ItemResource::collection($query->paginate($n)->withQueryString());
     }
 
     public function findAll(array $where, int $limit, string|null $q)
     {
-        $query = $this->model->query();
+        $query = $this->item->query();
         // searching
         if ($q) {
             $query->where('name', 'LIKE', "%$q%");
@@ -67,7 +62,7 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
 
     public function checkExistBy(array $q): bool
     {
-        $query = $this->model->query();
+        $query = $this->item->query();
         if (!empty($query)) {
             $query->where($q);
         }
@@ -77,9 +72,16 @@ class ItemRepositoryImplement extends Eloquent implements ItemRepository
 
     public function findById($id, $with = ['units', 'units.pricing', 'units.itemPurchase'])
     {
-        $query = $this->model->query();
+        $query = $this->item->query();
         $query->with(...$with);
 
         return new ItemResource($query->findOrFail($id));
+    }
+
+
+    public function updateById($id, $data)
+    {
+        $item = $this->item->findOrFail($id);
+        return $item->update($data);
     }
 }

@@ -1,23 +1,14 @@
 <?php
 
-namespace App\Services\Item;
+namespace App\Services;
 
 use App\Models\Unit;
-use LaravelEasyRepository\Service;
-use App\Repositories\Item\ItemRepository;
-use App\Repositories\Purchase\PurchaseRepository;
+use App\Repositories\ItemRepository;
 use Error;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class ItemServiceImplement extends Service implements ItemService
+class ItemService
 {
-
-    /**
-     * don't change $this->itemRepository variable name
-     * because used in extends service class
-     */
-
     public function __construct(protected ItemRepository $itemRepository)
     {
     }

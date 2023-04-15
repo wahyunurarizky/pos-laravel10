@@ -13,6 +13,7 @@ import InputPriceEstimatedSell from "./BuyField/InputPriceEstimatedSell";
 import Edit from "./Button/Edit";
 import Delete from "./Button/Delete";
 import Minimize from "./Button/Minimize";
+import { usePage } from "@inertiajs/react";
 
 export const useBuyForm = useFormContext;
 
@@ -61,6 +62,7 @@ export default function NewForm({
         register,
         handleSubmit,
         watch,
+        setError,
         formState: { errors },
     } = method;
 
@@ -88,8 +90,6 @@ export default function NewForm({
     };
 
     register("units");
-
-    console.log(errors);
 
     return (
         <div className="shadow-0 mb-2 w-full rounded-md bg-white p-2">

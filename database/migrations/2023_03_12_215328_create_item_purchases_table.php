@@ -20,7 +20,6 @@ return new class extends Migration
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->unsignedDecimal('price_per_unit', 19, 2);
             $table->unsignedDecimal('total', 19, 2);
-            $table->unsignedBigInteger('seller_id')->nullable();
             $table->unsignedDecimal('bottom_unit_qty_left', 19, 2)->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
@@ -30,10 +29,6 @@ return new class extends Migration
                 ->cascadeOnUpdate();
 
             $table->foreign('purchase_id')->references('id')->on('purchases')
-                ->nullOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->foreign('seller_id')->references('id')->on('sellers')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
 

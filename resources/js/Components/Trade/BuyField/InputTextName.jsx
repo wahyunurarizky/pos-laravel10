@@ -42,8 +42,6 @@ export default function InputTextName({
                         setNameIsUsed(false);
                     }
 
-                    console.log(box);
-
                     if (box.some((el) => el.name === value)) {
                         setError(
                             "name",
@@ -53,6 +51,8 @@ export default function InputTextName({
                         setNameIsUsed(true);
                     }
 
+                    console.log("keren");
+
                     setIsDisabled(false);
                     setIsLoadingNameCheck(false);
                 })
@@ -60,7 +60,7 @@ export default function InputTextName({
                     // setItems([]);
                     setIsLoadingNameCheck(false);
                 });
-        }, 1000),
+        }, 500),
         []
     );
 

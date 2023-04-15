@@ -3,14 +3,16 @@
 namespace App\Rules;
 
 use App\Models\Item;
-use App\Repositories\Item\ItemRepositoryImplement;
-use App\Services\Item\ItemService;
-use App\Services\Item\ItemServiceImplement;
+use App\Services\ItemService;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class ItemNameShouldNotExist implements ValidationRule
 {
+
+    function __construct(private ItemService $itemService)
+    {
+    }
 
     /**
      * Run the validation rule.
@@ -19,7 +21,7 @@ class ItemNameShouldNotExist implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $nameIsExist = (new ItemServiceImplement(new ItemRepositoryImplement(new Item())))->checkNameAlreadyExists($value);
+        $nameIsExist = $this->itemService->checkNameAlreadyExists($value);
         if ($nameIsExist) {
             $fail('The :attribute already exists');
         }

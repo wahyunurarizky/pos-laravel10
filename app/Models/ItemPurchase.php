@@ -19,10 +19,7 @@ class ItemPurchase extends Model
         return $this->belongsTo(Item::class, 'item_id', 'id');
     }
 
-    public function seller(): BelongsTo
-    {
-        return $this->belongsTo(Seller::class, 'seller_id', 'id');
-    }
+
 
     public function unit(): BelongsTo
     {

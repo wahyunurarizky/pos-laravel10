@@ -16,7 +16,6 @@ class ItemPurchaseResource extends JsonResource
     {
         return [
             'unit' => $this->whenLoaded('unit'),
-            'seller' => $this->whenLoaded('seller'),
             ...parent::toArray($request)
         ];
     }

@@ -1,37 +1,52 @@
 <?php
 
-namespace App\Services\Purchase;
+namespace App\Services;
 
-use App\Http\Resources\ItemPurchaseResource;
-use App\Models\Item;
-use App\Models\ItemPurchase;
-use App\Models\Pricing;
-use App\Models\Purchase;
-use App\Models\Unit;
-use LaravelEasyRepository\Service;
-use App\Repositories\Purchase\PurchaseRepository;
+use App\Repositories\ItemPurchaseRepository;
+use App\Repositories\ItemRepository;
+use App\Repositories\PricingRepository;
+use App\Repositories\PurchaseRepository;
+use App\Repositories\UnitRepository;
 use App\Rules\ItemNameShouldNotExist;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
-class PurchaseServiceImplement extends Service implements PurchaseService
+class PurchaseService
 {
 
-    /**
-     * don't change $this->purchaseRepository variable name
-     * because used in extends service class
-     */
-    protected $purchaseRepository;
-
-    public function __construct(PurchaseRepository $purchaseRepository)
-    {
-        $this->purchaseRepository = $purchaseRepository;
+    public function __construct(
+        protected ItemRepository $itemRepository,
+        protected ItemPurchaseRepository $itemPurchaseRepository,
+        protected PurchaseRepository $purchaseRepository,
+        protected UnitRepository $unitRepository,
+        protected PricingRepository $pricingRepository,
+        protected ItemNameShouldNotExist $itemNameShouldNotExist
+    ) {
     }
 
-    public function validateNewItems($newItemValidates)
+    public function buyNewAndOldItems($newItemValidates, $oldItemBuyValidates, $purchaseData, $newItemBuys, $oldItemBuys)
+    {
+        $this->validateNewItems($newItemValidates);
+        $this->validateOldItems($oldItemBuyValidates);
+
+        $purchase = $this->purchaseRepository->create($purchaseData);
+
+        $oldItemBuys = collect($oldItemBuys)->map(function ($item) use ($purchase) {
+            $item['purchase_id'] = $purchase->id;
+            return $item;
+        });
+        $newItemBuys = collect($newItemBuys)->map(function ($item) use ($purchase) {
+            $item['purchase_id'] = $purchase->id;
+            return $item;
+        });
+
+        $this->insertNewItem($newItemBuys);
+        $this->insertOldItem($oldItemBuys);
+    }
+
+    private function validateNewItems($newItemValidates)
     {
         Validator::make($newItemValidates, [
-            '*.name' => ['required', 'max:100', new ItemNameShouldNotExist],
+            '*.name' => ['required', 'max:100', $this->itemNameShouldNotExist],
             '*.per_unit_qty' => 'required|numeric',
             '*.price_per_unit' => 'required|numeric',
             '*.master_unit_id' => 'required|numeric',
@@ -46,7 +61,7 @@ class PurchaseServiceImplement extends Service implements PurchaseService
             '*.units.*.parent_ref_qty' => 'input tidak valid',
         ])->stopOnFirstFailure()->validate();
     }
-    public function validateOldItems($oldItemBuyValidates)
+    private function validateOldItems($oldItemBuyValidates)
     {
         Validator::make($oldItemBuyValidates, [
             '*.per_unit_qty' => 'required|numeric',
@@ -60,19 +75,21 @@ class PurchaseServiceImplement extends Service implements PurchaseService
         ])->stopOnFirstFailure()->validate();
     }
 
-    public function insertNewItem($newItemBuys)
+    private function insertNewItem($newItemBuys)
     {
         foreach ($newItemBuys as $data) {
-            $item = Item::create([
-                'name' => $data['name'],
-                'master_unit_id' => $data['master_unit_id'],
-                'sub_name' => $data['sub_name'],
-            ]);
+            $item = $this->itemRepository->create(
+                [
+                    'name' => $data['name'],
+                    'master_unit_id' => $data['master_unit_id'],
+                    'sub_name' => $data['sub_name'],
+                ]
+            );
 
             $tempUnit = null;
             $unitPurchase = null;
             foreach ($data['units'] as $unit) {
-                $tempUnit = Unit::create([
+                $tempUnit = $this->unitRepository->create([
                     'name' => $unit['name'],
                     'parent_id' => $tempUnit ? $tempUnit->id : $tempUnit,
                     'parent_ref_qty' => $unit['parent_ref_qty'],
@@ -83,18 +100,18 @@ class PurchaseServiceImplement extends Service implements PurchaseService
                     $unitPurchase = $tempUnit;
                 }
 
-                Pricing::create([
+                $this->pricingRepository->create([
                     'unit_id' => $tempUnit->id,
                     'price' => $unit['price'],
                 ]);
             }
 
             $bottomUnitQty = $data['per_unit_qty'];
-            if ($unitPurchase->children) {
+            if ($unitPurchase?->children) {
                 $bottomUnitQty = $bottomUnitQty * $this->calcChildren($unitPurchase->children);
             }
 
-            ItemPurchase::create([
+            $this->itemPurchaseRepository->create([
                 'item_id' => $item->id,
                 'unit_id' => $unitPurchase->id,
                 'per_unit_qty' => $data['per_unit_qty'],
@@ -102,40 +119,38 @@ class PurchaseServiceImplement extends Service implements PurchaseService
                 'total' => $data['total'],
                 'bottom_unit_qty' => $bottomUnitQty,
                 'bottom_unit_qty_left' => $bottomUnitQty,
-                'seller_id' => $data['seller_id'],
                 'purchase_id' => $data['purchase_id'],
             ]);
 
-            $item->update([
+            $this->itemRepository->updateById($item->id, [
                 'bottom_unit_qty' => $bottomUnitQty
             ]);
         }
     }
 
-    public function insertOldItem($oldItemBuys)
+    private function insertOldItem($oldItemBuys)
     {
-        ItemPurchase::insert(collect($oldItemBuys)->map(function ($d) {
+        $items = collect($oldItemBuys)->map(function ($d) {
             $bottomUnitQty = $d['per_unit_qty'];
-            $unitPurchase = Unit::find($d['unit_id']);
+            $unitPurchase = $this->unitRepository->findById($d['unit_id']);
             if ($unitPurchase->children) {
                 $bottomUnitQty = $bottomUnitQty * $this->calcChildren($unitPurchase->children);
             }
 
-
             collect($d['units'])->each(function ($unit) {
-                $price = Pricing::where('unit_id', $unit['unit_id'])->latest('created_at')->first();
+                $price = $this->pricingRepository->findOne(['unit_id' => $unit['unit_id']]);
 
                 if ($price->price != $unit['price']) {
-                    Pricing::create([
+                    $this->pricingRepository->create([
                         'unit_id' => $unit['unit_id'],
                         'price' => $unit['price'],
                     ]);
                 }
             });
 
-            $item = Item::find($d['item_id']);
+            $item = $this->itemRepository->findById($d['item_id']);
 
-            $item->update([
+            $this->itemRepository->updateById($item->id, [
                 'bottom_unit_qty' => $bottomUnitQty + $item->bottom_unit_qty
             ]);
 
@@ -145,17 +160,18 @@ class PurchaseServiceImplement extends Service implements PurchaseService
                 'unit_id' => $d['unit_id'],
                 'price_per_unit' => $d['price_per_unit'],
                 'total' => $d['total'],
-                'seller_id' => $d['seller_id'],
                 'bottom_unit_qty' => $bottomUnitQty,
                 'bottom_unit_qty_left' => $bottomUnitQty,
                 'purchase_id' => $d['purchase_id'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
-        })->toArray());
+        })->toArray();
+
+        $this->itemPurchaseRepository->createBulk($items);
     }
 
-    function calcChildren($model)
+    private function calcChildren($model)
     {
         if ($model->children) {
             return $model->parent_ref_qty * $this->calcChildren($model->children);
@@ -163,7 +179,7 @@ class PurchaseServiceImplement extends Service implements PurchaseService
         return $model->parent_ref_qty;
     }
 
-    public function getAllPaginate($perPage, $q)
+    public function getAllItemPurchasePaginate($perPage, $q)
     {
 
         $validator = Validator::make(['perPage' => $perPage, 'q' => $q], [
@@ -172,6 +188,6 @@ class PurchaseServiceImplement extends Service implements PurchaseService
 
         $validator->validate();
 
-        return $this->purchaseRepository->paginate($perPage, $q);
+        return $this->itemPurchaseRepository->paginate($perPage, $q);
     }
 }

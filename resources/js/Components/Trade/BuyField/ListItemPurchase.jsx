@@ -30,8 +30,13 @@ export default function ListItemPurchase({ d, i, box, setBox }) {
             className="mb-2 flex w-full cursor-pointer items-center rounded-md bg-white p-2 shadow-md hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-100 active:bg-gray-100"
         >
             <div className="w-full">
-                <div className="font-bold">
+                <div className="relative font-bold">
                     {d.isNew ? d.name : d.apiData?.name}
+                    {d.isNew && (
+                        <div className="absolute top-0 right-0 font-light text-yellow-600">
+                            new
+                        </div>
+                    )}
                 </div>
                 <div className="flex cursor-pointer items-end text-sm">
                     <div className="basis-1/6 pr-2">

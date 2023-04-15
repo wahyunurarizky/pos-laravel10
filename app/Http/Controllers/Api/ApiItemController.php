@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
-use App\Services\Item\ItemService;
+use App\Services\ItemService;
 use Illuminate\Http\Request;
 
 class ApiItemController extends Controller
