@@ -2,7 +2,7 @@ import { useState } from "react";
 import SearchBox from "./SearchBox";
 import ExistForm from "./ExistForm";
 import NewForm from "./NewForm";
-import { useBuy } from "@/Pages/Trade/Buy";
+import { useBuy } from "@/Pages/Item/Buy";
 import { toast } from "react-toastify";
 import { Transition } from "@headlessui/react";
 

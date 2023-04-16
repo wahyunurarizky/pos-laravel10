@@ -41,6 +41,15 @@ class PurchaseService
 
         $this->insertNewItem($newItemBuys);
         $this->insertOldItem($oldItemBuys);
+
+        $totalOldItem = collect($oldItemBuys)->reduce(function ($accumulator, $currentValue) {
+            return $accumulator + $currentValue['total'];
+        }, 0);
+        $totalNewItem = collect($newItemBuys)->reduce(function ($accumulator, $currentValue) {
+            return $accumulator + $currentValue['total'];
+        }, 0);
+
+        $this->purchaseRepository->updateById($purchase->id, ['total' => $totalOldItem + $totalNewItem]);
     }
 
     private function validateNewItems($newItemValidates)
@@ -186,7 +195,7 @@ class PurchaseService
             'perPage' => 'required|numeric|max:100',
         ]);
 
-        $validator->validate();
+        $validator->stopOnFirstFailure()->validate();
 
         return $this->itemPurchaseRepository->paginate($perPage, $q);
     }

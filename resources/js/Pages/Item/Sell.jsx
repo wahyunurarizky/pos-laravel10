@@ -8,6 +8,7 @@ import ListItemPurchase from "@/Components/Trade/BuyField/ListItemPurchase";
 import clsx from "clsx";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import CheckoutSell from "@/Components/Trade/Button/CheckoutSell";
+import _ from "lodash";
 
 const SellContext = createContext();
 
@@ -67,7 +68,11 @@ export default function Sell({ auth }) {
     };
 
     const { errors } = usePage().props;
-    console.log(errors);
+    useEffect(() => {
+        if (!_.isEmpty(errors)) {
+            toast.error(_.values(errors).join(", "));
+        }
+    }, [errors]);
 
     return (
         <AuthenticatedLayout auth={auth} className>

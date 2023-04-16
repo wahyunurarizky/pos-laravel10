@@ -88,13 +88,15 @@ export default function HistoryBuy({ auth, item_purchases, q }) {
 
                                                 <td>
                                                     {moment(
-                                                        d?.created_at
+                                                        d.purchase.created_at
                                                     ).format(
-                                                        "DD MMMM YYYY, hh:mm:ss"
+                                                        "DD MMMM YYYY, hh:mm"
                                                     )}
                                                 </td>
 
-                                                <td>{d?.seller?.name}</td>
+                                                <td>
+                                                    {d.purchase.seller?.name}
+                                                </td>
                                                 <td>
                                                     {Number(
                                                         Number(

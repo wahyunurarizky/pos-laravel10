@@ -35,6 +35,7 @@ class SaleService
             '*.unit_id' => 'required|numeric',
         ])->stopOnFirstFailure()->validate();
 
+        // TODO using validation
         collect($items)->each(function ($d) {
             $available = $this->itemService->checkAvailableStock($d['unit_id'], $d['per_unit_qty']);
             if (!$available) {
@@ -63,7 +64,6 @@ class SaleService
             }
 
             $pricing = $this->pricingRepository->firstOrCreate(['unit_id' => $d['unit_id']]);
-
 
             if (floatval($pricing->price) != floatval($d['price_per_unit']))
                 $this->pricingRepository->updateById($pricing->id, ['price' => $d['price_per_unit']]);

@@ -20,7 +20,7 @@ class PurchaseController extends Controller
     public function buy()
     {
         $master_units = $this->masterUnit->findAll();
-        return Inertia::render('Trade/Buy', ['master_units' => $master_units]);
+        return Inertia::render('Item/Buy', ['master_units' => $master_units]);
     }
 
     public function saveBuy(Request $request)
@@ -67,12 +67,11 @@ class PurchaseController extends Controller
             }
         }
 
-        $dataPurchase = [
-            'total' => $request->total,
+        $purchaseData = [
             'seller_id' => $request->seller_id
         ];
 
-        $this->purchaseService->buyNewAndOldItems($newItemValidates, $oldItemValidates, $dataPurchase, $newItemBuys, $oldItemBuys);
+        $this->purchaseService->buyNewAndOldItems($newItemValidates, $oldItemValidates, $purchaseData, $newItemBuys, $oldItemBuys);
 
         return to_route('items.index')->with('message', 'berhasil menambahkan data');
     }

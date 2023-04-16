@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Form from "./Form";
 import SearchBox from "./SearchBox";
-import { useSell } from "@/Pages/Trade/Sell";
+import { useSell } from "@/Pages/Item/Sell";
 import { toast } from "react-toastify";
 
 export default function SellOption({ updateBox, d, deleteBox, minimizeBox }) {

@@ -1,7 +1,7 @@
 import React from "react";
 import Label from "@/Components/Field/Label";
 import { useBuyForm } from "../NewForm";
-import { useBuy } from "@/Pages/Trade/Buy";
+import { useBuy } from "@/Pages/Item/Buy";
 import Select from "react-select";
 
 export default function InputDropdownUnits({ className, ...props }) {

@@ -33,7 +33,7 @@ class ItemPurchaseRepository
             });
         }
 
-        $query->with('unit');
+        $query->with('unit', 'purchase', 'purchase.seller');
 
         $query->orderBy('updated_at', 'desc');
 

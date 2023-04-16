@@ -15,4 +15,10 @@ class PurchaseRepository
     {
         return $this->purchase->create($data);
     }
+
+    public function updateById($id, $data)
+    {
+        $purchase = $this->purchase->findOrFail($id);
+        return $purchase->update($data);
+    }
 }

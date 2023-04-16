@@ -25,4 +25,9 @@ class ItemPurchase extends Model
     {
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }
+
+    public function purchase(): BelongsTo
+    {
+        return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
+    }
 }

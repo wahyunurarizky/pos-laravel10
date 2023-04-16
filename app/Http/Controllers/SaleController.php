@@ -21,7 +21,7 @@ class SaleController extends Controller
 
     public function sell()
     {
-        return Inertia::render('Trade/Sell');
+        return Inertia::render('Item/Sell');
     }
 
     public function saveSell(Request $request)

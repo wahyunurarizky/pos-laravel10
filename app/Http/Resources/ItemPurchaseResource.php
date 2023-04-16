@@ -15,6 +15,7 @@ class ItemPurchaseResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'purchase' => $this->whenLoaded('purchase'),
             'unit' => $this->whenLoaded('unit'),
             ...parent::toArray($request)
         ];

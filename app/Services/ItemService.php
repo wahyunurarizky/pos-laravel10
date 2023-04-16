@@ -20,7 +20,7 @@ class ItemService
             'perPage' => 'required|numeric|max:100',
         ]);
 
-        $validator->validate();
+        $validator->stopOnFirstFailure()->validate();
 
         return $this->itemRepository->paginate($perPage, $q);
     }
