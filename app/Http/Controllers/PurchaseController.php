@@ -67,10 +67,12 @@ class PurchaseController extends Controller
             }
         }
 
-        $this->purchaseService->buyNewAndOldItems($newItemValidates, $oldItemValidates, [
+        $dataPurchase = [
             'total' => $request->total,
             'seller_id' => $request->seller_id
-        ], $newItemBuys, $oldItemBuys);
+        ];
+
+        $this->purchaseService->buyNewAndOldItems($newItemValidates, $oldItemValidates, $dataPurchase, $newItemBuys, $oldItemBuys);
 
         return to_route('items.index')->with('message', 'berhasil menambahkan data');
     }

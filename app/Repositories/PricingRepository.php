@@ -29,4 +29,15 @@ class PricingRepository
 
         return $q->first();
     }
+
+    public function firstOrCreate($data)
+    {
+        return $this->pricing->firstOrCreate($data);
+    }
+
+    public function updateById($id, $data)
+    {
+        $pricing = $this->pricing->findOrFail($id);
+        return $pricing->update($data);
+    }
 }
