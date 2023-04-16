@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { useSell } from "@/Pages/Item/Sale/Sell";
+import { toast } from "react-toastify";
 import Form from "./Form";
 import SearchBox from "./SearchBox";
-import { useSell } from "@/Pages/Item/Sell";
-import { toast } from "react-toastify";
 
 export default function SellOption({ updateBox, d, deleteBox, minimizeBox }) {
     const [isForm, setIsForm] = useState(Boolean(d.total > 0));

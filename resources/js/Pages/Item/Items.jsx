@@ -66,10 +66,10 @@ export default function Index({ auth, items, q, flash }) {
                     </Link>
                     <div className="mt-10">
                         <div className="flex justify-between">
-                            <Link href={route("trade.history-sell")}>
+                            <Link href={route("items.history-sell")}>
                                 history jual
                             </Link>
-                            <Link href={route("trade.history-buy")}>
+                            <Link href={route("items.history-buy")}>
                                 history beli
                             </Link>
                         </div>

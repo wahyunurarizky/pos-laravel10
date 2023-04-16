@@ -25,7 +25,7 @@ class ItemController extends Controller
             return to_route('items.index', ['q' => $q]);
         }
 
-        return Inertia::render('Item/Index', ['items' => $items, 'q' => $q]);
+        return Inertia::render('Item/Items', ['items' => $items, 'q' => $q]);
     }
 
     public function historyBuy(Request $request)
@@ -36,14 +36,14 @@ class ItemController extends Controller
 
         $item_purchases = $this->purchaseService->getAllItemPurchasePaginate($perPage, $q);
         if ($page > $item_purchases->lastPage()) {
-            return to_route('trade.history-buy', ['q' => $q]);
+            return to_route('items.history-buy', ['q' => $q]);
         }
 
-        return Inertia::render('Item/HistoryBuy', ['item_purchases' => $item_purchases, 'q' => $q]);
+        return Inertia::render('Item/Purchase/History', ['item_purchases' => $item_purchases, 'q' => $q]);
     }
 
     public function historySell()
     {
-        return Inertia::render('Item/HistorySell');
+        return Inertia::render('Item/Sale/History');
     }
 }

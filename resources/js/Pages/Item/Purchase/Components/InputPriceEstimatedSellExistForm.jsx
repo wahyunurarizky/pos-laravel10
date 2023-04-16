@@ -1,9 +1,9 @@
 import Label from "@/Components/Field/Label";
 import React from "react";
-import { useBuyForm } from "../NewForm";
 import CurrencyInput from "react-currency-input-field";
+import { useBuyForm } from "@/Pages/Item/Purchase/Components/ExistForm";
 
-export default function InputPriceEstimatedSell({ className }) {
+export default function InputPriceEstimatedSellExistForm({ className }) {
     const labelName = "Perencanaan Harga Jual";
 
     const { watch, setValue } = useBuyForm();
@@ -14,7 +14,7 @@ export default function InputPriceEstimatedSell({ className }) {
             {watch("units").map((d, i) => (
                 <div className="my-1 flex items-center" key={i}>
                     <label htmlFor="" className="w-40">
-                        harga per {d.name}{" "}
+                        harga per {d.unit_name}{" "}
                     </label>
                     <CurrencyInput
                         allowDecimals

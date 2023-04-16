@@ -1,5 +1,5 @@
 import React from "react";
-import { useBuyForm } from "../NewForm";
+import { useBuyForm } from "@/Pages/Item/Purchase/Components/NewForm";
 import Label from "@/Components/Field/Label";
 import { usePage } from "@inertiajs/react";
 

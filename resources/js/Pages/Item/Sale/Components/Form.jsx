@@ -2,17 +2,13 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-// import InputPriceEstimatedSellExistForm from "./BuyField/InputPriceEstimatedSellExistForm";
-// import InputNumberQtyBuyExistForm from "./BuyField/InputNumberQtyBuyExistForm";
-// import InputPriceBuyExistForm from "./BuyField/InputPriceBuyExistForm";
-// import InputPriceTotalExistForm from "./BuyField/InputPriceTotalExistForm";
-import Edit from "../Button/Edit";
-import Delete from "../Button/Delete";
-import Minimize from "../Button/Minimize";
-import InputNumberQtySell from "../SellField/InputNumberQtySell";
-import InputPriceSell from "../SellField/InputPriceSell";
-import InputPriceTotal from "../SellField/InputPriceTotal";
-import InputSubName from "../SellField/InputSubName";
+import Edit from "@/Components/Trade/Button/Edit";
+import Delete from "@/Components/Trade/Button/Delete";
+import Minimize from "@/Components/Trade/Button/Minimize";
+import InputSubName from "./InputSubName";
+import InputNumberQtySell from "./InputNumberQtySell";
+import InputPriceTotal from "./InputPriceTotal";
+import InputPriceSell from "./InputPriceSell";
 
 export const useSellForm = useFormContext;
 

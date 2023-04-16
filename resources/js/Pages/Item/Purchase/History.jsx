@@ -10,7 +10,7 @@ import "moment/dist/locale/id";
 import { currencyFormat } from "@/Helpers/currencyFormat";
 moment.locale("id");
 
-export default function HistoryBuy({ auth, item_purchases, q }) {
+export default function History({ auth, item_purchases, q }) {
     console.log(item_purchases);
     return (
         <AuthenticatedLayout auth={auth} className>

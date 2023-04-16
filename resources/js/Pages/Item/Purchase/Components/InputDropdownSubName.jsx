@@ -1,8 +1,7 @@
 import Label from "@/Components/Field/Label";
 import React from "react";
-import { Controller } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
-import { useBuyForm } from "../NewForm";
+import { useBuyForm } from "@/Pages/Item/Purchase/Components/NewForm";
 import "react-toggle/style.css"; // for ES6 modules
 
 export default function InputDropdownSubName({ className }) {

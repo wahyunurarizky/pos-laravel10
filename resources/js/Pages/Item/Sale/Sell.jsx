@@ -1,20 +1,17 @@
-import PrimaryButton from "@/Components/PrimaryButton";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import { useState, createContext, useContext, useRef, useEffect } from "react";
+import PrimaryButton from "@/Components/PrimaryButton";
+import SellOption from "@/Pages/Item/Sale/Components/SellOption";
+import ListItemPurchase from "@/Components/Trade/BuyField/ListItemPurchase";
+import clsx from "clsx";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import CheckoutSell from "@/Components/Trade/Button/CheckoutSell";
 import _ from "lodash";
 
-import { toast } from "react-toastify";
-import BuyOption from "@/Components/Trade/BuyOption";
-import Checkout from "@/Components/Trade/Button/Checkout";
-import ListItemPurchase from "@/Components/Trade/BuyField/ListItemPurchase";
-import { Transition } from "@headlessui/react";
-import clsx from "clsx";
+const SellContext = createContext();
 
-const BuyContext = createContext();
-
-export default function Buy({ auth, master_units }) {
+export default function Sell({ auth }) {
     const [box, setBox] = useState([{ edit: true }]);
 
     const ref = useRef(null);
@@ -26,10 +23,6 @@ export default function Buy({ auth, master_units }) {
         ref.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    const addNew = () => {
-        setBox([...box, { edit: true }]);
-    };
-
     const deleteBox = (i) => {
         setBox(box.filter((d, index) => i !== index));
     };
@@ -39,8 +32,11 @@ export default function Buy({ auth, master_units }) {
             ...box[i],
             edit: false,
         };
-        console.log(arr);
         setBox(arr);
+    };
+
+    const addNew = () => {
+        setBox([...box, { edit: true }]);
     };
 
     const currencyFormat = (num) => {
@@ -60,19 +56,17 @@ export default function Buy({ auth, master_units }) {
         };
     }, []);
 
-    const submit = (seller_id) => {
-        router.post(route("items.buy.save"), {
+    const submit = () => {
+        router.post(route("items.sell.save"), {
             items: box,
             total: box.reduce(
                 (accumulator, currentValue) => accumulator + currentValue.total,
                 0
             ),
-            seller_id,
         });
     };
 
     const { errors } = usePage().props;
-
     useEffect(() => {
         if (!_.isEmpty(errors)) {
             toast.error(_.values(errors).join(", "));
@@ -80,10 +74,10 @@ export default function Buy({ auth, master_units }) {
     }, [errors]);
 
     return (
-        <AuthenticatedLayout auth={auth}>
-            <Head title="Beli Barang" />
+        <AuthenticatedLayout auth={auth} className>
+            <Head title="Jual Barang" />
             <div className="p-6 pb-16">
-                <div className="ease mb-2 flex justify-between">
+                <div className="mb-2 flex justify-between">
                     <Link href={route("items.index")}>
                         <PrimaryButton
                             onClick={(e) => {
@@ -102,11 +96,10 @@ export default function Buy({ auth, master_units }) {
                         className="text-3xl font-bold text-mycolor-dark"
                         ref={ref}
                     >
-                        Beli Barang
+                        Jual Barang
                     </h3>
                 </div>
-
-                <BuyContext.Provider value={{ master_units, box, setBox }}>
+                <SellContext.Provider value={{ box, setBox }}>
                     {box.length > 0 &&
                         box.map((d, i) => (
                             <div className=" w-full" key={i}>
@@ -116,7 +109,8 @@ export default function Buy({ auth, master_units }) {
                                         "overflow-hidden transition-all duration-500"
                                     )}
                                 >
-                                    <BuyOption
+                                    <SellOption
+                                        d={d}
                                         updateBox={(data) => {
                                             updateBox(data, i);
                                         }}
@@ -127,7 +121,6 @@ export default function Buy({ auth, master_units }) {
                                             minimizeBox(i);
                                         }}
                                         i={i}
-                                        d={d}
                                     />
                                 </div>
                                 <div
@@ -169,13 +162,13 @@ export default function Buy({ auth, master_units }) {
                                     )}
                                 </span>
                             </div>
-                            <Checkout submit={submit} />
+                            <CheckoutSell submit={submit} />
                         </div>
                     )}
-                </BuyContext.Provider>
+                </SellContext.Provider>
             </div>
         </AuthenticatedLayout>
     );
 }
 
-export const useBuy = () => useContext(BuyContext);
+export const useSell = () => useContext(SellContext);

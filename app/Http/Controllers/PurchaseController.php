@@ -20,7 +20,7 @@ class PurchaseController extends Controller
     public function buy()
     {
         $master_units = $this->masterUnit->findAll();
-        return Inertia::render('Item/Buy', ['master_units' => $master_units]);
+        return Inertia::render('Item/Purchase/Buy', ['master_units' => $master_units]);
     }
 
     public function saveBuy(Request $request)

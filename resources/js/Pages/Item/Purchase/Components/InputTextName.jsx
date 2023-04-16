@@ -2,8 +2,8 @@ import React, { useCallback, useState } from "react";
 import _debounce from "lodash/debounce";
 import axios from "axios";
 import Label from "@/Components/Field/Label";
-import { useBuyForm } from "../NewForm";
-import { useBuy } from "@/Pages/Item/Buy";
+import { useBuyForm } from "@/Pages/Item/Purchase/Components/NewForm";
+import { useBuy } from "@/Pages/Item/Purchase/Buy";
 
 export default function InputTextName({
     className,

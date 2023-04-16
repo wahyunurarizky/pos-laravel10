@@ -2,7 +2,7 @@ import Label from "@/Components/Field/Label";
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import Toggle from "react-toggle";
-import { useBuyForm } from "../ExistForm";
+import { useBuyForm } from "@/Pages/Item/Purchase/Components/ExistForm";
 
 export default function InputPriceTotalExistForm({
     className,

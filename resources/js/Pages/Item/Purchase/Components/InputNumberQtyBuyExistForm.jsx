@@ -1,62 +1,17 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import Label from "@/Components/Field/Label";
-import _debounce from "lodash/debounce";
-import { useSellForm } from "../Sell/Form";
+import { useBuyForm } from "@/Pages/Item/Purchase/Components/ExistForm";
 
-export default function InputNumberQtySell({
-    className,
-    bottom_unit_qty,
-    setStockNotAvailable,
-    setIsDisabled,
-}) {
+export default function InputNumberQtyBuyExistForm({ className }) {
     const {
         watch,
-        setError,
         setValue,
         formState: { errors },
         register,
-        clearErrors,
-    } = useSellForm();
-
-    const [isLoadingAvailableStockCheck, setIsLoadingAvailableStockCheck] =
-        useState(false);
+    } = useBuyForm();
 
     const labelName = "banyaknya";
     const name = "per_unit_qty";
-
-    const checkAvailableStock = useCallback(
-        _debounce((unit_id, per_unit_qty) => {
-            axios
-                .post(
-                    route("api.items.check-available-stock", {
-                        unit_id,
-                        per_unit_qty,
-                        bottom_unit_qty,
-                    })
-                )
-                .then((response) => {
-                    console.log(response.data);
-                    if (response?.data) {
-                        clearErrors("per_unit_qty");
-                        setStockNotAvailable(false);
-                    } else {
-                        setError(
-                            "per_unit_qty",
-                            { message: "stock not available" },
-                            { shouldFocus: true }
-                        );
-                        setStockNotAvailable(true);
-                    }
-                    setIsDisabled(false);
-                    setIsLoadingAvailableStockCheck(false);
-                })
-                .catch((_error) => {
-                    // setItems([]);
-                    setIsLoadingAvailableStockCheck(false);
-                });
-        }, 500),
-        []
-    );
 
     return (
         <div className={className || "group relative z-0 mb-6 w-full"}>
@@ -66,9 +21,6 @@ export default function InputNumberQtySell({
                     setValueAs: (v) => (v === "" ? null : v),
                     // valueAsNumber: true,
                     onChange: (e) => {
-                        setIsLoadingAvailableStockCheck(true);
-                        setIsDisabled(true);
-                        checkAvailableStock(watch("unit_id"), e.target.value);
                         setValue(
                             "total",
                             (
@@ -92,13 +44,9 @@ export default function InputNumberQtySell({
                     setValue(
                         "price_per_unit",
                         watch("units").find((d) => d.unit_id == e.target.value)
-                            ?.price
+                            ?.price_per_unit
                     );
                     setValue("unit_id", e.target.value);
-
-                    setIsLoadingAvailableStockCheck(true);
-                    checkAvailableStock(e.target.value, watch("per_unit_qty"));
-
                     setValue(
                         "total",
                         (
@@ -115,13 +63,9 @@ export default function InputNumberQtySell({
                     </option>
                 ))}
             </select>
-            {isLoadingAvailableStockCheck ? (
-                <span className="absolute text-sm ">mengecek stok...</span>
-            ) : (
-                <span className="block text-sm text-red-500">
-                    {errors.per_unit_qty?.message}
-                </span>
-            )}
+            <span className="block text-sm text-red-500">
+                {errors.per_unit_qty?.message}
+            </span>
         </div>
     );
 }

@@ -2,18 +2,17 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import InputDropdownUnits from "./BuyField/InputDropdownUnits";
-import InputTextName from "./BuyField/InputTextName";
-import InputDropdownSubName from "./BuyField/InputDropdownSubName";
-import InputUnitsDetail from "./BuyField/InputUnitsDetail";
-import InputNumberQtyBuy from "./BuyField/InputNumberQtyBuy";
-import InputPriceBuy from "./BuyField/InputPriceBuy";
-import InputPriceTotal from "./BuyField/InputPriceTotal";
-import InputPriceEstimatedSell from "./BuyField/InputPriceEstimatedSell";
-import Edit from "./Button/Edit";
-import Delete from "./Button/Delete";
-import Minimize from "./Button/Minimize";
-import { usePage } from "@inertiajs/react";
+import InputDropdownUnits from "@/Pages/Item/Purchase/Components/InputDropdownUnits";
+import InputTextName from "@/Pages/Item/Purchase/Components/InputTextName";
+import InputDropdownSubName from "@/Pages/Item/Purchase/Components/InputDropdownSubName";
+import InputUnitsDetail from "@/Pages/Item/Purchase/Components/InputUnitsDetail";
+import InputNumberQtyBuy from "@/Pages/Item/Purchase/Components/InputNumberQtyBuy";
+import InputPriceBuy from "@/Pages/Item/Purchase/Components/InputPriceBuy";
+import InputPriceTotal from "@/Pages/Item/Purchase/Components/InputPriceTotal";
+import InputPriceEstimatedSell from "@/Pages/Item/Purchase/Components/InputPriceEstimatedSell";
+import Edit from "@/Components/Trade/Button/Edit";
+import Delete from "@/Components/Trade/Button/Delete";
+import Minimize from "@/Components/Trade/Button/Minimize";
 
 export const useBuyForm = useFormContext;
 
@@ -30,7 +29,7 @@ const schema = yup
         ),
         sub_name: yup.array().of(yup.string()),
         per_unit_qty: yup.string().required(),
-        price_per_unit: yup.number().required().positive("the total not valid"),
+        price_per_unit: yup.number().required(),
         total: yup.number().positive("the total not valid"),
     })
     .required();

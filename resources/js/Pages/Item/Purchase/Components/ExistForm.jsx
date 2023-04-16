@@ -2,13 +2,13 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import InputPriceEstimatedSellExistForm from "./BuyField/InputPriceEstimatedSellExistForm";
-import InputNumberQtyBuyExistForm from "./BuyField/InputNumberQtyBuyExistForm";
-import InputPriceBuyExistForm from "./BuyField/InputPriceBuyExistForm";
-import InputPriceTotalExistForm from "./BuyField/InputPriceTotalExistForm";
-import Edit from "./Button/Edit";
-import Delete from "./Button/Delete";
-import Minimize from "./Button/Minimize";
+import InputPriceEstimatedSellExistForm from "@/Pages/Item/Purchase/Components/InputPriceEstimatedSellExistForm";
+import InputNumberQtyBuyExistForm from "@/Pages/Item/Purchase/Components/InputNumberQtyBuyExistForm";
+import InputPriceBuyExistForm from "@/Pages/Item/Purchase/Components/InputPriceBuyExistForm";
+import InputPriceTotalExistForm from "@/Pages/Item/Purchase/Components/InputPriceTotalExistForm";
+import Edit from "@/Components/Trade/Button/Edit";
+import Delete from "@/Components/Trade/Button/Delete";
+import Minimize from "@/Components/Trade/Button/Minimize";
 
 export const useBuyForm = useFormContext;
 
@@ -22,7 +22,7 @@ const schema = yup
         ),
         unit_id: yup.number().required(),
         per_unit_qty: yup.string().required(),
-        price_per_unit: yup.number().required().positive("the total not valid"),
+        price_per_unit: yup.number().required(),
         total: yup.number().positive("the total not valid"),
     })
     .required();

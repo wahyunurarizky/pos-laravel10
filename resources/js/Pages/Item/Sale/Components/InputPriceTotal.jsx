@@ -2,7 +2,8 @@ import Label from "@/Components/Field/Label";
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import Toggle from "react-toggle";
-import { useBuyForm } from "../ExistForm";
+import "react-toggle/style.css";
+import { useSellForm } from "./Form";
 
 export default function InputPriceTotal({
     className,
@@ -13,7 +14,7 @@ export default function InputPriceTotal({
         watch,
         setValue,
         formState: { errors },
-    } = useBuyForm();
+    } = useSellForm();
 
     const name = "total";
     const labelName = "total";

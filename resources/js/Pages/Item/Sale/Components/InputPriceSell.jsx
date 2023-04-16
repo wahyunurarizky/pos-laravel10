@@ -1,15 +1,15 @@
 import Label from "@/Components/Field/Label";
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
-import { useBuyForm } from "../ExistForm";
+import { useSellForm } from "./Form";
 
-export default function InputPriceBuyExistForm({ className, inputByTotal }) {
+export default function InputPriceSell({ className, inputByTotal }) {
     const {
         watch,
         setValue,
         formState: { errors },
-    } = useBuyForm();
-    const labelName = `Harga beli per ${
+    } = useSellForm();
+    const labelName = `Harga jual per ${
         watch("units").find((d) => d.unit_id == watch("unit_id"))?.unit_name
     }`;
     const name = "price_per_unit";

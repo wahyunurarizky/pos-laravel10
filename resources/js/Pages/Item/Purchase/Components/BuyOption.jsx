@@ -1,10 +1,9 @@
 import { useState } from "react";
-import SearchBox from "./SearchBox";
-import ExistForm from "./ExistForm";
-import NewForm from "./NewForm";
-import { useBuy } from "@/Pages/Item/Buy";
 import { toast } from "react-toastify";
-import { Transition } from "@headlessui/react";
+import SearchBox from "@/Pages/Item/Purchase/Components/SearchBox";
+import ExistForm from "@/Pages/Item/Purchase/Components/ExistForm";
+import NewForm from "@/Pages/Item/Purchase/Components/NewForm";
+import { useBuy } from "@/Pages/Item/Purchase/Buy";
 
 export default function BuyOption({ updateBox, d, deleteBox, minimizeBox }) {
     if (!d.edit) return;

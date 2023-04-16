@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import _debounce from "lodash/debounce";
 import axios from "axios";
-import ButtonMain from "../ButtonMain";
-import LoadingSpinner from "../LoadingSpinner";
-import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import ButtonMain from "@/Components/ButtonMain";
+import LoadingSpinner from "@/Components/LoadingSpinner";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 function DataItem({ data, ...props }) {
     console.log(data);

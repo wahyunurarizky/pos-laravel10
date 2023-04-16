@@ -1,7 +1,7 @@
 import React from "react";
 import Label from "@/Components/Field/Label";
 import Select from "react-select";
-import { useSellForm } from "../Sell/Form";
+import { useSellForm } from "./Form";
 
 export default function InputSubName({ className, options = [], ...props }) {
     const name = "sub_name";
