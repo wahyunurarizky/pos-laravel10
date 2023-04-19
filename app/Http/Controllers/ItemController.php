@@ -28,22 +28,17 @@ class ItemController extends Controller
         return Inertia::render('Item/Items', ['items' => $items, 'q' => $q]);
     }
 
-    public function historyBuy(Request $request)
+    public function update(Request $request, $id)
     {
-        $q = $request->q;
-        $page = $request->page;
-        $perPage = $request->per_page ?? 10;
+        $this->itemService->updateById($id, $request->all());
 
-        $item_purchases = $this->purchaseService->getAllItemPurchasePaginate($perPage, $q);
-        if ($page > $item_purchases->lastPage()) {
-            return to_route('items.history-buy', ['q' => $q]);
-        }
-
-        return Inertia::render('Item/Purchase/History', ['item_purchases' => $item_purchases, 'q' => $q]);
+        return to_route('items.index')->with('message', 'berhasil mengubah data');
     }
 
-    public function historySell()
+    public function destroy(Request $request, $id)
     {
-        return Inertia::render('Item/Sale/History');
+        $this->itemService->deleteById($id);
+
+        return to_route('items.index')->with('message', 'berhasil menghapus data');
     }
 }

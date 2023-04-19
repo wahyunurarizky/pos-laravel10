@@ -49,16 +49,12 @@ class ItemService
     }
     public function checkNameAlreadyExists($name): bool
     {
-        $validator = Validator::make(
+        Validator::make(
             ['name' => $name],
             [
                 'name' => 'required|string',
             ]
-        );
-
-        if ($validator->fails()) {
-            throw new Error($validator->messages(), 400);
-        }
+        )->stopOnFirstFailure()->validate();
         return $this->itemRepository->checkExistBy(['name' => $name]);
     }
 
@@ -74,5 +70,28 @@ class ItemService
         $bottom_unit_qty = $unit->item->bottom_unit_qty;
 
         return $per_unit_bottom_qty_calc <= $bottom_unit_qty;
+    }
+
+    public function updateById($id, $data)
+    {
+        Validator::make(
+            $data,
+            [
+                'name' => 'required|string',
+                'sub_name' => 'array',
+            ]
+        )->stopOnFirstFailure()->validate();
+
+        $validData = [
+            'name' => @$data['name'],
+            'sub_name' => @$data['sub_name'],
+        ];
+
+        $this->itemRepository->updateById($id, $validData);
+    }
+
+    public function deleteById($id,)
+    {
+        $this->itemRepository->deleteById($id);
     }
 }

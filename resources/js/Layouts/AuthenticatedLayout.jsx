@@ -118,14 +118,14 @@ export default function Authenticated({ auth, header, children }) {
                         " sm:hidden"
                     }
                 >
-                    <div className="space-y-1 pt-2 pb-3">
+                    {/* <div className="space-y-1 pt-2 pb-3">
                         <ResponsiveNavLink
                             href={route("home")}
                             active={route().current("home")}
                         >
                             Dashboard
                         </ResponsiveNavLink>
-                    </div>
+                    </div> */}
 
                     <div className="border-t border-gray-200 pt-4 pb-1 dark:border-gray-600">
                         <div className="px-4">

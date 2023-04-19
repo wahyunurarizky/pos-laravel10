@@ -84,4 +84,10 @@ class ItemRepository
         $item = $this->item->findOrFail($id);
         return $item->update($data);
     }
+
+    public function deleteById($id)
+    {
+        $item = $this->item->findOrFail($id);
+        return $item->delete();
+    }
 }

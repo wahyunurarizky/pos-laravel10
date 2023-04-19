@@ -96,6 +96,8 @@ export default function InputNumberQtySell({
                     );
                     setValue("unit_id", e.target.value);
 
+                    setIsDisabled(true);
+
                     setIsLoadingAvailableStockCheck(true);
                     checkAvailableStock(e.target.value, watch("per_unit_qty"));
 

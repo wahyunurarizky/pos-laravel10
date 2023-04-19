@@ -61,13 +61,4 @@ class ApiItemController extends Controller
             ], $th->getCode() ?: 500);
         }
     }
-
-    public function update(Request $request, $id)
-    {
-        Item::find($id)->update($request->all());
-
-        return response()->json([
-            'message' => 'success'
-        ]);
-    }
 }

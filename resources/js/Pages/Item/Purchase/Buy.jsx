@@ -6,7 +6,7 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import _ from "lodash";
 
 import { toast } from "react-toastify";
-import Checkout from "@/Components/Trade/Button/Checkout";
+import Checkout from "@/Pages/Item/Purchase/Components/Checkout";
 import clsx from "clsx";
 import BuyOption from "@/Pages/Item/Purchase/Components/BuyOption";
 import ListItemPurchase from "@/Pages/Item/Purchase/Components/ListItemPurchase";

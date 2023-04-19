@@ -30,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/items', [ItemController::class, 'index'])->name('items.index');
+    Route::put('/items/{id}', [ItemController::class, 'update'])->name('items.update');
+    Route::delete('/items/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
 
     Route::get('/items/buy', [PurchaseController::class, 'buy'])->name('items.buy');
     Route::post('/items/buy', [PurchaseController::class, 'saveBuy'])->name('items.buy.save');
@@ -37,17 +39,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/items/sell', [SaleController::class, 'sell'])->name('items.sell');
     Route::post('/items/sell', [SaleController::class, 'saveSell'])->name('items.sell.save');
 
-    Route::get('/items/history-sell', [ItemController::class, 'historySell'])->name('items.history-sell');
-    Route::get('/items/history-buy', [ItemController::class, 'historyBuy'])->name('items.history-buy');
+    Route::get('/items/history-sell', [SaleController::class, 'historySell'])->name('items.history-sell');
+    Route::get('/items/history-buy', [PurchaseController::class, 'historyBuy'])->name('items.history-buy');
 
+    // API ITEMS
     Route::post('/api/items/search', [ApiItemController::class, 'index'])->name('api.items.index');
     Route::post('/api/items/check-unique-name', [ApiItemController::class, 'checkUniqueName'])->name('api.items.check-unique-name');
     Route::post('/api/items/check-available-stock', [ApiItemController::class, 'checkAvailableStock'])->name('api.items.check-available-stock');
     Route::get('/api/items/{id}', [ApiItemController::class, 'show'])->name('api.items.show');
-    Route::put('/api/items/{id}', [ApiItemController::class, 'update'])->name('api.items.update');
 
-    Route::get('/api/seller', [ApiSellerController::class, 'index'])->name('api.seller.index');
-    Route::post('/api/seller', [ApiSellerController::class, 'store'])->name('api.seller.store');
+    // API SELLERS
+    Route::get('/api/sellers', [ApiSellerController::class, 'index'])->name('api.seller.index');
+    Route::post('/api/sellers', [ApiSellerController::class, 'store'])->name('api.seller.store');
 });
 
 

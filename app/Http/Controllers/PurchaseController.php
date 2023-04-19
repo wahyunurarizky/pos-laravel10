@@ -75,4 +75,18 @@ class PurchaseController extends Controller
 
         return to_route('items.index')->with('message', 'berhasil menambahkan data');
     }
+
+    public function historyBuy(Request $request)
+    {
+        $q = $request->q;
+        $page = $request->page;
+        $perPage = $request->per_page ?? 10;
+
+        $item_purchases = $this->purchaseService->getAllItemPurchasePaginate($perPage, $q);
+        if ($page > $item_purchases->lastPage()) {
+            return to_route('items.history-buy', ['q' => $q]);
+        }
+
+        return Inertia::render('Item/Purchase/History', ['item_purchases' => $item_purchases, 'q' => $q]);
+    }
 }

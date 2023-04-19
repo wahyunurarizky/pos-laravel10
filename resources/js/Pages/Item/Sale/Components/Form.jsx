@@ -153,7 +153,7 @@ export default function Form({
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <InputSubName
-                            options={d.apiData?.sub_name.map((d) => ({
+                            options={d.apiData?.sub_name?.map((d) => ({
                                 value: d,
                                 label: d,
                             }))}

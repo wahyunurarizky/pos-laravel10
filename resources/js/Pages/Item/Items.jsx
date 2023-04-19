@@ -1,12 +1,17 @@
 import ButtonMain from "@/Components/ButtonMain";
+import LoadingSpinner from "@/Components/LoadingSpinner";
 import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Paginate from "@/Components/Table/Paginate";
 import Search from "@/Components/Table/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import CreatableSelect from "react-select/creatable";
 import { toast } from "react-toastify";
+import _ from "lodash";
+import Label from "@/Components/Field/Label";
+import { ShoppingBagIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 export default function Index({ auth, items, q, flash }) {
     const [showDetail, setShowDetail] = useState(false);
@@ -14,11 +19,25 @@ export default function Index({ auth, items, q, flash }) {
     const [dataDetail, setDataDetail] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
 
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+
     const closeModal = () => {
         setShowDetail(false);
     };
 
-    const { data, setData, post, processing, errors, put } = useForm({
+    const closeModalDelete = () => {
+        setShowConfirmDelete(false);
+    };
+
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        errors,
+        put,
+        delete: destroy,
+    } = useForm({
         name: "",
     });
 
@@ -26,8 +45,15 @@ export default function Index({ auth, items, q, flash }) {
         axios
             .get(route("api.items.show", id))
             .then((d) => {
+                console.log(d);
                 setDataDetail(d.data);
-                setData("name", d.data.name);
+                setData({
+                    sub_name: d.data.sub_name?.map((d) => ({
+                        value: d,
+                        label: d,
+                    })),
+                    name: d.data.name,
+                });
                 setShowDetail(true);
                 setLoadingDetail(false);
             })
@@ -37,43 +63,69 @@ export default function Index({ auth, items, q, flash }) {
             });
     };
 
-    useEffect(() => {
-        if (flash.message) {
-            toast.success(flash.message);
-        }
-    }, []);
+    const { errors: e } = usePage().props;
+
+    // useEffect(() => {
+    //     if (flash.message) {
+    //         toast.success(flash.message);
+    //         setShowDetail(false);
+    //     }
+    // }, [flash]);
+
+    // useEffect(() => {
+    //     if (!_.isEmpty(e)) {
+    //         toast.error(_.values(e).join(", "));
+    //     }
+    // }, [e]);
 
     function submit(e) {
         e.preventDefault();
-        put(route("api.items.update", dataDetail.id));
+        put(route("items.update", dataDetail.id));
     }
+
+    const deleteItem = (e) => {
+        destroy(route("items.destroy", dataDetail.id));
+    };
 
     return (
         <AuthenticatedLayout auth={auth} className>
-            <div className="p-6">
-                <div>
-                    <Head title="Jual Beli" />
-                    <Link href={route("home")}>
-                        <PrimaryButton className="m-2">Back</PrimaryButton>
-                    </Link>
-                </div>
-                <div className="my-4 rounded-md bg-white p-4">
-                    <Link href={route("items.sell")}>
-                        <ButtonMain className="mb-3 w-full">Jual</ButtonMain>
-                    </Link>
-                    <Link href={route("items.buy")}>
-                        <ButtonMain className="mb-3 w-full">Beli</ButtonMain>
-                    </Link>
-                    <div className="mt-10">
-                        <div className="flex justify-between">
-                            <Link href={route("items.history-sell")}>
-                                history jual
+            <Head title="Jual Beli" />
+            <div className="md:p-6">
+                <div className="bg-white p-4 md:rounded-md">
+                    <div className="grid grid-cols-2 gap-2">
+                        <div>
+                            <Link href={route("items.sell")}>
+                                <ButtonMain className="h-full w-full">
+                                    Jual
+                                    <ShoppingCartIcon className="w-12" />
+                                </ButtonMain>
                             </Link>
-                            <Link href={route("items.history-buy")}>
-                                history beli
+                            <Link
+                                href={route("items.history-sell")}
+                                className="text-xs underline"
+                            >
+                                Riwayat Penjualan
                             </Link>
                         </div>
-                        <h3 className="font-bold">Data Dagangan Saat Ini</h3>
+                        <div className="w-full text-right">
+                            <Link href={route("items.buy")}>
+                                <ButtonMain className="h-full w-full">
+                                    <ShoppingBagIcon className="w-12" />
+                                    Beli
+                                </ButtonMain>
+                            </Link>
+                            <Link
+                                href={route("items.history-buy")}
+                                className="text-xs underline"
+                            >
+                                Riwayat pembelian
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="mt-10 border-t-2 pt-3">
+                        <h3 className="text-center text-xl font-bold">
+                            Data Dagangan Saat Ini
+                        </h3>
                         <Search q={q} />
                         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                             <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -159,14 +211,10 @@ export default function Index({ auth, items, q, flash }) {
                         ) : (
                             ""
                         )}
-                        <p>
-                            yang bisa diedit: nama, master unit, qty unitnya
-                            gan, sub_name udah itu aja wkwk
-                        </p>
                     </div>
                     <Modal show={showDetail} onClose={closeModal}>
                         {dataDetail && (
-                            <div>
+                            <div className="overflow-auto">
                                 <div className="px-3">{dataDetail.name}</div>
                                 <ul>
                                     {dataDetail.units?.map(
@@ -189,6 +237,14 @@ export default function Index({ auth, items, q, flash }) {
                                     {dataDetail.bottom_unit?.name}
                                 </div>
                                 <button
+                                    onClick={() => {
+                                        setShowConfirmDelete(true);
+                                    }}
+                                    className="absolute top-0 right-0"
+                                >
+                                    delete
+                                </button>
+                                <button
                                     onClick={(e) => {
                                         setIsEdit((p) => !p);
                                     }}
@@ -204,14 +260,59 @@ export default function Index({ auth, items, q, flash }) {
                                             }}
                                             type="name"
                                         />
+                                        <div className="group relative z-0 mb-6 w-full">
+                                            <Label
+                                                name="sub_name"
+                                                labelName="sub name"
+                                            />
+
+                                            <CreatableSelect
+                                                onChange={(val) => {
+                                                    setData(
+                                                        "sub_name",
+                                                        val.map((d) => d.value)
+                                                    );
+                                                }}
+                                                menuPortalTarget={document.body}
+                                                menuPosition={"fixed"}
+                                                styles={{
+                                                    menuPortal: (base) => ({
+                                                        ...base,
+                                                        zIndex: 9999,
+                                                    }),
+                                                }}
+                                                isMulti
+                                                placeholder={
+                                                    "ketik untuk menambahkan"
+                                                }
+                                                defaultValue={dataDetail.sub_name?.map(
+                                                    (d) => ({
+                                                        label: d,
+                                                        value: d,
+                                                    })
+                                                )}
+                                            />
+                                        </div>
                                         <button type="submit">save</button>
                                     </form>
                                 )}
                             </div>
                         )}
+                        <Modal
+                            show={showConfirmDelete}
+                            onClose={closeModalDelete}
+                        >
+                            <div>yakin?</div>
+                            <button onClick={deleteItem}>yes</button>
+                        </Modal>
                     </Modal>
                 </div>
             </div>
+            {loadingDetail && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-gray-500/75 opacity-75 dark:bg-gray-900/75">
+                    <LoadingSpinner color="red" />
+                </div>
+            )}
         </AuthenticatedLayout>
     );
 }

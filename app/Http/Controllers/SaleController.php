@@ -48,4 +48,20 @@ class SaleController extends Controller
 
         return to_route('items.index')->with('message', 'berhasil melakukan penjualan');
     }
+
+
+    public function historySell(Request $request)
+    {
+
+        $q = $request->q;
+        $page = $request->page;
+        $perPage = $request->per_page ?? 10;
+
+        $item_sales = $this->saleService->getAllItemSalePaginate($perPage, $q);
+        if ($page > $item_sales->lastPage()) {
+            return to_route('items.history-sell', ['q' => $q]);
+        }
+
+        return Inertia::render('Item/Sale/History', ['item_sales' => $item_sales, 'q' => $q]);
+    }
 }

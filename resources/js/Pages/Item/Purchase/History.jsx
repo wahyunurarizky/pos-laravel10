@@ -83,7 +83,9 @@ export default function History({ auth, item_purchases, q }) {
                                                     scope="row"
                                                     className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
                                                 >
-                                                    {d.item.name}
+                                                    {d.item
+                                                        ? d.item.name
+                                                        : "deleted data"}
                                                 </th>
 
                                                 <td>

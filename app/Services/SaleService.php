@@ -36,11 +36,11 @@ class SaleService
         ])->stopOnFirstFailure()->validate();
 
         // TODO using validation
-        collect($items)->each(function ($d) {
+        collect($items)->each(function ($d, $i) {
             $available = $this->itemService->checkAvailableStock($d['unit_id'], $d['per_unit_qty']);
             if (!$available) {
                 throw ValidationException::withMessages([
-                    'stock' => 'stock not available',
+                    'stock' => "stock $i not available",
                 ]);
             }
         });
@@ -97,5 +97,17 @@ class SaleService
             return $model->parent_ref_qty * $this->calcChildren($model->children);
         }
         return $model->parent_ref_qty;
+    }
+
+    public function getAllItemSalePaginate($perPage, $q)
+    {
+
+        $validator = Validator::make(['perPage' => $perPage, 'q' => $q], [
+            'perPage' => 'required|numeric|max:100',
+        ]);
+
+        $validator->stopOnFirstFailure()->validate();
+
+        return $this->itemSaleRepository->paginate($perPage, $q);
     }
 }

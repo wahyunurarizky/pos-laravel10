@@ -3,11 +3,12 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SellOption from "@/Pages/Item/Sale/Components/SellOption";
-import ListItemPurchase from "@/Components/Trade/BuyField/ListItemPurchase";
 import clsx from "clsx";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import CheckoutSell from "@/Components/Trade/Button/CheckoutSell";
+import CheckoutSell from "@/Pages/Item/Sale/Components/CheckoutSell";
+import ListItemSell from "@/Pages/Item/Sale/Components/ListItemSell";
 import _ from "lodash";
+import { toast } from "react-toastify";
 
 const SellContext = createContext();
 
@@ -129,7 +130,7 @@ export default function Sell({ auth }) {
                                         "overflow-hidden transition-opacity duration-500"
                                     )}
                                 >
-                                    <ListItemPurchase
+                                    <ListItemSell
                                         d={d}
                                         i={i}
                                         box={box}
