@@ -8,13 +8,23 @@ import {
     faMoneyCheckAlt,
     faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
+import { currencyFormat } from "@/Helpers/currencyFormat";
 
-export default function Welcome(props) {
+export default function Welcome({ balances, ...props }) {
     return (
         <AuthenticatedLayout auth={props.auth} errors={props.errors}>
             <div className="bg-dots-darker dark:bg-dots-lighter relative bg-gray-100 bg-center selection:bg-red-500 selection:text-white dark:bg-gray-900 sm:flex sm:items-center sm:justify-center">
                 <Head title="Beranda" />
                 <div className="mx-auto max-w-7xl p-6 lg:p-8">
+                    <div>
+                        {balances.map((d, i) => (
+                            <Link href={route("balances.show", d.id)}>
+                                <div>
+                                    {d.name}: {currencyFormat(d.amount)}
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-4 lg:gap-8">
                         <Link
                             href={route("items.index")}
@@ -60,7 +70,7 @@ export default function Welcome(props) {
                                 />
 
                                 <h2 className="mt-6 text-center text-xl font-extrabold text-gray-900 dark:text-white">
-                                    PEMASUKAN / PENGELUARAN LAIN
+                                    PEMASUKAN / PENGELUARAN
                                 </h2>
                             </div>
                         </Link>

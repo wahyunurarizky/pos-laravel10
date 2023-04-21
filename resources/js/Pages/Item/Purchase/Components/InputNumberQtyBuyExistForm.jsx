@@ -1,6 +1,7 @@
 import React from "react";
 import Label from "@/Components/Field/Label";
 import { useBuyForm } from "@/Pages/Item/Purchase/Components/ExistForm";
+import { castFloat } from "@/Helpers/castFloat";
 
 export default function InputNumberQtyBuyExistForm({ className }) {
     const {
@@ -23,11 +24,11 @@ export default function InputNumberQtyBuyExistForm({ className }) {
                     onChange: (e) => {
                         setValue(
                             "total",
-                            (
+                            castFloat(
                                 Math.round(
                                     watch(name) * watch("price_per_unit") * 100
                                 ) / 100
-                            ).toFixed(2)
+                            )
                         );
                     },
                 })}
@@ -49,11 +50,11 @@ export default function InputNumberQtyBuyExistForm({ className }) {
                     setValue("unit_id", e.target.value);
                     setValue(
                         "total",
-                        (
+                        castFloat(
                             Math.round(
                                 watch(name) * watch("price_per_unit") * 100
                             ) / 100
-                        ).toFixed(2)
+                        )
                     );
                 }}
             >

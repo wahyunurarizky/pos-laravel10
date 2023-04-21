@@ -1,12 +1,10 @@
+import { currencyFormat } from "@/Helpers/currencyFormat";
 import React from "react";
 import { toast } from "react-toastify";
 
 export default function ListItemSell({ d, i, box, setBox }) {
     if (d.edit) return;
-
-    const currencyFormat = (num) => {
-        return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-    };
+    console.log(d);
 
     return (
         <div
@@ -45,10 +43,10 @@ export default function ListItemSell({ d, i, box, setBox }) {
                                   ?.unit_name}
                     </div>
                     <div className="flex-grow basis-1/3 pl-2 text-right">
-                        @Rp {currencyFormat(d.price_per_unit) || "-"}
+                        @{currencyFormat(d.price_per_unit) || "Rp -"}
                     </div>
                     <div className="flex-grow basis-1/3 pl-2 text-right">
-                        Rp {currencyFormat(d.total)}
+                        {currencyFormat(d.total)}
                     </div>
                 </div>
             </div>

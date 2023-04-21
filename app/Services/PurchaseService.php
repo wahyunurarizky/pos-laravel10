@@ -2,12 +2,15 @@
 
 namespace App\Services;
 
+use App\Repositories\BalanceRepository;
 use App\Repositories\ItemPurchaseRepository;
 use App\Repositories\ItemRepository;
 use App\Repositories\PricingRepository;
 use App\Repositories\PurchaseRepository;
 use App\Repositories\UnitRepository;
 use App\Rules\ItemNameShouldNotExist;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 class PurchaseService
@@ -19,14 +22,57 @@ class PurchaseService
         protected PurchaseRepository $purchaseRepository,
         protected UnitRepository $unitRepository,
         protected PricingRepository $pricingRepository,
+        protected BalanceRepository $balanceRepository,
         protected ItemNameShouldNotExist $itemNameShouldNotExist
     ) {
     }
 
-    public function buyNewAndOldItems($newItemValidates, $oldItemBuyValidates, $purchaseData, $newItemBuys, $oldItemBuys)
+    public function buyNewAndOldItems($dataPurchase)
     {
+        $this->validatePurchase($dataPurchase);
+
+        $newItemBuys = [];
+        $newItemValidates = [];
+        $oldItemBuys = [];
+        $oldItemValidates = [];
+
+        foreach (@$dataPurchase['items'] as $key => $item) {
+            if (@$item['isNew']) {
+                $data = [
+                    'name' => Str::upper(@$item['name']),
+                    'master_unit_id' => @$item['master_unit_id'],
+                    'sub_name' => @$item['sub_name'],
+                    'units' => @$item['units'],
+                    'unit_name' => @$item['unit_name'],
+                    'per_unit_qty' => @$item['per_unit_qty'],
+                    'price_per_unit' => @$item['price_per_unit'],
+                    'total' => @$item['total'],
+                ];
+
+                $newItemBuys[] = $data;
+                $newItemValidates[$key] = [...$data, 'units' => Arr::except($data['units'], [0])];
+            } else {
+                $data = [
+                    'item_id' => @$item['item_id'],
+                    'units' => @$item['units'],
+                    'unit_id' => @$item['unit_id'],
+                    'per_unit_qty' => @$item['per_unit_qty'],
+                    'price_per_unit' => @$item['price_per_unit'],
+                    'total' => @$item['total'],
+                ];
+
+                $oldItemBuys[] = $data;
+                $oldItemValidates[$key] = $data;
+            }
+        }
+
+        $purchaseData = [
+            'seller_id' => @$dataPurchase['seller_id'],
+            'balance_id' => @$dataPurchase['balance_id'] ?? 1
+        ];
+
         $this->validateNewItems($newItemValidates);
-        $this->validateOldItems($oldItemBuyValidates);
+        $this->validateOldItems($oldItemValidates);
 
         $purchase = $this->purchaseRepository->create($purchaseData);
 
@@ -49,7 +95,25 @@ class PurchaseService
             return $accumulator + $currentValue['total'];
         }, 0);
 
-        $this->purchaseRepository->updateById($purchase->id, ['total' => $totalOldItem + $totalNewItem]);
+        $total =  $totalOldItem + $totalNewItem;
+
+        $this->purchaseRepository->updateById($purchase->id, ['total' => $total]);
+
+        $balance = $this->balanceRepository->findById($dataPurchase['balance_id']);
+        $this->balanceRepository->updateById($dataPurchase['balance_id'], ['amount' => $balance->amount - $total]);
+    }
+
+    private function validatePurchase($data)
+    {
+        Validator::make(
+            $data,
+            [
+                'items' => 'required|array',
+                'total' => 'required|numeric',
+                'seller_id' => 'nullable|numeric',
+                'balance_id' => 'nullable|numeric'
+            ]
+        )->stopOnFirstFailure()->validate();
     }
 
     private function validateNewItems($newItemValidates)
@@ -116,9 +180,16 @@ class PurchaseService
             }
 
             $bottomUnitQty = $data['per_unit_qty'];
+
+            $parent_qty_total = 1;
+
+
             if ($unitPurchase?->children) {
-                $bottomUnitQty = $bottomUnitQty * $this->calcChildren($unitPurchase->children);
+                $parent_qty_total = $this->calcChildren($unitPurchase->children);
+                $bottomUnitQty = $bottomUnitQty * $parent_qty_total;
             }
+
+            $pricePerBottomUnit =  $data['price_per_unit'] / $parent_qty_total;
 
             $this->itemPurchaseRepository->create([
                 'item_id' => $item->id,
@@ -127,6 +198,7 @@ class PurchaseService
                 'price_per_unit' => $data['price_per_unit'],
                 'total' => $data['total'],
                 'bottom_unit_qty' => $bottomUnitQty,
+                'price_per_bottom_unit' => $pricePerBottomUnit,
                 'bottom_unit_qty_left' => $bottomUnitQty,
                 'purchase_id' => $data['purchase_id'],
             ]);
@@ -139,14 +211,18 @@ class PurchaseService
 
     private function insertOldItem($oldItemBuys)
     {
-        $items = collect($oldItemBuys)->map(function ($d) {
-            $bottomUnitQty = $d['per_unit_qty'];
-            $unitPurchase = $this->unitRepository->findById($d['unit_id']);
+        $items = collect($oldItemBuys)->map(function ($data) {
+            $bottomUnitQty = $data['per_unit_qty'];
+            $unitPurchase = $this->unitRepository->findById($data['unit_id']);
+
+            $parent_qty_total = 1;
+
             if ($unitPurchase->children) {
-                $bottomUnitQty = $bottomUnitQty * $this->calcChildren($unitPurchase->children);
+                $parent_qty_total = $this->calcChildren($unitPurchase->children);
+                $bottomUnitQty = $bottomUnitQty * $parent_qty_total;
             }
 
-            collect($d['units'])->each(function ($unit) {
+            collect($data['units'])->each(function ($unit) {
                 $price = $this->pricingRepository->findOne(['unit_id' => $unit['unit_id']]);
 
                 if ($price->price != $unit['price']) {
@@ -157,21 +233,24 @@ class PurchaseService
                 }
             });
 
-            $item = $this->itemRepository->findById($d['item_id']);
+            $item = $this->itemRepository->findById($data['item_id']);
 
             $this->itemRepository->updateById($item->id, [
                 'bottom_unit_qty' => $bottomUnitQty + $item->bottom_unit_qty
             ]);
 
+            $pricePerBottomUnit =  $data['price_per_unit'] / $parent_qty_total;
+
             return [
-                'item_id' => $d['item_id'],
-                'per_unit_qty' => $d['per_unit_qty'],
-                'unit_id' => $d['unit_id'],
-                'price_per_unit' => $d['price_per_unit'],
-                'total' => $d['total'],
+                'item_id' => $data['item_id'],
+                'per_unit_qty' => $data['per_unit_qty'],
+                'unit_id' => $data['unit_id'],
+                'price_per_unit' => $data['price_per_unit'],
+                'total' => $data['total'],
                 'bottom_unit_qty' => $bottomUnitQty,
                 'bottom_unit_qty_left' => $bottomUnitQty,
-                'purchase_id' => $d['purchase_id'],
+                'price_per_bottom_unit' => $pricePerBottomUnit,
+                'purchase_id' => $data['purchase_id'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];

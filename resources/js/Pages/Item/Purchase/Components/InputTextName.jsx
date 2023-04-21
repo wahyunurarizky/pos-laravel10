@@ -27,7 +27,7 @@ export default function InputTextName({
     const checkUniqueName = useCallback(
         _debounce((value) => {
             axios
-                .post(route("api.items.check-unique-name", { name: value }))
+                .post(route("api.items.check-unique-name"), { name: value })
                 .then((response) => {
                     if (response?.data) {
                         setError(

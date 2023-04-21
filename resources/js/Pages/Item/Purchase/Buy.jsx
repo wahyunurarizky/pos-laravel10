@@ -10,10 +10,11 @@ import Checkout from "@/Pages/Item/Purchase/Components/Checkout";
 import clsx from "clsx";
 import BuyOption from "@/Pages/Item/Purchase/Components/BuyOption";
 import ListItemPurchase from "@/Pages/Item/Purchase/Components/ListItemPurchase";
+import { currencyFormat } from "@/Helpers/currencyFormat";
 
 const BuyContext = createContext();
 
-export default function Buy({ auth, master_units }) {
+export default function Buy({ auth, master_units, balances }) {
     const [box, setBox] = useState([{ edit: true }]);
 
     const ref = useRef(null);
@@ -42,10 +43,6 @@ export default function Buy({ auth, master_units }) {
         setBox(arr);
     };
 
-    const currencyFormat = (num) => {
-        return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-    };
-
     function handleBeforeUnload(e) {
         e.preventDefault();
         e.returnValue = "";
@@ -59,14 +56,14 @@ export default function Buy({ auth, master_units }) {
         };
     }, []);
 
-    const submit = (seller_id) => {
+    const submit = (additionalData) => {
         router.post(route("items.buy.save"), {
             items: box,
             total: box.reduce(
                 (accumulator, currentValue) => accumulator + currentValue.total,
                 0
             ),
-            seller_id,
+            ...additionalData,
         });
     };
 
@@ -81,7 +78,7 @@ export default function Buy({ auth, master_units }) {
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="Beli Barang" />
-            <div className="p-6 pb-16">
+            <div className="p-4 pb-16 md:p-6">
                 <div className="ease mb-2 flex justify-between">
                     <Link href={route("items.index")}>
                         <PrimaryButton
@@ -98,7 +95,7 @@ export default function Buy({ auth, master_units }) {
                         </PrimaryButton>
                     </Link>
                     <h3
-                        className="text-3xl font-bold text-mycolor-dark"
+                        className="text-xl font-bold text-mycolor-dark"
                         ref={ref}
                     >
                         Beli Barang
@@ -157,7 +154,7 @@ export default function Buy({ auth, master_units }) {
                         <div className="fixed inset-x-0 bottom-0 px-2 pb-4 pt-2 backdrop-blur-2xl">
                             <div className="text-right">
                                 <span className="font-semibold">
-                                    Total: Rp{" "}
+                                    Total:
                                     {currencyFormat(
                                         box.reduce(
                                             (accumulator, currentValue) =>
@@ -168,7 +165,7 @@ export default function Buy({ auth, master_units }) {
                                     )}
                                 </span>
                             </div>
-                            <Checkout submit={submit} />
+                            <Checkout submit={submit} balances={balances} />
                         </div>
                     )}
                 </BuyContext.Provider>

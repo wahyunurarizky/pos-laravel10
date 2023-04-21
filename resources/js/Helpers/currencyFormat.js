@@ -1,3 +1,9 @@
 export const currencyFormat = (num) => {
-    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return (
+        "Rp " +
+        String(parseFloat(Number(num).toFixed(2))).replace(
+            /(\d)(?=(\d{3})+(?!\d))/g,
+            "$1,"
+        )
+    );
 };

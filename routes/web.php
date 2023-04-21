@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Api\ApiItemController;
 use App\Http\Controllers\Api\ApiSellerController;
+use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\CashflowController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,9 +23,7 @@ use Inertia\Inertia;
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Home');
-    })->name('home');
+    Route::get('/', [HomeController::class, 'home'])->name('home');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -41,6 +41,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/items/history-sell', [SaleController::class, 'historySell'])->name('items.history-sell');
     Route::get('/items/history-buy', [PurchaseController::class, 'historyBuy'])->name('items.history-buy');
+
+    Route::get('/balances/{id}', [BalanceController::class, 'show'])->name('balances.show');
+
+    Route::get('/cashflow', [CashflowController::class, 'index'])->name('cashflow.index');
+
+    // API
 
     // API ITEMS
     Route::post('/api/items/search', [ApiItemController::class, 'index'])->name('api.items.index');

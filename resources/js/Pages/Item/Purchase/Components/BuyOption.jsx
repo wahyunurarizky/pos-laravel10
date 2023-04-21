@@ -10,13 +10,11 @@ export default function BuyOption({ updateBox, d, deleteBox, minimizeBox }) {
     const [isForm, setIsForm] = useState(Boolean(d.total > 0));
     const { box } = useBuy();
 
-    const editButtonClick = (e) => {
-        e.stopPropagation();
+    const editButtonClick = () => {
         updateBox({ edit: true });
         setIsForm(false);
     };
-    const deleteButtonClick = (e) => {
-        e.stopPropagation();
+    const deleteButtonClick = () => {
         deleteBox();
     };
 

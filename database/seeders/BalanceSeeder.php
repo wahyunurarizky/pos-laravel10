@@ -19,7 +19,16 @@ class BalanceSeeder extends Seeder
             ],
             [
                 'name' => 'cash',
-                'amount' => 0
+                'amount' => 2000000
+            ]
+        );
+        Balance::firstOrCreate(
+            [
+                'name' => 'saldo tokped',
+            ],
+            [
+                'name' => 'saldo tokped',
+                'amount' => 1000000
             ]
         );
     }

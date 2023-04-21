@@ -9,6 +9,7 @@ import InputPriceTotalExistForm from "@/Pages/Item/Purchase/Components/InputPric
 import Edit from "@/Components/Trade/Button/Edit";
 import Delete from "@/Components/Trade/Button/Delete";
 import Minimize from "@/Components/Trade/Button/Minimize";
+import { castFloat } from "@/Helpers/castFloat";
 
 export const useBuyForm = useFormContext;
 
@@ -90,20 +91,24 @@ export default function ExistForm({
                         return {
                             unit_id: d.id,
                             unit_name: d.name,
-                            price: d.pricing?.price || 0,
-                            price_per_unit:
-                                d.item_purchase?.price_per_unit || 0,
+                            price: castFloat(d.pricing?.price || 0),
+                            price_per_unit: castFloat(
+                                d.item_purchase?.price_per_unit || 0
+                            ),
                         };
                     })
                 );
                 setValue("unit_id", response.data?.units[0]?.id);
                 setValue(
                     "price_per_unit",
-                    response.data?.units[0]?.item_purchase?.price_per_unit
+                    castFloat(
+                        response.data?.units[0]?.item_purchase?.price_per_unit
+                    )
                 );
                 setIsLoading(false);
             })
             .catch((_error) => {
+                editButtonClick();
                 console.log(_error);
                 setIsLoading(false);
             });

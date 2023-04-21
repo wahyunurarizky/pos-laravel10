@@ -2,25 +2,31 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import _debounce from "lodash/debounce";
 import axios from "axios";
 import LoadingSpinner from "@/Components/LoadingSpinner";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+    DocumentMagnifyingGlassIcon,
+    TrashIcon,
+} from "@heroicons/react/24/outline";
 
 function DataItem({ data, ...props }) {
-    console.log(data);
     return (
         <div
             {...props}
-            className="my-1 flex cursor-pointer justify-between border-b-2 p-2 text-sm"
+            className="my-1 flex cursor-pointer items-center justify-between border-b-2 p-2 text-sm"
         >
-            <div className="mr-3">{data.name}</div>
-            <div className="flex flex-row-reverse flex-wrap">
-                {data.stock.map((s, si) => (
-                    <div
-                        key={si}
-                        className="mr-2 mb-1 rounded border border-green-400 bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-gray-700 dark:text-green-400"
-                    >
-                        {s}
-                    </div>
-                ))}
+            <DocumentMagnifyingGlassIcon className="mr-1 w-5 flex-none" />
+            <div className="mr-3 flex-1 text-left">{data.name}</div>
+            <div className="flex flex-row flex-wrap justify-end">
+                <span className="mr-2">stok:</span>
+                {data.stock
+                    // .filter((s) => !s.startsWith("0"))
+                    .map((s, si) => (
+                        <div
+                            key={si}
+                            className="mr-2 mb-1 rounded border border-green-400 bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-gray-700 dark:text-green-400"
+                        >
+                            {s}
+                        </div>
+                    ))}
             </div>
         </div>
     );

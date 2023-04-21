@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Repositories\BalanceRepository;
+use App\Repositories\ItemPurchaseRepository;
 use App\Repositories\ItemSaleRepository;
 use App\Repositories\ItemRepository;
 use App\Repositories\PricingRepository;
@@ -21,11 +23,13 @@ class SaleService
         protected UnitRepository $unitRepository,
         protected PricingRepository $pricingRepository,
         protected SaleRepository $saleRepository,
-        protected ItemService $itemService
+        protected ItemPurchaseRepository $itemPurchaseRepository,
+        protected BalanceRepository $balanceRepository,
+        protected ItemService $itemService,
     ) {
     }
 
-    public function sellItems($items)
+    public function sellItems($items, $balanceId)
     {
         Validator::make($items, [
             '*.per_unit_qty' => 'required|numeric',
@@ -51,8 +55,8 @@ class SaleService
 
         $sales = $this->saleRepository->create([
             'total' => $total,
+            'balance_id' => $balanceId
         ]);
-
 
         $items = collect($items)->map(function ($d) use ($sales) {
             $bottomUnitQty = $d['per_unit_qty'];
@@ -74,12 +78,15 @@ class SaleService
                 'bottom_unit_qty' => $item->bottom_unit_qty - $bottomUnitQty
             ]);
 
+            $profit = $d['total'] - $this->getBuyPricesAndUpdateItemPurchaseQty($bottomUnitQty, $item->id, $d['price_per_unit']);
+
             return [
                 'item_id' => $d['item_id'],
                 'per_unit_qty' => $d['per_unit_qty'],
                 'unit_id' => $d['unit_id'],
                 'price_per_unit' => $d['price_per_unit'],
                 'total' => $d['total'],
+                'profit' => $profit,
                 'sub_name' => $d['sub_name'],
                 'bottom_unit_qty' => $bottomUnitQty,
                 'sale_id' => $sales->id,
@@ -89,6 +96,9 @@ class SaleService
         })->toArray();
 
         $this->itemSaleRepository->createBulk($items);
+
+        $balance = $this->balanceRepository->findById($balanceId);
+        $this->balanceRepository->updateById($balanceId, ['amount' => $balance->amount + $total]);
     }
 
     function calcChildren($model)
@@ -109,5 +119,31 @@ class SaleService
         $validator->stopOnFirstFailure()->validate();
 
         return $this->itemSaleRepository->paginate($perPage, $q);
+    }
+
+    private function getBuyPricesAndUpdateItemPurchaseQty($bottomUnitQty, $item_id, $price_per_unit)
+    {
+        $itemPurchase = $this->itemPurchaseRepository->findOne([
+            ['item_id', '=', $item_id],
+            ['bottom_unit_qty_left', '>', 0]
+        ]);
+
+        if ($bottomUnitQty > $itemPurchase->bottom_unit_qty_left) {
+            $newBottomUnitQty = $bottomUnitQty - $itemPurchase->bottom_unit_qty_left;
+            $this->itemPurchaseRepository->updateById(
+                $itemPurchase->id,
+                ['bottom_unit_qty_left' => 0]
+            );
+            $buyPrices = $itemPurchase->bottom_unit_qty_left * $itemPurchase->price_per_bottom_unit;
+            return $buyPrices + $this->getBuyPricesAndUpdateItemPurchaseQty($newBottomUnitQty, $item_id, $price_per_unit);
+        } else {
+            $this->itemPurchaseRepository->updateById(
+                $itemPurchase->id,
+                ['bottom_unit_qty_left' => $itemPurchase->bottom_unit_qty_left - $bottomUnitQty]
+            );
+
+            $buyPrices = $bottomUnitQty * $itemPurchase->price_per_bottom_unit;
+            return $buyPrices;
+        }
     }
 }

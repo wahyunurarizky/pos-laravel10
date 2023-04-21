@@ -65,18 +65,18 @@ export default function Index({ auth, items, q, flash }) {
 
     const { errors: e } = usePage().props;
 
-    // useEffect(() => {
-    //     if (flash.message) {
-    //         toast.success(flash.message);
-    //         setShowDetail(false);
-    //     }
-    // }, [flash]);
+    useEffect(() => {
+        if (flash.message) {
+            toast.success(flash.message);
+            setShowDetail(false);
+        }
+    }, [flash]);
 
-    // useEffect(() => {
-    //     if (!_.isEmpty(e)) {
-    //         toast.error(_.values(e).join(", "));
-    //     }
-    // }, [e]);
+    useEffect(() => {
+        if (!_.isEmpty(e)) {
+            toast.error(_.values(e).join(", "));
+        }
+    }, [e]);
 
     function submit(e) {
         e.preventDefault();
@@ -93,30 +93,30 @@ export default function Index({ auth, items, q, flash }) {
             <div className="md:p-6">
                 <div className="bg-white p-4 md:rounded-md">
                     <div className="grid grid-cols-2 gap-2">
-                        <div>
+                        <div className="h-16 md:h-auto">
                             <Link href={route("items.sell")}>
                                 <ButtonMain className="h-full w-full">
                                     Jual
-                                    <ShoppingCartIcon className="w-12" />
+                                    <ShoppingCartIcon className="w-8 sm:w-12" />
                                 </ButtonMain>
                             </Link>
                             <Link
                                 href={route("items.history-sell")}
-                                className="text-xs underline"
+                                className="pl-2 text-xs underline"
                             >
                                 Riwayat Penjualan
                             </Link>
                         </div>
-                        <div className="w-full text-right">
+                        <div className="h-16 text-right md:h-auto">
                             <Link href={route("items.buy")}>
                                 <ButtonMain className="h-full w-full">
-                                    <ShoppingBagIcon className="w-12" />
+                                    <ShoppingBagIcon className="w-8 sm:w-12" />
                                     Beli
                                 </ButtonMain>
                             </Link>
                             <Link
                                 href={route("items.history-buy")}
-                                className="text-xs underline"
+                                className="pr-2 text-xs underline"
                             >
                                 Riwayat pembelian
                             </Link>
@@ -147,7 +147,7 @@ export default function Index({ auth, items, q, flash }) {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="">
                                     {items?.data?.length ? (
                                         items?.data.map((d, i) => (
                                             <tr

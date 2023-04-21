@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('seller_id')->nullable();
+            $table->unsignedBigInteger('balance_id')->nullable();
             $table->foreign('seller_id')->references('id')->on('sellers')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
+            $table->foreign('balance_id')->references('id')->on('balances')
+                ->restrictOnDelete()
+                ->restrictOnUpdate();
             $table->unsignedDecimal('total', 19, 2)->default(0);
             $table->timestamps();
         });

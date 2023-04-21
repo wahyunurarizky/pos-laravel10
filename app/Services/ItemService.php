@@ -60,7 +60,7 @@ class ItemService
 
     public function findByIdWithPricing(int $id)
     {
-        return $this->itemRepository->findById($id, ['units', 'units.pricing', 'units.itemPurchase', 'bottomUnit']);
+        return $this->itemRepository->findById($id, ['units', 'units.pricing', 'units.itemPurchase', 'bottomUnit', 'itemPurchasesLatest.unit']);
     }
     public function checkAvailableStock($unit_id, $per_unit_qty)
     {

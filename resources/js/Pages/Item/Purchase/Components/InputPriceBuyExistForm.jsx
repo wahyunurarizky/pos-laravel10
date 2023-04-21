@@ -2,6 +2,7 @@ import Label from "@/Components/Field/Label";
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { useBuyForm } from "@/Pages/Item/Purchase/Components/ExistForm";
+import { castFloat } from "@/Helpers/castFloat";
 
 export default function InputPriceBuyExistForm({ className, inputByTotal }) {
     const {
@@ -33,11 +34,11 @@ export default function InputPriceBuyExistForm({ className, inputByTotal }) {
                     }
                     setValue(
                         "total",
-                        (
+                        castFloat(
                             Math.round(
                                 watch(name) * watch("per_unit_qty") * 100
                             ) / 100
-                        ).toFixed(2)
+                        )
                     );
                 }}
                 disabled={inputByTotal}

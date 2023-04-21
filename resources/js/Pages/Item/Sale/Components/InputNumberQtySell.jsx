@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import Label from "@/Components/Field/Label";
 import _debounce from "lodash/debounce";
 import { useSellForm } from "./Form";
+import { castFloat } from "@/Helpers/castFloat";
 
 export default function InputNumberQtySell({
     className,
@@ -71,11 +72,11 @@ export default function InputNumberQtySell({
                         checkAvailableStock(watch("unit_id"), e.target.value);
                         setValue(
                             "total",
-                            (
+                            castFloat(
                                 Math.round(
                                     watch(name) * watch("price_per_unit") * 100
                                 ) / 100
-                            ).toFixed(2)
+                            )
                         );
                     },
                 })}
@@ -103,11 +104,11 @@ export default function InputNumberQtySell({
 
                     setValue(
                         "total",
-                        (
+                        castFloat(
                             Math.round(
                                 watch(name) * watch("price_per_unit") * 100
                             ) / 100
-                        ).toFixed(2)
+                        )
                     );
                 }}
             >

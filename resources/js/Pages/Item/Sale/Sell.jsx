@@ -9,6 +9,7 @@ import CheckoutSell from "@/Pages/Item/Sale/Components/CheckoutSell";
 import ListItemSell from "@/Pages/Item/Sale/Components/ListItemSell";
 import _ from "lodash";
 import { toast } from "react-toastify";
+import { currencyFormat } from "@/Helpers/currencyFormat";
 
 const SellContext = createContext();
 
@@ -38,10 +39,6 @@ export default function Sell({ auth }) {
 
     const addNew = () => {
         setBox([...box, { edit: true }]);
-    };
-
-    const currencyFormat = (num) => {
-        return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };
 
     function handleBeforeUnload(e) {
@@ -152,7 +149,7 @@ export default function Sell({ auth }) {
                         <div className="fixed inset-x-0 bottom-0 px-2 pb-4 pt-2 backdrop-blur-2xl">
                             <div className="text-right">
                                 <span className="font-semibold">
-                                    Total: Rp{" "}
+                                    Total:{" "}
                                     {currencyFormat(
                                         box.reduce(
                                             (accumulator, currentValue) =>

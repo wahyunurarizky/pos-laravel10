@@ -21,14 +21,12 @@ export default function SellOption({ updateBox, d, deleteBox, minimizeBox }) {
         setIsForm(true);
     };
 
-    const editButtonClick = (e) => {
-        e.stopPropagation();
+    const editButtonClick = () => {
         updateBox({ edit: true });
         setIsForm(false);
     };
 
-    const deleteButtonClick = (e) => {
-        e.stopPropagation();
+    const deleteButtonClick = () => {
         deleteBox();
     };
 

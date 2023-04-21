@@ -8,6 +8,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import "moment/dist/locale/id";
 import { currencyFormat } from "@/Helpers/currencyFormat";
+import { castFloat } from "@/Helpers/castFloat";
 moment.locale("id");
 
 export default function History({ auth, item_sales, q }) {
@@ -92,27 +93,22 @@ export default function History({ auth, item_sales, q }) {
                                                     {moment(
                                                         d.sale.created_at
                                                     ).format(
-                                                        "DD MMMM YYYY, hh:mm"
+                                                        "DD MMMM YYYY, kk:mm"
                                                     )}
                                                 </td>
 
                                                 <td></td>
                                                 <td>
-                                                    {Number(
-                                                        Number(
-                                                            d.per_unit_qty
-                                                        ).toFixed(2)
-                                                    )}{" "}
+                                                    {castFloat(d.per_unit_qty)}{" "}
                                                     {d.unit?.name}
                                                 </td>
                                                 <td>
-                                                    @Rp{" "}
+                                                    @
                                                     {currencyFormat(
                                                         Number(d.price_per_unit)
                                                     )}
                                                 </td>
                                                 <td className="font-bold">
-                                                    Rp{" "}
                                                     {currencyFormat(
                                                         Number(d.total)
                                                     )}

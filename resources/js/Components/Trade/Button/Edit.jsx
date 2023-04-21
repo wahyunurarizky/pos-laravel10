@@ -40,7 +40,10 @@ export default function Edit({ editButtonClick }) {
                                 Apa anda yakin ingin mengubah item ini?
                             </h3>
                             <button
-                                onClick={editButtonClick}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    editButtonClick();
+                                }}
                                 type="button"
                                 className="mr-2 inline-flex items-center rounded-lg bg-yellow-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-yellow-800 focus:outline-none focus:ring-4 focus:ring-yellow-300 dark:focus:ring-yellow-800"
                             >

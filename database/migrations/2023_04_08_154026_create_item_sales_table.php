@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedDecimal('price_per_unit', 19, 2);
             $table->unsignedDecimal('total', 19, 2);
             $table->string('sub_name')->nullable();
+            $table->decimal('profit', 19, 2)->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

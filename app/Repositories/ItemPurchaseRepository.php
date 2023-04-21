@@ -50,4 +50,21 @@ class ItemPurchaseRepository
     {
         return $this->itemPurchase->insert($data);
     }
+
+    public function updateById($id, $data)
+    {
+        $itemPurchase = $this->itemPurchase->findOrFail($id);
+        return $itemPurchase->update($data);
+    }
+
+    public function findOne($data, $sort = 'created_at', $sortType = 'asc')
+    {
+        $query = $this->itemPurchase->query();
+
+        $query->where($data);
+
+        $query->orderBy($sort, $sortType);
+
+        return $query->first();
+    }
 }

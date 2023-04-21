@@ -1,25 +1,37 @@
+import Label from "@/Components/Field/Label";
 import Modal from "@/Components/Modal";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
 
-export default function Checkout({ submit }) {
+export default function Checkout({ submit, balances }) {
     const [showModal, setShowModal] = useState(false);
-    const [options, setOptions] = useState([]);
+    const [sellerOptions, setSellerOptions] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [seller, setSeller] = useState();
+    const [balance, setBalance] = useState();
+
+    console.log(seller, balance);
 
     const closeModal = () => {
         setShowModal(false);
     };
 
+    const balanceOptions = balances.map((d) => ({
+        label: d.name,
+        value: d.id,
+    }));
+
     useEffect(() => {
         axios.get(route("api.seller.index")).then((r) => {
-            setOptions(r.data.map((d) => ({ label: d.name, value: d.id })));
+            setSellerOptions(
+                r.data.map((d) => ({ label: d.name, value: d.id }))
+            );
         });
     }, []);
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [value, setValue] = useState();
 
     const handleCreate = (inputValue) => {
         setIsLoading(true);
@@ -30,9 +42,10 @@ export default function Checkout({ submit }) {
                 })
             )
             .then((r) => {
+                console.log("wkwkwkwk");
                 const newData = { label: r.data.name, value: r.data.id };
-                setOptions((prev) => [...prev, newData]);
-                setValue(newData);
+                setSellerOptions((prev) => [...prev, newData]);
+                setSeller(newData);
                 setIsLoading(false);
             })
             .catch((err) => {
@@ -89,20 +102,31 @@ export default function Checkout({ submit }) {
                                 </tr>
                             </tbody>
                         </table>
-
+                        <Label labelName="Penjual" />
                         <CreatableSelect
                             isClearable
                             isDisabled={isLoading}
                             isLoading={isLoading}
-                            onChange={(newValue) => setValue(newValue)}
+                            onChange={(newValue) => setSeller(newValue)}
                             onCreateOption={handleCreate}
-                            options={options}
-                            value={value}
+                            options={sellerOptions}
+                            value={seller}
+                        />
+                        <Label labelName="Balance" />
+                        <Select
+                            onChange={(newValue) => setBalance(newValue)}
+                            options={balanceOptions}
+                            isClearable={false}
+                            isSearchable={false}
+                            value={balance}
                         />
 
                         <button
                             onClick={() => {
-                                submit(value?.value);
+                                submit({
+                                    seller_id: seller?.value,
+                                    balance_id: balance?.value,
+                                });
                                 setShowModal(false);
                             }}
                             type="button"

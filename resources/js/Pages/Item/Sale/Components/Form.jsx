@@ -9,6 +9,8 @@ import InputSubName from "./InputSubName";
 import InputNumberQtySell from "./InputNumberQtySell";
 import InputPriceTotal from "./InputPriceTotal";
 import InputPriceSell from "./InputPriceSell";
+import { castFloat } from "@/Helpers/castFloat";
+import { currencyFormat } from "@/Helpers/currencyFormat";
 
 export const useSellForm = useFormContext;
 
@@ -22,7 +24,7 @@ const schema = yup
         ),
         unit_id: yup.number().required(),
         per_unit_qty: yup.string().required(),
-        price_per_unit: yup.number().required().positive("the total not valid"),
+        price_per_unit: yup.number().required(),
         total: yup.number().positive("the total not valid"),
         sub_name: yup.string(),
     })
@@ -102,20 +104,19 @@ export default function Form({
                         return {
                             unit_id: d.id,
                             unit_name: d.name,
-                            price: d.pricing?.price || 0,
-                            // price_per_unit:
-                            //     d.item_purchase?.price_per_unit || 0,
+                            price: castFloat(d.pricing?.price || 0),
                         };
                     })
                 );
                 setValue("unit_id", response.data?.units[0]?.id);
                 setValue(
                     "price_per_unit",
-                    response.data?.units[0]?.pricing?.price || 0
+                    castFloat(response.data?.units[0]?.pricing?.price || 0)
                 );
                 setIsLoading(false);
             })
             .catch((_error) => {
+                editButtonClick();
                 console.log(_error);
                 setIsLoading(false);
             });
@@ -150,6 +151,24 @@ export default function Form({
                             )}
                         </ul>
                         <p>Stok tersedia: {d.apiData?.stock.join(", ")}</p>
+                        <p>Riwayat harga beli</p>
+                        <ul>
+                            {d.apiData?.item_purchases_latest?.map(
+                                (item_purchase, i) => (
+                                    <li key={i}>
+                                        {castFloat(item_purchase.per_unit_qty)}{" "}
+                                        {item_purchase.unit?.name} @
+                                        {currencyFormat(
+                                            item_purchase.price_per_unit
+                                        )}{" "}
+                                        {currencyFormat(item_purchase.total)}
+                                        {moment(
+                                            item_purchase.created_at
+                                        ).format("DD MMM YYYY, kk:mm")}
+                                    </li>
+                                )
+                            )}
+                        </ul>
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <InputSubName

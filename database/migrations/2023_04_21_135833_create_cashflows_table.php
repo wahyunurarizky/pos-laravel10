@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('balances', function (Blueprint $table) {
+        Schema::create('cashflows', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('description');
             $table->unsignedDecimal('amount', 19, 2)->default(0);
+            $table->unsignedBigInteger('balance_id')->nullable();
+            $table->string('type')->default('inflow');
+            $table->foreign('balance_id')->references('id')->on('balances')
+                ->restrictOnDelete()
+                ->restrictOnUpdate();
+            $table->timestamps();
         });
     }
 
@@ -23,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('balances');
+        Schema::dropIfExists('cashflows');
     }
 };

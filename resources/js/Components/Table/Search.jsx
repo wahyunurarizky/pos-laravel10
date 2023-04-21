@@ -34,7 +34,7 @@ export default function Search({ q }) {
                     </svg>
                 </div>
                 <input
-                    autoFocus
+                    // autoFocus
                     type="text"
                     id="table-search"
                     value={value}

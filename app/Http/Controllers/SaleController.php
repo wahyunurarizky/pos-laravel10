@@ -28,7 +28,8 @@ class SaleController extends Controller
     {
         $request->validate([
             'items' => 'required|array',
-            'total' => 'required|numeric'
+            'total' => 'required|numeric',
+            'balance_id' => 'numeric',
         ]);
 
         $sellItems = [];
@@ -44,7 +45,7 @@ class SaleController extends Controller
             ];
         }
 
-        $this->saleService->sellItems($sellItems);
+        $this->saleService->sellItems($sellItems, $request->balance_id ?? 1);
 
         return to_route('items.index')->with('message', 'berhasil melakukan penjualan');
     }

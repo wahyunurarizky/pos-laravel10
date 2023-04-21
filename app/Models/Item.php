@@ -25,11 +25,10 @@ class Item extends Model
         return $this->hasMany(Unit::class)->orderBy('id', 'ASC');
     }
 
-    public function itemPurchases(): HasMany
+    public function itemPurchasesLatest(): HasMany
     {
-        return $this->hasMany(ItemPurchase::class);
+        return $this->hasMany(ItemPurchase::class)->where('item_purchases.bottom_unit_qty_left', '>', 0);
     }
-
 
     public function bottomUnit()
     {

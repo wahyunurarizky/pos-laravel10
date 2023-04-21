@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedDecimal('per_unit_qty', 19, 2);
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->unsignedDecimal('price_per_unit', 19, 2);
+            $table->unsignedDecimal('price_per_bottom_unit', 19, 2);
             $table->unsignedDecimal('total', 19, 2);
             $table->unsignedDecimal('bottom_unit_qty_left', 19, 2)->default(0);
             $table->timestamp('created_at')->useCurrent();
