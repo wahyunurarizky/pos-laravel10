@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedDecimal('amount', 19, 2)->default(0);
             $table->unsignedBigInteger('balance_id')->nullable();
             $table->string('type')->default('inflow');
+            $table->unsignedDecimal('amount_balance_before', 19, 2)->default(0);
+            $table->unsignedDecimal('amount_balance_after', 19, 2)->default(0);
             $table->foreign('balance_id')->references('id')->on('balances')
                 ->restrictOnDelete()
                 ->restrictOnUpdate();
