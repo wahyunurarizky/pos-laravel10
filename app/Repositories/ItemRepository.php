@@ -73,7 +73,7 @@ class ItemRepository
     public function findById($id, $with = ['units', 'units.pricing', 'units.itemPurchase'])
     {
         $query = $this->item->query();
-        $query->with(...$with);
+        $query->with($with);
 
         return new ItemResource($query->findOrFail($id));
     }

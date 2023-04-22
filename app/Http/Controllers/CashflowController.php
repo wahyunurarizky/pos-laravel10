@@ -32,6 +32,12 @@ class CashflowController extends Controller
     public function store(Request $request)
     {
         $this->cashflowService->createCashflow($request->all());
-        return to_route('cashflow.index')->with('message', 'berhasil menambah data');
+        return to_route('cashflows.index')->with('message', 'berhasil menambah data');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->cashflowService->updateById($id, $request->all());
+        return to_route('cashflows.index')->with('message', 'berhasil merubah data');
     }
 }

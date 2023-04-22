@@ -34,10 +34,10 @@ class CashflowRepository
         return CashflowResource::collection($query->paginate($n)->withQueryString());
     }
 
-    public function findById($id, $with = ['units', 'units.pricing', 'units.cashflowPurchase'])
+    public function findById($id, $with = [])
     {
         $query = $this->cashflow->query();
-        $query->with(...$with);
+        $query->with($with);
 
         return new CashflowResource($query->findOrFail($id));
     }

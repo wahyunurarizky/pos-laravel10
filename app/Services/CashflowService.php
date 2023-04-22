@@ -65,4 +65,23 @@ class CashflowService
 
         $this->historyBalanceRepository->create($historyBalanceData);
     }
+
+    public function getById($id)
+    {
+        return $this->cashflowRepository->findById($id);
+    }
+
+    public function updateById($id, $data)
+    {
+        $validator = Validator::make($data, [
+            'description' => 'required|string|max:255',
+        ]);
+        $validator->stopOnFirstFailure()->validate();
+
+        $data = [
+            'description' => $data['description']
+        ];
+
+        $this->cashflowRepository->updateById($id, $data);
+    }
 }

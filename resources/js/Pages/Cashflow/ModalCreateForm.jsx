@@ -35,7 +35,7 @@ export default function ModalCreateForm({ showModal, closeModal, balances }) {
     } = useForm({ defaultValues, resolver: yupResolver(schemaCreate) });
 
     const onSubmit = (data) => {
-        const d = router.post(route("cashflow.store"), data);
+        const d = router.post(route("cashflows.store"), data);
         console.log(d);
     };
 

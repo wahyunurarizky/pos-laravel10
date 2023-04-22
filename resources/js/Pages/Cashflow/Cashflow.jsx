@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
-import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+    InformationCircleIcon,
+    PencilSquareIcon,
+    XMarkIcon,
+} from "@heroicons/react/24/outline";
 import Paginate from "@/Components/Table/Paginate";
 import Search from "@/Components/Table/Search";
 import { currencyFormat } from "@/Helpers/currencyFormat";
@@ -9,14 +13,21 @@ import Modal from "@/Components/Modal";
 import ModalCreateForm from "./ModalCreateForm";
 import { toast } from "react-toastify";
 import _ from "lodash";
+import axios from "axios";
+import ModalEditForm from "./ModalEditForm";
 
 export default function Cashflow({ auth, cashflows, balances, q, flash }) {
     console.log(cashflows);
 
-    const [showModal, setShowModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [detailCashflow, setDetailCashflow] = useState(null);
 
-    const closeModal = () => {
-        setShowModal(false);
+    const closeCreateModal = () => {
+        setShowCreateModal(false);
+    };
+    const closeEditModal = () => {
+        setShowEditModal(false);
     };
 
     const { errors: e } = usePage().props;
@@ -24,7 +35,7 @@ export default function Cashflow({ auth, cashflows, balances, q, flash }) {
     useEffect(() => {
         if (flash.message) {
             toast.success(flash.message);
-            setShowModal(false);
+            setShowCreateModal(false);
         }
     }, [flash]);
 
@@ -33,6 +44,20 @@ export default function Cashflow({ auth, cashflows, balances, q, flash }) {
             toast.error(_.values(e).join(", "));
         }
     }, [e]);
+
+    const getCashflowById = (id) => {
+        axios
+            .get(route("api.cashflows.show", id))
+            .then((d) => {
+                setShowEditModal(true);
+                setDetailCashflow(d.data);
+            })
+            .catch((e) => {
+                setShowEditModal(false);
+                setDetailCashflow(null);
+                console.log(e);
+            });
+    };
 
     return (
         <AuthenticatedLayout auth={auth} className>
@@ -43,15 +68,15 @@ export default function Cashflow({ auth, cashflows, balances, q, flash }) {
                     <div>
                         <button
                             onClick={() => {
-                                setShowModal(true);
+                                setShowCreateModal(true);
                             }}
                         >
                             Tambah
                         </button>
                         <ModalCreateForm
                             balances={balances}
-                            showModal={showModal}
-                            closeModal={closeModal}
+                            showModal={showCreateModal}
+                            closeModal={closeCreateModal}
                         />
                     </div>
                     <Search q={q} />
@@ -107,9 +132,6 @@ export default function Cashflow({ auth, cashflows, balances, q, flash }) {
                                     >
                                         Aksi
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        <span className="sr-only">Action</span>
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -146,12 +168,18 @@ export default function Cashflow({ auth, cashflows, balances, q, flash }) {
                                             <td>{d.type}</td>
                                             <td>{currencyFormat(d.amount)}</td>
                                             <td className="px-6 py-4 text-right">
-                                                <a
-                                                    href="#"
-                                                    className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                                                <button
+                                                    onClick={() => {
+                                                        getCashflowById(d.id);
+                                                    }}
                                                 >
-                                                    <InformationCircleIcon className="inline h-10 w-10" />
-                                                </a>
+                                                    <PencilSquareIcon className="inline h-5 w-5" />
+                                                </button>
+                                                <ModalEditForm
+                                                    showModal={showEditModal}
+                                                    closeModal={closeEditModal}
+                                                    cashflow={detailCashflow}
+                                                />
                                             </td>
                                         </tr>
                                     ))

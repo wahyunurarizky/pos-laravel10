@@ -26,7 +26,7 @@ export default function Checkout({ submit, balances }) {
     }));
 
     useEffect(() => {
-        axios.get(route("api.seller.index")).then((r) => {
+        axios.get(route("api.sellers.index")).then((r) => {
             setSellerOptions(
                 r.data.map((d) => ({ label: d.name, value: d.id }))
             );
@@ -37,7 +37,7 @@ export default function Checkout({ submit, balances }) {
         setIsLoading(true);
         axios
             .post(
-                route("api.seller.store", {
+                route("api.sellers.store", {
                     name: inputValue,
                 })
             )
