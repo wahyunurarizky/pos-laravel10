@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/balances/{id}', [BalanceController::class, 'show'])->name('balances.show');
 
     Route::get('/cashflow', [CashflowController::class, 'index'])->name('cashflow.index');
+    Route::post('/cashflow', [CashflowController::class, 'store'])->name('cashflow.store');
 
     // API
 

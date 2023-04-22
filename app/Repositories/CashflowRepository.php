@@ -22,14 +22,14 @@ class CashflowRepository
         $query = $this->cashflow->query();
 
         // searching
-        // if ($q) {
-        //     $query->where('name', 'LIKE', "%$q%");
-        // }
+        if ($q) {
+            $query->where('description', 'LIKE', "%$q%");
+        }
 
         $query->orderBy('updated_at', 'desc');
 
         // populate bottomUnit
-        // $query->with('bottomUnit');
+        $query->with('balance');
 
 
         return CashflowResource::collection($query->paginate($n)->withQueryString());

@@ -1,18 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { Head, usePage } from "@inertiajs/react";
+import { InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Paginate from "@/Components/Table/Paginate";
 import Search from "@/Components/Table/Search";
 import { currencyFormat } from "@/Helpers/currencyFormat";
+import Modal from "@/Components/Modal";
+import ModalCreateForm from "./ModalCreateForm";
+import { toast } from "react-toastify";
+import _ from "lodash";
 
-export default function Cashflow({ auth, cashflows, q }) {
+export default function Cashflow({ auth, cashflows, balances, q, flash }) {
+    const [showModal, setShowModal] = useState(false);
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+    const { errors: e } = usePage().props;
+
+    useEffect(() => {
+        if (flash.message) {
+            toast.success(flash.message);
+            setShowModal(false);
+        }
+    }, [flash]);
+
+    useEffect(() => {
+        if (!_.isEmpty(e)) {
+            toast.error(_.values(e).join(", "));
+        }
+    }, [e]);
+
     return (
         <AuthenticatedLayout auth={auth} className>
             <Head title="Jual Beli" />
             <div className="md:p-6">
                 <div className="bg-white p-4 md:rounded-md">
-                    <h3 className="font-bold">Riwayat Beli</h3>
+                    <h3 className="font-bold">Pemasukan / Pengeluaran</h3>
+                    <div>
+                        <button
+                            onClick={() => {
+                                setShowModal(true);
+                            }}
+                        >
+                            Tambah
+                        </button>
+                        <ModalCreateForm
+                            balances={balances}
+                            showModal={showModal}
+                            closeModal={closeModal}
+                        />
+                    </div>
                     <Search q={q} />
                     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
@@ -34,6 +73,24 @@ export default function Cashflow({ auth, cashflows, q }) {
                                         scope="col"
                                         className=" py-3 font-extrabold"
                                     >
+                                        Balance
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className=" py-3 font-extrabold"
+                                    >
+                                        Awal
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className=" py-3 font-extrabold"
+                                    >
+                                        Akhir
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className=" py-3 font-extrabold"
+                                    >
                                         Type
                                     </th>
                                     <th
@@ -46,7 +103,7 @@ export default function Cashflow({ auth, cashflows, q }) {
                                         scope="col"
                                         className=" py-3 font-extrabold"
                                     >
-                                        Total
+                                        Aksi
                                     </th>
                                     <th scope="col" className="px-6 py-3">
                                         <span className="sr-only">Action</span>
@@ -70,6 +127,17 @@ export default function Cashflow({ auth, cashflows, q }) {
                                             <td>
                                                 {moment(d.created_at).format(
                                                     "DD MMMM YYYY, kk:mm"
+                                                )}
+                                            </td>
+                                            <td>{d.balance.name}</td>
+                                            <td>
+                                                {currencyFormat(
+                                                    d.amount_balance_before
+                                                )}
+                                            </td>
+                                            <td>
+                                                {currencyFormat(
+                                                    d.amount_balance_after
                                                 )}
                                             </td>
 

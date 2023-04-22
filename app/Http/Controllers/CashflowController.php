@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\BalanceService;
 use App\Services\CashflowService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CashflowController extends Controller
 {
-    public function __construct(protected CashflowService $cashflowService)
+    public function __construct(protected CashflowService $cashflowService, protected BalanceService $balanceService)
     {
     }
 
@@ -19,11 +20,18 @@ class CashflowController extends Controller
         $perPage = $request->per_page ?? 10;
 
         $cashflows = $this->cashflowService->getAllPaginate($perPage, $q);
+        $balances = $this->balanceService->getAllBalance();
 
         if ($page > $cashflows->lastPage()) {
             return to_route('cashflows.index', ['q' => $q]);
         }
 
-        return Inertia::render('Cashflow/Cashflow', ['cashflows' => $cashflows, 'q' => $q]);
+        return Inertia::render('Cashflow/Cashflow', ['cashflows' => $cashflows, 'balances' => $balances, 'q' => $q]);
+    }
+
+    public function store(Request $request)
+    {
+        $this->cashflowService->createCashflow($request->all());
+        return to_route('cashflow.index')->with('message', 'berhasil menambah data');
     }
 }
