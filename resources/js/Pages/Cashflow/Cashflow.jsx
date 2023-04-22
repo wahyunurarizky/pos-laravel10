@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import _ from "lodash";
 
 export default function Cashflow({ auth, cashflows, balances, q, flash }) {
+    console.log(cashflows);
+
     const [showModal, setShowModal] = useState(false);
 
     const closeModal = () => {
@@ -132,12 +134,12 @@ export default function Cashflow({ auth, cashflows, balances, q, flash }) {
                                             <td>{d.balance.name}</td>
                                             <td>
                                                 {currencyFormat(
-                                                    d.amount_balance_before
+                                                    d.history?.amount_before
                                                 )}
                                             </td>
                                             <td>
                                                 {currencyFormat(
-                                                    d.amount_balance_after
+                                                    d.history?.amount_after
                                                 )}
                                             </td>
 

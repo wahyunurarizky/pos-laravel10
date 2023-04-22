@@ -29,8 +29,7 @@ class CashflowRepository
         $query->orderBy('updated_at', 'desc');
 
         // populate bottomUnit
-        $query->with('balance');
-
+        $query->with('balance', 'history');
 
         return CashflowResource::collection($query->paginate($n)->withQueryString());
     }

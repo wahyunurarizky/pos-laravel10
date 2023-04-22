@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cashflows', function (Blueprint $table) {
+        Schema::create('history_balances', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
-            $table->unsignedDecimal('amount', 19, 2)->default(0);
+            $table->string('message');
+            $table->string('type');
+            $table->unsignedBigInteger('transaction_id')->nullable();
             $table->unsignedBigInteger('balance_id')->nullable();
-            $table->string('type')->default('inflow');
+            $table->unsignedDecimal('amount', 19, 2)->default(0);
+            $table->unsignedDecimal('amount_before', 19, 2)->default(0);
+            $table->unsignedDecimal('amount_after', 19, 2)->default(0);
             $table->foreign('balance_id')->references('id')->on('balances')
                 ->restrictOnDelete()
                 ->restrictOnUpdate();
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cashflows');
+        Schema::dropIfExists('history_balances');
     }
 };

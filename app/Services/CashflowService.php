@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\BalanceRepository;
 use App\Repositories\CashflowRepository;
+use App\Repositories\HistoryBalanceRepository;
 use Error;
 use Illuminate\Support\Facades\Validator;
 
@@ -11,7 +12,8 @@ class CashflowService
 {
     public function __construct(
         protected CashflowRepository $cashflowRepository,
-        protected BalanceRepository $balanceRepository
+        protected BalanceRepository $balanceRepository,
+        protected HistoryBalanceRepository $historyBalanceRepository
     ) {
     }
 
@@ -46,8 +48,21 @@ class CashflowService
             $updatedBalanceAmount = $balance->amount - $data['amount'];
         }
 
+
         $this->balanceRepository->updateById($balance->id, ['amount' => $updatedBalanceAmount]);
 
-        return $this->cashflowRepository->create($data);
+        $createdCashflow = $this->cashflowRepository->create($data);
+
+        $historyBalanceData = [
+            'type' => 'cashflow',
+            'message' => $data['type'] === 'inflow' ? 'Uang masuk' : 'Uang keluar',
+            'transaction_id' => $createdCashflow->id,
+            'balance_id' => $data['balance_id'],
+            'amount' => $data['amount'],
+            'amount_before' => $balance->amount,
+            'amount_after' => $updatedBalanceAmount,
+        ];
+
+        $this->historyBalanceRepository->create($historyBalanceData);
     }
 }

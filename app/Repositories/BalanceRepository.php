@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Http\Resources\BalanceResource;
 use App\Models\Balance;
 
 class BalanceRepository

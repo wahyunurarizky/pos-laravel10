@@ -1,4 +1,4 @@
-export const currencyFormat = (num) => {
+export const currencyFormat = (num = 0) => {
     return (
         "Rp " +
         String(parseFloat(Number(num).toFixed(2))).replace(

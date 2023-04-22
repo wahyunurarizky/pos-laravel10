@@ -7,21 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Cashflow extends Model
+class HistoryBalance extends Model
 {
     use HasFactory;
-
     protected $guarded = ['id'];
 
-    protected $table = 'cashflows';
+    protected $table = 'history_balances';
 
     public function balance(): BelongsTo
     {
         return $this->belongsTo(Balance::class, 'balance_id', 'id');
     }
 
-    public function history(): HasOne
+    public function cashflow(): BelongsTo
     {
-        return $this->hasOne(HistoryBalance::class, 'transaction_id', 'id')->where('history_balances.type', '=', 'cashflow');
+        return $this->belongsTo(Cashflow::class, 'transaction_id', 'id')->where('cashflow.type', '=', 'cashflow');
     }
 }
