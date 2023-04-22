@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Resources\HistoryBalanceResource;
 use App\Models\HistoryBalance;
 
 class HistoryBalanceRepository
@@ -16,13 +17,29 @@ class HistoryBalanceRepository
         return $this->historyBalance->create($data);
     }
 
-
-    public function findAll()
+    public function paginate($n, $q, $page)
     {
         $query = $this->historyBalance->query();
 
-        return $query->get();
+        // searching
+        // if ($q) {
+        //     $query->where('message', 'LIKE', "%$q%");
+        // }
+
+        $query->orderBy('created_at', 'desc');
+
+        // populate bottomUnit
+        // $query->with('cashflow');
+
+        return HistoryBalanceResource::collection($query->paginate($n, ['*'], 'page', $page)->withQueryString());
     }
+
+    // public function findAll()
+    // {
+    //     $query = $this->historyBalance->query();
+
+    //     return $query->get();
+    // }
 
     public function findById($id)
     {

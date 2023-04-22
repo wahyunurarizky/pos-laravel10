@@ -13,16 +13,17 @@ class ItemService
     {
     }
 
-    public function getAllPaginate($perPage, $q)
+    public function getAllPaginate($perPage, $q, $page)
     {
 
-        $validator = Validator::make(['perPage' => $perPage, 'q' => $q], [
+        $validator = Validator::make(['perPage' => $perPage, 'page' => $page, 'q' => $q], [
             'perPage' => 'required|numeric|max:100',
+            'page' => 'required|numeric'
         ]);
 
         $validator->stopOnFirstFailure()->validate();
 
-        return $this->itemRepository->paginate($perPage, $q);
+        return $this->itemRepository->paginate($perPage, $q, $page);
     }
 
     public function getAll(array $whereClause = [], int $limit = 10, string|null $q = null)

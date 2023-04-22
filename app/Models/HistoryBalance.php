@@ -19,8 +19,8 @@ class HistoryBalance extends Model
         return $this->belongsTo(Balance::class, 'balance_id', 'id');
     }
 
-    public function cashflow(): BelongsTo
-    {
-        return $this->belongsTo(Cashflow::class, 'transaction_id', 'id')->where('cashflow.type', '=', 'cashflow');
-    }
+    // public function cashflow(): BelongsTo
+    // {
+    //     return $this->belongsTo(Cashflow::class, 'transaction_id', 'id')->where('history_balances.type', '=', 'cashflow');
+    // }
 }

@@ -17,16 +17,16 @@ class CashflowService
     ) {
     }
 
-    public function getAllPaginate($perPage, $q)
+    public function getAllPaginate($perPage, $q, $page)
     {
-
-        $validator = Validator::make(['perPage' => $perPage, 'q' => $q], [
+        $validator = Validator::make(['perPage' => $perPage, 'q' => $q, 'page' => $page], [
             'perPage' => 'required|numeric|max:100',
+            'page' => 'required|numeric|'
         ]);
 
         $validator->stopOnFirstFailure()->validate();
 
-        return $this->cashflowRepository->paginate($perPage, $q);
+        return $this->cashflowRepository->paginate($perPage, $q, $page);
     }
 
     public function createCashflow($data)

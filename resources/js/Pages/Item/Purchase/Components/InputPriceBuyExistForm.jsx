@@ -32,6 +32,7 @@ export default function InputPriceBuyExistForm({ className, inputByTotal }) {
                     } else {
                         setValue(name, newValue);
                     }
+
                     setValue(
                         "total",
                         castFloat(

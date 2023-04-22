@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\BalanceRepository;
+use App\Repositories\HistoryBalanceRepository;
 use App\Repositories\ItemPurchaseRepository;
 use App\Repositories\ItemRepository;
 use App\Repositories\PricingRepository;
@@ -12,6 +13,7 @@ use App\Rules\ItemNameShouldNotExist;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class PurchaseService
 {
@@ -23,6 +25,7 @@ class PurchaseService
         protected UnitRepository $unitRepository,
         protected PricingRepository $pricingRepository,
         protected BalanceRepository $balanceRepository,
+        protected HistoryBalanceRepository $historyBalanceRepository,
         protected ItemNameShouldNotExist $itemNameShouldNotExist
     ) {
     }
@@ -66,6 +69,22 @@ class PurchaseService
             }
         }
 
+        $totalOldItem = collect($oldItemBuys)->reduce(function ($accumulator, $currentValue) {
+            return $accumulator + $currentValue['total'];
+        }, 0);
+        $totalNewItem = collect($newItemBuys)->reduce(function ($accumulator, $currentValue) {
+            return $accumulator + $currentValue['total'];
+        }, 0);
+
+        $total =  $totalOldItem + $totalNewItem;
+        $balance = $this->balanceRepository->findById($dataPurchase['balance_id']);
+
+        if ($total > $balance->amount) {
+            throw ValidationException::withMessages([
+                'total' => 'balance not enough, maks buy is Rp ' . $balance->amount,
+            ]);
+        }
+
         $purchaseData = [
             'seller_id' => @$dataPurchase['seller_id'],
             'balance_id' => @$dataPurchase['balance_id'] ?? 1
@@ -88,19 +107,20 @@ class PurchaseService
         $this->insertNewItem($newItemBuys);
         $this->insertOldItem($oldItemBuys);
 
-        $totalOldItem = collect($oldItemBuys)->reduce(function ($accumulator, $currentValue) {
-            return $accumulator + $currentValue['total'];
-        }, 0);
-        $totalNewItem = collect($newItemBuys)->reduce(function ($accumulator, $currentValue) {
-            return $accumulator + $currentValue['total'];
-        }, 0);
-
-        $total =  $totalOldItem + $totalNewItem;
-
         $this->purchaseRepository->updateById($purchase->id, ['total' => $total]);
 
-        $balance = $this->balanceRepository->findById($dataPurchase['balance_id']);
         $this->balanceRepository->updateById($dataPurchase['balance_id'], ['amount' => $balance->amount - $total]);
+
+        $dataHistoryBalance = [
+            'message' => 'pembelian',
+            'amount' => $total,
+            'balance_id' => $dataPurchase['balance_id'],
+            'amount_before' => $balance->amount,
+            'amount_before' => $balance->amount - $total,
+            'type' => 'purchase',
+            'transaction_id' => $purchase->id
+        ];
+        $this->historyBalanceRepository->create($dataHistoryBalance);
     }
 
     private function validatePurchase($data)

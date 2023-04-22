@@ -16,10 +16,10 @@ class CashflowController extends Controller
     public function index(Request $request)
     {
         $q = $request->q;
-        $page = $request->page;
+        $page = $request->page ?? 1;
         $perPage = $request->per_page ?? 10;
 
-        $cashflows = $this->cashflowService->getAllPaginate($perPage, $q);
+        $cashflows = $this->cashflowService->getAllPaginate($perPage, $q, $page);
         $balances = $this->balanceService->getAllBalance();
 
         if ($page > $cashflows->lastPage()) {

@@ -17,7 +17,7 @@ class ItemRepository
         return $this->item->create($data);
     }
 
-    public function paginate($n, $q)
+    public function paginate($n, $q, $page)
     {
         $query = $this->item->query();
 
@@ -32,7 +32,7 @@ class ItemRepository
         $query->with('bottomUnit');
 
 
-        return ItemResource::collection($query->paginate($n)->withQueryString());
+        return ItemResource::collection($query->paginate($n, ['*'], 'page', $page)->withQueryString());
     }
 
     public function findAll(array $where, int $limit, string|null $q)

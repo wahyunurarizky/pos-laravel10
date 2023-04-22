@@ -17,7 +17,7 @@ class CashflowRepository
         return $this->cashflow->create($data);
     }
 
-    public function paginate($n, $q)
+    public function paginate($n, $q, $page)
     {
         $query = $this->cashflow->query();
 
@@ -31,7 +31,7 @@ class CashflowRepository
         // populate bottomUnit
         $query->with('balance', 'history');
 
-        return CashflowResource::collection($query->paginate($n)->withQueryString());
+        return CashflowResource::collection($query->paginate($n, ['*'], 'page', $page)->withQueryString());
     }
 
     public function findById($id, $with = [])

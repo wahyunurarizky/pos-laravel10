@@ -16,10 +16,10 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $q = $request->q;
-        $page = $request->page;
+        $page = $request->page ?? 1;
         $perPage = $request->per_page ?? 10;
 
-        $items = $this->itemService->getAllPaginate($perPage, $q);
+        $items = $this->itemService->getAllPaginate($perPage, $q, $page);
 
         if ($page > $items->lastPage()) {
             return to_route('items.index', ['q' => $q]);

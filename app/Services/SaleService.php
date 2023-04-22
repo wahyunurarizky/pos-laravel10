@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\BalanceRepository;
+use App\Repositories\HistoryBalanceRepository;
 use App\Repositories\ItemPurchaseRepository;
 use App\Repositories\ItemSaleRepository;
 use App\Repositories\ItemRepository;
@@ -25,6 +26,7 @@ class SaleService
         protected SaleRepository $saleRepository,
         protected ItemPurchaseRepository $itemPurchaseRepository,
         protected BalanceRepository $balanceRepository,
+        protected HistoryBalanceRepository $historyBalanceRepository,
         protected ItemService $itemService,
     ) {
     }
@@ -99,6 +101,17 @@ class SaleService
 
         $balance = $this->balanceRepository->findById($balanceId);
         $this->balanceRepository->updateById($balanceId, ['amount' => $balance->amount + $total]);
+
+        $dataHistoryBalance = [
+            'message' => 'penjualan',
+            'amount' => $total,
+            'balance_id' => $balanceId,
+            'amount_before' => $balance->amount,
+            'amount_before' => $balance->amount + $total,
+            'type' => 'sale',
+            'transaction_id' => $sales->id
+        ];
+        $this->historyBalanceRepository->create($dataHistoryBalance);
     }
 
     function calcChildren($model)

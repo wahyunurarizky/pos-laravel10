@@ -102,7 +102,8 @@ export default function ExistForm({
                 setValue(
                     "price_per_unit",
                     castFloat(
-                        response.data?.units[0]?.item_purchase?.price_per_unit
+                        response.data?.units[0]?.item_purchase
+                            ?.price_per_unit || 0
                     )
                 );
                 setIsLoading(false);
