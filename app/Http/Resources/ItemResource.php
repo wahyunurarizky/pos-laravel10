@@ -24,7 +24,8 @@ class ItemResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'units' => $this->whenLoaded('units'),
-            'item_purchases_latest' => $this->whenLoaded('itemPurchasesLatest')
+            'item_purchases_latest' => $this->whenLoaded('itemPurchasesLatest'),
+            ...parent::toArray($request)
         ];
     }
 }

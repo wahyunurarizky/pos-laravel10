@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
 import {
+    EyeIcon,
     InformationCircleIcon,
     PencilSquareIcon,
     XMarkIcon,
@@ -14,8 +15,11 @@ import { toast } from "react-toastify";
 import _ from "lodash";
 import axios from "axios";
 import ModalCreateForm from "./ModalCreateForm";
+import ModalPayDebtForm from "./ModalPayDebtForm";
+import ModalDetail from "./ModalDetail";
 
-export default function Debt({ auth, debts, balances, q, flash }) {
+export default function Debt({ auth, debters, balances, q, flash }) {
+    console.log("asd", debters);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const closeCreateModal = () => {
         setShowCreateModal(false);
@@ -41,7 +45,7 @@ export default function Debt({ auth, debts, balances, q, flash }) {
             <Head title="Jual Beli" />
             <div className="md:p-6">
                 <div className="bg-white p-4 md:rounded-md">
-                    <h3 className="font-bold">Hutang / Piutang</h3>
+                    <h3 className="font-bold">Hutang</h3>
                     <div>
                         <button
                             onClick={() => {
@@ -65,13 +69,7 @@ export default function Debt({ auth, debts, balances, q, flash }) {
                                         scope="col"
                                         className="px-6 py-3 font-extrabold"
                                     >
-                                        Debter
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className=" py-3 font-extrabold"
-                                    >
-                                        Type
+                                        Nama
                                     </th>
                                     <th
                                         scope="col"
@@ -79,17 +77,14 @@ export default function Debt({ auth, debts, balances, q, flash }) {
                                     >
                                         Jumlah
                                     </th>
-                                    <th
-                                        scope="col"
-                                        className=" py-3 font-extrabold"
-                                    >
-                                        Aksi
+                                    <th scope="col" className="px-6 py-3">
+                                        <span className="sr-only">Aksi</span>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {debts?.data?.length ? (
-                                    debts?.data.map((d, i) => (
+                                {debters?.data?.length ? (
+                                    debters?.data.map((d, i) => (
                                         <tr
                                             key={i}
                                             className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
@@ -98,24 +93,17 @@ export default function Debt({ auth, debts, balances, q, flash }) {
                                                 scope="row"
                                                 className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
                                             >
-                                                {d.debter?.name}
+                                                {d.name}
                                             </th>
 
-                                            <td>{d.type}</td>
                                             <td>{currencyFormat(d.amount)}</td>
                                             <td className="px-6 py-4 text-right">
-                                                <button
-                                                    onClick={() => {
-                                                        // getCashflowById(d.id);
-                                                    }}
-                                                >
-                                                    <PencilSquareIcon className="inline h-5 w-5" />
-                                                </button>
-                                                {/* <ModalEditForm
-                                                    showModal={showEditModal}
-                                                    closeModal={closeEditModal}
-                                                    cashflow={detailCashflow}
-                                                /> */}
+                                                <ModalPayDebtForm
+                                                    id={d.id}
+                                                    balances={balances}
+                                                    flash={flash}
+                                                />
+                                                <ModalDetail id={d.id} />
                                             </td>
                                         </tr>
                                     ))
@@ -132,8 +120,8 @@ export default function Debt({ auth, debts, balances, q, flash }) {
                             </tbody>
                         </table>
                     </div>
-                    {debts?.data?.length ? (
-                        <Paginate links={debts?.links} meta={debts?.meta} />
+                    {debters?.data?.length ? (
+                        <Paginate links={debters?.links} meta={debters?.meta} />
                     ) : (
                         ""
                     )}

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Resources\DebterResource;
 use App\Models\Debter;
 
 class DebterRepository
@@ -9,6 +10,23 @@ class DebterRepository
 
     public function __construct(protected Debter $debter)
     {
+    }
+
+    public function paginate($n, $q, $page)
+    {
+        $query = $this->debter->query();
+
+        // searching
+        if ($q) {
+            $query->where('name', 'LIKE', "%$q%");
+        }
+
+        $query->orderBy('updated_at', 'desc');
+
+        // populate bottomUnit
+        $query->with('debts');
+
+        return DebterResource::collection($query->paginate($n, ['*'], 'page', $page)->withQueryString());
     }
 
     public function create($data)

@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->unsignedDecimal('amount', 19, 2)->default(0);
+            $table->string('description')->nullable();
+            $table->boolean("is_pay")->default(false);
+            $table->unsignedDecimal('debt_amount', 19, 2)->default(0);
+            $table->decimal('debt_before', 19, 2)->default(0);
+            $table->decimal('debt_after', 19, 2)->default(0);
             $table->unsignedBigInteger('debter_id')->nullable();
             $table->foreign('debter_id')->references('id')->on('debters')
                 ->nullOnDelete()

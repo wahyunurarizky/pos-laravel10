@@ -16,4 +16,8 @@ class HomeController extends Controller
     {
         return Inertia::render('Home');
     }
+    public function debtBond()
+    {
+        return Inertia::render('DebtBond/Index');
+    }
 }

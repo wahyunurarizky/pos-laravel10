@@ -17,13 +17,17 @@ class DebtRepository
         return $this->debt->create($data);
     }
 
-    public function paginate($n, $q, $page)
+    public function paginate($n, $q, $page, $where)
     {
         $query = $this->debt->query();
 
         // searching
         if ($q) {
             $query->where('debter', 'LIKE', "%$q%");
+        }
+
+        if ($where) {
+            $query->where($where);
         }
 
         $query->orderBy('updated_at', 'desc');

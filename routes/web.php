@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ApiBalanceController;
 use App\Http\Controllers\Api\ApiCashflowController;
+use App\Http\Controllers\Api\ApiDebtController;
 use App\Http\Controllers\Api\ApiDebterController;
 use App\Http\Controllers\Api\ApiHistoryBalanceController;
 use App\Http\Controllers\Api\ApiItemController;
@@ -53,8 +54,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/cashflows', [CashflowController::class, 'store'])->name('cashflows.store');
     Route::put('/cashflows/{id}', [CashflowController::class, 'update'])->name('cashflows.update');
 
-    Route::get('/debts', [DebtController::class, 'index'])->name('debts.index');
-    Route::post('/debts', [DebtController::class, 'store'])->name('debts.store');
+    Route::get('/debt-bond', [HomeController::class, 'debtBond'])->name('debt-bond.index');
+
+    Route::get('/debters', [DebtController::class, 'index'])->name('debters.index');
+    Route::post('/debters', [DebtController::class, 'store'])->name('debters.store');
+    Route::get('/debters/{id}/debts', [DebtController::class, 'debts'])->name('debters.show.debts');
 
     // API
 
@@ -70,7 +74,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // API DEBTERS
     Route::get('/api/debters', [ApiDebterController::class, 'index'])->name('api.debters.index');
+    Route::get('/api/debters/{id}', [ApiDebterController::class, 'show'])->name('api.debters.show');
     Route::post('/api/debters', [ApiDebterController::class, 'store'])->name('api.debters.store');
+
+    // API DEBTS
+    Route::get('/api/debts', [ApiDebtController::class, 'index'])->name('api.debts.index');
 
     // API CASHFLOWS
     Route::get('/api/cashflows/{id}', [ApiCashflowController::class, 'show'])->name('api.cashflows.show');

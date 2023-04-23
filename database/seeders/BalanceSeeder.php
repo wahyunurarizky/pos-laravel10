@@ -24,10 +24,10 @@ class BalanceSeeder extends Seeder
         );
         Balance::firstOrCreate(
             [
-                'name' => 'saldo tokped',
+                'name' => 'BCA',
             ],
             [
-                'name' => 'saldo tokped',
+                'name' => 'BCA',
                 'amount' => 1000000
             ]
         );

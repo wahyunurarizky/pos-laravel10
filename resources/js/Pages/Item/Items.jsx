@@ -14,6 +14,7 @@ import Label from "@/Components/Field/Label";
 import { ShoppingBagIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 export default function Index({ auth, items, q, flash }) {
+    console.log(items);
     const [showDetail, setShowDetail] = useState(false);
     const [loadingDetail, setLoadingDetail] = useState(false);
     const [dataDetail, setDataDetail] = useState(null);

@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Services\BalanceService;
+use App\Services\DebterService;
 use App\Services\DebtService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DebtController extends Controller
 {
-    public function __construct(protected DebtService $debtService, protected BalanceService $balanceService)
+    public function __construct(protected DebterService $debterService, protected DebtService $debtService, protected BalanceService $balanceService)
     {
     }
 
@@ -21,18 +22,23 @@ class DebtController extends Controller
 
         $balances = $this->balanceService->getAllBalance();
 
-        $debts = $this->debtService->getAllPaginate($perPage, $q, $page);
+        $debters = $this->debterService->getAllPaginate($perPage, $q, $page);
 
-        if ($page > $debts->lastPage()) {
-            return to_route('debts.index', ['q' => $q]);
+        if ($page > $debters->lastPage()) {
+            return to_route('debters.index', ['q' => $q]);
         }
 
-        return Inertia::render('Debt/Debt', ['debts' => $debts, 'balances' => $balances, 'q' => $q]);
+        return Inertia::render('Debt/Debt', ['debters' => $debters, 'balances' => $balances, 'q' => $q]);
+    }
+
+    public function debts()
+    {
+        return Inertia::render('Debt/ShowDetail');
     }
 
     public function store(Request $request)
     {
         $this->debtService->create($request->all());
-        return to_route('debts.index')->with('message', 'berhasil menambah data');
+        return to_route('debters.index')->with('message', 'berhasil menambah data');
     }
 }

@@ -35,4 +35,17 @@ class ApiDebterController extends Controller
             ], $th->getCode() ?: 500);
         }
     }
+
+    public function show($id)
+    {
+        try {
+            $debter = $this->debterService->getById($id);
+
+            return response()->json($debter);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ], $th->getCode() ?: 500);
+        }
+    }
 }
