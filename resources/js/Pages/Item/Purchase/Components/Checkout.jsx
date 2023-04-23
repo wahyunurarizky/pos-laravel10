@@ -14,8 +14,6 @@ export default function Checkout({ submit, balances }) {
     const [seller, setSeller] = useState();
     const [balance, setBalance] = useState();
 
-    console.log(seller, balance);
-
     const closeModal = () => {
         setShowModal(false);
     };

@@ -3,12 +3,13 @@
 namespace App\Repositories;
 
 use App\Http\Resources\HistoryBalanceResource;
+use App\Models\Cashflow;
 use App\Models\HistoryBalance;
 
 class HistoryBalanceRepository
 {
 
-    public function __construct(protected HistoryBalance $historyBalance)
+    public function __construct(protected HistoryBalance $historyBalance, protected Cashflow $cashflow)
     {
     }
 
@@ -17,7 +18,7 @@ class HistoryBalanceRepository
         return $this->historyBalance->create($data);
     }
 
-    public function paginate($n, $q, $page)
+    public function paginate($n, $q, $page, $where = [])
     {
         $query = $this->historyBalance->query();
 
@@ -25,6 +26,8 @@ class HistoryBalanceRepository
         // if ($q) {
         //     $query->where('message', 'LIKE', "%$q%");
         // }
+
+        $query->where($where);
 
         $query->orderBy('created_at', 'desc');
 
@@ -43,7 +46,13 @@ class HistoryBalanceRepository
 
     public function findById($id)
     {
-        return $this->historyBalance->find($id);
+        $historyBalance = $this->historyBalance->find($id);
+        $data = [];
+        if ($historyBalance->type === 'cashflow') {
+            // $historyBalance->set('')al
+            $data = $this->cashflow->find($historyBalance->transaction_id);
+        }
+        return [...$historyBalance->toArray(), 'data' => $data];
     }
 
     public function updateById($id, $data)

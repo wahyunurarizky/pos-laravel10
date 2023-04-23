@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Api\ApiBalanceController;
 use App\Http\Controllers\Api\ApiCashflowController;
+use App\Http\Controllers\Api\ApiDebterController;
+use App\Http\Controllers\Api\ApiHistoryBalanceController;
 use App\Http\Controllers\Api\ApiItemController;
 use App\Http\Controllers\Api\ApiSellerController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\CashflowController;
+use App\Http\Controllers\DebtController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemController;
@@ -49,6 +53,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/cashflows', [CashflowController::class, 'store'])->name('cashflows.store');
     Route::put('/cashflows/{id}', [CashflowController::class, 'update'])->name('cashflows.update');
 
+    Route::get('/debts', [DebtController::class, 'index'])->name('debts.index');
+    Route::post('/debts', [DebtController::class, 'store'])->name('debts.store');
+
     // API
 
     // API ITEMS
@@ -61,8 +68,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/api/sellers', [ApiSellerController::class, 'index'])->name('api.sellers.index');
     Route::post('/api/sellers', [ApiSellerController::class, 'store'])->name('api.sellers.store');
 
+    // API DEBTERS
+    Route::get('/api/debters', [ApiDebterController::class, 'index'])->name('api.debters.index');
+    Route::post('/api/debters', [ApiDebterController::class, 'store'])->name('api.debters.store');
+
     // API CASHFLOWS
     Route::get('/api/cashflows/{id}', [ApiCashflowController::class, 'show'])->name('api.cashflows.show');
+
+    // API BALANCES
+    Route::get('/api/balances', [ApiBalanceController::class, 'index'])->name('api.balances.index');
+
+    // API HISTORY BALANCES
+    Route::get('/api/history-balances/{id}', [ApiHistoryBalanceController::class, 'show'])->name('api.historybalances.show');
 });
 
 

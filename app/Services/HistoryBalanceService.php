@@ -13,7 +13,7 @@ class HistoryBalanceService
     {
     }
 
-    public function getAllPaginate($perPage, $q, $page)
+    public function getAllPaginate($perPage, $q, $page, $query = [])
     {
 
         $validator = Validator::make(['perPage' => $perPage, 'page' => $page, 'q' => $q], [
@@ -23,6 +23,11 @@ class HistoryBalanceService
 
         $validator->stopOnFirstFailure()->validate();
 
-        return $this->historyBalanceRepository->paginate($perPage, $q, $page);
+        return $this->historyBalanceRepository->paginate($perPage, $q, $page, $query);
+    }
+
+    public function getById($id)
+    {
+        return $this->historyBalanceRepository->findById($id);
     }
 }

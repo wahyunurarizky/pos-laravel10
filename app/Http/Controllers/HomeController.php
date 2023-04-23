@@ -14,8 +14,6 @@ class HomeController extends Controller
 
     public function home()
     {
-        $balances = $this->balanceService->getAllBalance();
-
-        return Inertia::render('Home', ['balances' => $balances]);
+        return Inertia::render('Home');
     }
 }

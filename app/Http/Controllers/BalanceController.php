@@ -24,7 +24,8 @@ class BalanceController extends Controller
         $perPage = $request->per_page ?? 10;
 
         $balance = $this->balanceService->getById($id);
-        $history_balance = $this->historyBalanceService->getAllPaginate($perPage, $q, $page);
+
+        $history_balance = $this->historyBalanceService->getAllPaginate($perPage, $q, $page, ['balance_id' => $id]);
 
         if ($page > $history_balance->lastPage()) {
             return to_route('items.index', ['q' => $q]);

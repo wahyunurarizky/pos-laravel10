@@ -10,21 +10,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { currencyFormat } from "@/Helpers/currencyFormat";
 
-export default function Welcome({ balances, ...props }) {
+export default function Welcome(props) {
     return (
         <AuthenticatedLayout auth={props.auth} errors={props.errors}>
             <div className="bg-dots-darker dark:bg-dots-lighter relative bg-gray-100 bg-center selection:bg-red-500 selection:text-white dark:bg-gray-900 sm:flex sm:items-center sm:justify-center">
                 <Head title="Beranda" />
                 <div className="mx-auto max-w-7xl p-6 lg:p-8">
-                    <div>
-                        {balances.map((d, i) => (
-                            <Link href={route("balances.show", d.id)}>
-                                <div>
-                                    {d.name}: {currencyFormat(d.amount)}
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-4 lg:gap-8">
                         <Link
                             href={route("items.index")}
@@ -43,7 +34,7 @@ export default function Welcome({ balances, ...props }) {
                             </div>
                         </Link>
                         <Link
-                            href="https://laravel.com/docs"
+                            href={route("debts.index")}
                             className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 shadow-2xl shadow-gray-500/20 transition-all focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
                         >
                             <div className="flex w-full flex-col align-middle">

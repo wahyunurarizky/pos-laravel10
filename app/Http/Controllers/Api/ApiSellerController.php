@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class ApiSellerController extends Controller
 {
+    // TODO: change it to something
     /**
      * Display a listing of the resource.
      */

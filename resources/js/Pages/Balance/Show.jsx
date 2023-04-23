@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { currencyFormat } from "@/Helpers/currencyFormat";
@@ -6,9 +6,16 @@ import ButtonMain from "@/Components/ButtonMain";
 import Search from "@/Components/Table/Search";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import Paginate from "@/Components/Table/Paginate";
+import axios from "axios";
 
 export default function Show({ auth, balance, history_balance, q }) {
     console.log(history_balance);
+    const showDetailById = (id) => {
+        axios.get(route("api.historybalances.show", id)).then((d) => {
+            console.log(d);
+        });
+    };
+
     return (
         <AuthenticatedLayout auth={auth} className>
             <Head title="Show balances" />
@@ -52,7 +59,13 @@ export default function Show({ auth, balance, history_balance, q }) {
                                                 </th>
 
                                                 <td className="px-6 py-4 text-right">
-                                                    <button>
+                                                    <button
+                                                        onClick={() => {
+                                                            showDetailById(
+                                                                d.id
+                                                            );
+                                                        }}
+                                                    >
                                                         <EyeIcon className="inline h-5 w-5" />
                                                     </button>
                                                 </td>
