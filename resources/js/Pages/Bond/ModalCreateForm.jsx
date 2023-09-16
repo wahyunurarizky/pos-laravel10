@@ -41,7 +41,7 @@ export default function ModalCreateForm({ showModal, closeModal, balances }) {
     } = useForm({ defaultValues, resolver: yupResolver(schemaCreate) });
 
     const onSubmit = (data) => {
-        router.post(route("debters.store"), data);
+        router.post(route("bonders.store"), data);
     };
     console.log(watch());
 
@@ -110,7 +110,7 @@ export default function ModalCreateForm({ showModal, closeModal, balances }) {
     }));
 
     useEffect(() => {
-        axios.get(route("api.debters.index", { type: "debt" })).then((r) => {
+        axios.get(route("api.debters.index", { type: "bond" })).then((r) => {
             setDebterOptions(
                 r.data.map((d) => ({ label: d.name, value: d.id }))
             );
@@ -122,10 +122,9 @@ export default function ModalCreateForm({ showModal, closeModal, balances }) {
         axios
             .post(route("api.debters.store"), {
                 name: inputValue,
-                type: "debt",
+                type: "bond",
             })
             .then((r) => {
-                console.log("wkwkwkwk");
                 const newData = { label: r.data.name, value: r.data.id };
                 setDebterOptions((prev) => [...prev, newData]);
                 setValue("debter_id", r.data.id);

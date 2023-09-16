@@ -12,13 +12,17 @@ class DebterRepository
     {
     }
 
-    public function paginate($n, $q, $page)
+    public function paginate($n, $q, $page, $where)
     {
         $query = $this->debter->query();
 
         // searching
         if ($q) {
             $query->where('name', 'LIKE', "%$q%");
+        }
+
+        if ($where) {
+            $query->where($where);
         }
 
         $query->orderBy('updated_at', 'desc');
@@ -35,9 +39,13 @@ class DebterRepository
     }
 
 
-    public function findAll()
+    public function findAll($where)
     {
         $query = $this->debter->query();
+
+        if ($where) {
+            $query->where($where);
+        }
 
         return $query->get();
     }

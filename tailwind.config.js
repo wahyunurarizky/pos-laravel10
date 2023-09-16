@@ -18,10 +18,8 @@ module.exports = {
                 height: "height",
             },
             colors: {
-                mycolor: {
-                    light: "#67e8f9",
-                    DEFAULT: "#06b6d4",
-                    dark: "#0e7490",
+                petkit: {
+                    dark: "#1d1d1d",
                 },
             },
         },

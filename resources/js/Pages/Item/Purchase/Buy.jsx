@@ -165,7 +165,11 @@ export default function Buy({ auth, master_units, balances }) {
                                     )}
                                 </span>
                             </div>
-                            <Checkout submit={submit} balances={balances} />
+                            <Checkout
+                                submit={submit}
+                                balances={balances}
+                                box={box}
+                            />
                         </div>
                     )}
                 </BuyContext.Provider>

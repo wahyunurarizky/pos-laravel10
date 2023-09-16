@@ -1,75 +1,22 @@
 import ButtonMain from "@/Components/ButtonMain";
-import LoadingSpinner from "@/Components/LoadingSpinner";
-import Modal from "@/Components/Modal";
-import PrimaryButton from "@/Components/PrimaryButton";
 import Paginate from "@/Components/Table/Paginate";
 import Search from "@/Components/Table/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { useEffect, useState } from "react";
-import CreatableSelect from "react-select/creatable";
+import { Head, Link, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import _ from "lodash";
-import Label from "@/Components/Field/Label";
 import { ShoppingBagIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import DetailItems from "./DetailItems";
 
 export default function Index({ auth, items, q, flash }) {
     console.log(items);
-    const [showDetail, setShowDetail] = useState(false);
-    const [loadingDetail, setLoadingDetail] = useState(false);
-    const [dataDetail, setDataDetail] = useState(null);
-    const [isEdit, setIsEdit] = useState(false);
-
-    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-
-    const closeModal = () => {
-        setShowDetail(false);
-    };
-
-    const closeModalDelete = () => {
-        setShowConfirmDelete(false);
-    };
-
-    const {
-        data,
-        setData,
-        post,
-        processing,
-        errors,
-        put,
-        delete: destroy,
-    } = useForm({
-        name: "",
-    });
-
-    const showDetailItem = (id) => {
-        axios
-            .get(route("api.items.show", id))
-            .then((d) => {
-                console.log(d);
-                setDataDetail(d.data);
-                setData({
-                    sub_name: d.data.sub_name?.map((d) => ({
-                        value: d,
-                        label: d,
-                    })),
-                    name: d.data.name,
-                });
-                setShowDetail(true);
-                setLoadingDetail(false);
-            })
-            .catch((e) => {
-                console.log(e);
-                setLoadingDetail(false);
-            });
-    };
 
     const { errors: e } = usePage().props;
 
     useEffect(() => {
         if (flash.message) {
             toast.success(flash.message);
-            setShowDetail(false);
         }
     }, [flash]);
 
@@ -78,15 +25,6 @@ export default function Index({ auth, items, q, flash }) {
             toast.error(_.values(e).join(", "));
         }
     }, [e]);
-
-    function submit(e) {
-        e.preventDefault();
-        put(route("items.update", dataDetail.id));
-    }
-
-    const deleteItem = (e) => {
-        destroy(route("items.destroy", dataDetail.id));
-    };
 
     return (
         <AuthenticatedLayout auth={auth} className>
@@ -175,22 +113,7 @@ export default function Index({ auth, items, q, flash }) {
                                                         ))}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
-                                                    <button
-                                                        className="mr-1 font-medium text-blue-600 hover:underline dark:text-blue-500"
-                                                        disabled={loadingDetail}
-                                                        onClick={(e) => {
-                                                            setLoadingDetail(
-                                                                true
-                                                            );
-                                                            e.stopPropagation();
-                                                            e.preventDefault();
-                                                            showDetailItem(
-                                                                d.id
-                                                            );
-                                                        }}
-                                                    >
-                                                        Lihat
-                                                    </button>
+                                                    <DetailItems id={d.id} />
                                                 </td>
                                             </tr>
                                         ))
@@ -213,107 +136,8 @@ export default function Index({ auth, items, q, flash }) {
                             ""
                         )}
                     </div>
-                    <Modal show={showDetail} onClose={closeModal}>
-                        {dataDetail && (
-                            <div className="overflow-auto">
-                                <div className="px-3">{dataDetail.name}</div>
-                                <ul>
-                                    {dataDetail.units?.map(
-                                        (u, ind, arr) =>
-                                            arr[ind + 1] && (
-                                                <li key={ind}>
-                                                    1 {u.name} ={" "}
-                                                    {
-                                                        arr[ind + 1]
-                                                            ?.parent_ref_qty
-                                                    }{" "}
-                                                    {arr[ind + 1]?.name}
-                                                </li>
-                                            )
-                                    )}
-                                </ul>
-                                <div>stok: {dataDetail.stock?.join(", ")}</div>
-                                <div>
-                                    setara dengan {dataDetail.bottom_unit_qty}{" "}
-                                    {dataDetail.bottom_unit?.name}
-                                </div>
-                                <button
-                                    onClick={() => {
-                                        setShowConfirmDelete(true);
-                                    }}
-                                    className="absolute top-0 right-0"
-                                >
-                                    delete
-                                </button>
-                                <button
-                                    onClick={(e) => {
-                                        setIsEdit((p) => !p);
-                                    }}
-                                >
-                                    edit
-                                </button>
-                                {isEdit && (
-                                    <form onSubmit={submit}>
-                                        <input
-                                            value={data.name}
-                                            onChange={(e) => {
-                                                setData("name", e.target.value);
-                                            }}
-                                            type="name"
-                                        />
-                                        <div className="group relative z-0 mb-6 w-full">
-                                            <Label
-                                                name="sub_name"
-                                                labelName="sub name"
-                                            />
-
-                                            <CreatableSelect
-                                                onChange={(val) => {
-                                                    setData(
-                                                        "sub_name",
-                                                        val.map((d) => d.value)
-                                                    );
-                                                }}
-                                                menuPortalTarget={document.body}
-                                                menuPosition={"fixed"}
-                                                styles={{
-                                                    menuPortal: (base) => ({
-                                                        ...base,
-                                                        zIndex: 9999,
-                                                    }),
-                                                }}
-                                                isMulti
-                                                placeholder={
-                                                    "ketik untuk menambahkan"
-                                                }
-                                                defaultValue={dataDetail.sub_name?.map(
-                                                    (d) => ({
-                                                        label: d,
-                                                        value: d,
-                                                    })
-                                                )}
-                                            />
-                                        </div>
-                                        <button type="submit">save</button>
-                                    </form>
-                                )}
-                            </div>
-                        )}
-                        <Modal
-                            show={showConfirmDelete}
-                            onClose={closeModalDelete}
-                        >
-                            <div>yakin?</div>
-                            <button onClick={deleteItem}>yes</button>
-                        </Modal>
-                    </Modal>
                 </div>
             </div>
-            {loadingDetail && (
-                <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-gray-500/75 opacity-75 dark:bg-gray-900/75">
-                    <LoadingSpinner color="red" />
-                </div>
-            )}
         </AuthenticatedLayout>
     );
 }

@@ -18,4 +18,8 @@ class Purchase extends Model
     {
         return $this->belongsTo(Seller::class, 'seller_id', 'id');
     }
+    public function balance(): BelongsTo
+    {
+        return $this->belongsTo(Balance::class, 'balance_id', 'id');
+    }
 }

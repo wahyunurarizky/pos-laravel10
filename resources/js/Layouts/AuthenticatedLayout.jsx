@@ -8,30 +8,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { BanknotesIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Modal from "@/Components/Modal";
+import LoadingSpinner from "@/Components/LoadingSpinner";
+import { currencyFormat } from "@/Helpers/currencyFormat";
+import BalanceModal from "@/Components/BalanceModal";
 
 export default function Authenticated({ auth, header, children, ...props }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
-    const [showBalanceModal, setShowBalanceModal] = useState(false);
-    const [balance, setBalance] = useState([]);
-
-    const closeBalanceModal = () => {
-        setShowBalanceModal(false);
-    };
-
-    const openBalance = () => {
-        axios
-            .get(route("api.balances.index"))
-            .then((d) => {
-                console.log(d);
-                setBalance(d.data);
-                setShowBalanceModal(true);
-            })
-            .catch((err) => {
-                console.log(err);
-                setShowBalanceModal(false);
-            });
-    };
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -47,44 +30,7 @@ export default function Authenticated({ auth, header, children, ...props }) {
                         </div>
 
                         <div className="-mr-2 flex items-center">
-                            <button
-                                onClick={openBalance}
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none dark:text-gray-500 dark:hover:bg-gray-900 dark:hover:text-gray-400 dark:focus:bg-gray-900 dark:focus:text-gray-400"
-                            >
-                                <BanknotesIcon className="w-7" />
-                            </button>
-                            <Modal
-                                show={showBalanceModal}
-                                onClose={closeBalanceModal}
-                            >
-                                <div className="w-full rounded-lg bg-white shadow dark:bg-gray-700">
-                                    <button
-                                        type="button"
-                                        className="absolute top-3 right-2.5 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white"
-                                        onClick={closeBalanceModal}
-                                    >
-                                        <XMarkIcon className="h-5 w-5" />
-                                        <span className="sr-only">
-                                            Close modal
-                                        </span>
-                                    </button>
-                                    <div>
-                                        {balance &&
-                                            balance.map((d) => (
-                                                <Link
-                                                    key={d.id}
-                                                    href={route(
-                                                        "balances.show",
-                                                        d.id
-                                                    )}
-                                                    className="block"
-                                                >
-                                                    {d.name} {d.amount}
-                                                </Link>
-                                            ))}
-                                    </div>
-                                </div>
-                            </Modal>
+                            <BalanceModal />
                         </div>
 
                         <div className="hidden sm:ml-6 sm:flex sm:items-center">

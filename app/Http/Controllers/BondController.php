@@ -8,7 +8,7 @@ use App\Services\DebtService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class DebtController extends Controller
+class BondController extends Controller
 {
     public function __construct(
         protected DebterService $debterService,
@@ -17,7 +17,7 @@ class DebtController extends Controller
     ) {
     }
 
-    public function debters(Request $request)
+    public function bonders(Request $request)
     {
         $q = $request->q;
         $page = $request->page ?? 1;
@@ -25,16 +25,16 @@ class DebtController extends Controller
 
         $balances = $this->balanceService->getAllBalance();
 
-        $debters = $this->debterService->getAllPaginate($perPage, $q, $page, ['type' => 'debt']);
+        $bonders = $this->debterService->getAllPaginate($perPage, $q, $page, ['type' => 'bond']);
 
-        if ($page > $debters->lastPage()) {
-            return to_route('debters.index', ['q' => $q]);
+        if ($page > $bonders->lastPage()) {
+            return to_route('bonders.index', ['q' => $q]);
         }
 
-        return Inertia::render('Debt/Debt', ['debters' => $debters, 'balances' => $balances, 'q' => $q]);
+        return Inertia::render('Bond/Bond', ['bonders' => $bonders, 'balances' => $balances, 'q' => $q]);
     }
 
-    public function debts($id, Request $request)
+    public function bonds($id, Request $request)
     {
         $q = $request->q;
         $page = $request->page ?? 1;
@@ -43,7 +43,7 @@ class DebtController extends Controller
         $debt = $this->debtService->getAllPaginate($perPage, $q, $page, ['debter_id' => $id]);
 
         if ($page > $debt->lastPage()) {
-            return to_route('debters.index', ['q' => $q]);
+            return to_route('bonders.index', ['q' => $q]);
         }
         return Inertia::render('Debt/ShowDetail', ['debts' => $debt, 'q' => $q, 'id' => $id]);
     }
@@ -51,6 +51,6 @@ class DebtController extends Controller
     public function store(Request $request)
     {
         $this->debtService->create($request->all());
-        return to_route('debters.index')->with('message', 'berhasil menambah data');
+        return to_route('bonders.index')->with('message', 'berhasil menambah data');
     }
 }

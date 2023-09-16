@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('debters', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('type')->default('debt');
             $table->decimal('amount', 19, 2)->default(0);
             $table->timestamps();
         });

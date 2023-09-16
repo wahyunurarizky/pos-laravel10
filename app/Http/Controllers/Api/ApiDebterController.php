@@ -12,10 +12,17 @@ class ApiDebterController extends Controller
     {
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $debters = $this->debterService->getAll();
+            $type = @$request->type;
+
+            $query = [];
+            if ($type) {
+                $query['type'] = $type;
+            }
+
+            $debters = $this->debterService->getAll($query);
             return response()->json($debters);
         } catch (\Throwable $th) {
             return response()->json([

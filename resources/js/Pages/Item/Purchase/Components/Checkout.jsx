@@ -5,14 +5,16 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import Select from "react-select";
+import { currencyFormat } from "@/Helpers/currencyFormat";
 
-export default function Checkout({ submit, balances }) {
+export default function Checkout({ submit, balances, box }) {
     const [showModal, setShowModal] = useState(false);
     const [sellerOptions, setSellerOptions] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
     const [seller, setSeller] = useState();
     const [balance, setBalance] = useState();
+    console.log("a", box);
 
     const closeModal = () => {
         setShowModal(false);
@@ -40,7 +42,6 @@ export default function Checkout({ submit, balances }) {
                 })
             )
             .then((r) => {
-                console.log("wkwkwkwk");
                 const newData = { label: r.data.name, value: r.data.id };
                 setSellerOptions((prev) => [...prev, newData]);
                 setSeller(newData);
@@ -73,25 +74,45 @@ export default function Checkout({ submit, balances }) {
                         <span className="sr-only">Close modal</span>
                     </button>
                     <div className="p-6">
-                        <table className="w-full text-left">
+                        <table className="w-full text-left text-sm">
                             <tbody>
                                 <tr>
                                     <th className="border-b-2" colSpan={4}>
                                         Order Details
                                     </th>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Dji Sam Soe</td>
-                                    <td>@Rp 33000</td>
-                                    <td>Rp 120,000</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Dji Sam Soe</td>
-                                    <td>@Rp 33000</td>
-                                    <td>Rp 120,000</td>
-                                </tr>
+                                {box &&
+                                    box.map((d, i) => (
+                                        <tr key={i}>
+                                            <td className="pr-2">
+                                                {d.per_unit_qty}
+                                            </td>
+                                            <td className="pr-2">
+                                                {d.isNew
+                                                    ? d.name
+                                                    : d.apiData?.name}{" "}
+                                                (
+                                                {d.isNew
+                                                    ? d.unit_name
+                                                    : d.units.find(
+                                                          (data) =>
+                                                              data.unit_id ==
+                                                              d.unit_id
+                                                      )?.unit_name}
+                                                )
+                                            </td>
+                                            <td className="pr-2">
+                                                @
+                                                {currencyFormat(
+                                                    d.price_per_unit
+                                                )}
+                                            </td>
+                                            <td className="pr-2">
+                                                {currencyFormat(d.total)}
+                                            </td>
+                                        </tr>
+                                    ))}
+
                                 <tr className="border-t-2">
                                     <td colSpan={3} className="font-bold">
                                         TOTAL

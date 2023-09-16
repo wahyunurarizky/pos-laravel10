@@ -38,35 +38,45 @@ export default function History({ auth, item_purchases, q }) {
                                         </th>
                                         <th
                                             scope="col"
-                                            className=" py-3 font-extrabold"
+                                            className=" py-3 pr-3 font-extrabold"
                                         >
                                             Tanggal
                                         </th>
                                         <th
                                             scope="col"
-                                            className=" py-3 font-extrabold"
+                                            className=" py-3 pr-3 font-extrabold"
                                         >
                                             Penjual
                                         </th>
                                         <th
                                             scope="col"
-                                            className=" py-3 font-extrabold"
+                                            className=" py-3 pr-3 font-extrabold"
                                         >
                                             Banyaknya
                                         </th>
                                         <th
                                             scope="col"
-                                            className=" py-3 font-extrabold"
+                                            className=" py-3 pr-3 font-extrabold"
                                         >
-                                            Harga
+                                            Dompet
                                         </th>
                                         <th
                                             scope="col"
-                                            className=" py-3 font-extrabold"
+                                            className=" py-3 pr-3 font-extrabold"
+                                        >
+                                            Harga
+                                        </th>
+
+                                        <th
+                                            scope="col"
+                                            className=" py-3 pr-3 font-extrabold"
                                         >
                                             Total
                                         </th>
-                                        <th scope="col" className="px-6 py-3">
+                                        <th
+                                            scope="col"
+                                            className="px-6 py-3 pr-3"
+                                        >
                                             <span className="sr-only">
                                                 Action
                                             </span>
@@ -104,21 +114,22 @@ export default function History({ auth, item_purchases, q }) {
                                                     {castFloat(d.per_unit_qty)}{" "}
                                                     {d.unit?.name}
                                                 </td>
+                                                <td className="font-bold">
+                                                    {d.purchase.balance.name}
+                                                </td>
                                                 <td>
                                                     @
                                                     {currencyFormat(
                                                         d.price_per_unit
                                                     )}
                                                 </td>
+
                                                 <td className="font-bold">
                                                     {currencyFormat(d.total)}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
-                                                    <a
-                                                        href="#"
-                                                        className="font-medium text-blue-600 hover:underline dark:text-blue-500"
-                                                    >
-                                                        <InformationCircleIcon className="inline h-10 w-10" />
+                                                    <a href="#">
+                                                        <InformationCircleIcon className="inline h-7 w-7" />
                                                     </a>
                                                 </td>
                                             </tr>

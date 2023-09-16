@@ -23,7 +23,7 @@ class DebtRepository
 
         // searching
         if ($q) {
-            $query->where('debter', 'LIKE', "%$q%");
+            $query->where('description', 'LIKE', "%$q%");
         }
 
         if ($where) {

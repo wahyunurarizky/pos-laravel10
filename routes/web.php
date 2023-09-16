@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ApiHistoryBalanceController;
 use App\Http\Controllers\Api\ApiItemController;
 use App\Http\Controllers\Api\ApiSellerController;
 use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\BondController;
 use App\Http\Controllers\CashflowController;
 use App\Http\Controllers\DebtController;
 use App\Http\Controllers\HomeController;
@@ -56,9 +57,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/debt-bond', [HomeController::class, 'debtBond'])->name('debt-bond.index');
 
-    Route::get('/debters', [DebtController::class, 'index'])->name('debters.index');
+    Route::get('/debters', [DebtController::class, 'debters'])->name('debters.index');
     Route::post('/debters', [DebtController::class, 'store'])->name('debters.store');
     Route::get('/debters/{id}/debts', [DebtController::class, 'debts'])->name('debters.show.debts');
+
+    Route::get('/bonders', [BondController::class, 'bonders'])->name('bonders.index');
+    Route::post('/bonders', [BondController::class, 'store'])->name('bonders.store');
+    Route::get('/bonders/{id}/bonds', [BondController::class, 'bonds'])->name('bonders.show.bonds');
 
     // API
 

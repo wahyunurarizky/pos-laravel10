@@ -20,7 +20,7 @@ class DebtService
     ) {
     }
 
-    public function getAllPaginate($perPage, $q, $page, $query)
+    public function getAllPaginate($perPage, $q, $page, $query = [])
     {
         $validatedData = [
             'perPage' => $perPage,
@@ -53,21 +53,41 @@ class DebtService
         $balance = $this->balanceRepository->findById($data['balance_id']);
         $debter = $this->debterRepository->findById($data['debter_id']);
 
-        if (isset($data['is_pay']) && $data['is_pay']) {
-            if ($balance->amount < $data['debt_amount']) {
-                throw ValidationException::withMessages([
-                    'amount' => 'balance not enough, maks outflow is Rp ' . $balance->amount,
-                ]);
-            }
+        if ($debter->type === 'debt') {
+            if (isset($data['is_pay']) && $data['is_pay']) {
+                if ($balance->amount < $data['debt_amount']) {
+                    throw ValidationException::withMessages([
+                        'amount' => 'balance not enough, maks outflow is Rp ' . $balance->amount,
+                    ]);
+                }
 
-            $updatedBalanceAmount = $balance->amount - $data['debt_amount'];
-            $debtAfter = $debter->amount - $data['debt_amount'];
-            $message = 'Bayar Hutang';
+                $updatedBalanceAmount = $balance->amount - $data['debt_amount'];
+                $debtAfter = $debter->amount - $data['debt_amount'];
+                $message = 'Bayar Hutang';
+            } else {
+                $updatedBalanceAmount = $balance->amount + $data['debt_amount'];
+                $debtAfter = $debter->amount + $data['debt_amount'];
+                $message = 'Hutang';
+            }
         } else {
-            $updatedBalanceAmount = $balance->amount + $data['debt_amount'];
-            $debtAfter = $debter->amount + $data['debt_amount'];
-            $message = 'Hutang';
+            if (isset($data['is_pay']) && $data['is_pay']) {
+                $updatedBalanceAmount = $balance->amount + $data['debt_amount'];
+                $debtAfter = $debter->amount - $data['debt_amount'];
+                $message = 'Bayar Piutang';
+            } else {
+                if ($balance->amount < $data['debt_amount']) {
+                    throw ValidationException::withMessages([
+                        'amount' => 'balance not enough, maks outflow is Rp ' . $balance->amount,
+                    ]);
+                }
+
+                $updatedBalanceAmount = $balance->amount - $data['debt_amount'];
+                $debtAfter = $debter->amount + $data['debt_amount'];
+                $message = 'Piutang';
+            }
         }
+
+
 
         $this->balanceRepository->updateById($balance->id, ['amount' => $updatedBalanceAmount]);
         $this->debterRepository->updateById($debter->id, ['amount' => $debtAfter]);

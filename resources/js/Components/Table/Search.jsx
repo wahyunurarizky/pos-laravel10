@@ -2,12 +2,14 @@ import { router } from "@inertiajs/react";
 import { useCallback, useState } from "react";
 import _debounce from "lodash/debounce";
 
-export default function Search({ q }) {
+export default function Search({ q, addData = {} }) {
     const [value, setValue] = useState(q || "");
 
     const search = useCallback(
         _debounce((value) => {
-            router.get(route(route().current(), { page: 1, q: value }));
+            router.get(
+                route(route().current(), { page: 1, q: value, ...addData })
+            );
         }, 500),
         []
     );

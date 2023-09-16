@@ -16,67 +16,67 @@ export default function Welcome(props) {
             <div className="bg-dots-darker dark:bg-dots-lighter relative bg-gray-100 bg-center selection:bg-red-500 selection:text-white dark:bg-gray-900 sm:flex sm:items-center sm:justify-center">
                 <Head title="Beranda" />
                 <div className="mx-auto max-w-7xl p-6 lg:p-8">
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-4 lg:gap-8">
+                    <div className="grid grid-cols-2 gap-5 md:grid-cols-4 lg:gap-8">
                         <Link
                             href={route("items.index")}
-                            className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 shadow-2xl shadow-gray-500/20 transition-all focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
+                            className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 text-gray-800 shadow-2xl shadow-gray-500/20 transition-all hover:bg-gray-800 hover:text-white focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
                         >
-                            <div className="flex w-full flex-col align-middle">
+                            <div className="w-full text-center">
                                 <FontAwesomeIcon
                                     icon={faCashRegister}
-                                    size="5x"
-                                    className="text-orange-400"
+                                    size="3x"
+                                    className="rounded-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-green-200 to-green-500 p-4 text-gray-800"
                                 />
 
-                                <h2 className="mt-6 text-center text-xl font-extrabold text-gray-900 dark:text-white">
-                                    JUAL / BELI
+                                <h2 className="text-md mt-6 text-center font-extrabold  dark:text-white">
+                                    JUAL/BELI
                                 </h2>
                             </div>
                         </Link>
                         <Link
                             href={route("debt-bond.index")}
-                            className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 shadow-2xl shadow-gray-500/20 transition-all focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
+                            className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 text-gray-800 shadow-2xl shadow-gray-500/20 transition-all hover:bg-gray-800 hover:text-white focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
                         >
-                            <div className="flex w-full flex-col align-middle">
+                            <div className="w-full text-center">
                                 <FontAwesomeIcon
                                     icon={faSackDollar}
-                                    size="5x"
-                                    className="text-orange-400"
+                                    size="3x"
+                                    className="rounded-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-green-200 to-green-500 p-4 text-gray-800"
                                 />
 
-                                <h2 className="mt-6 text-center text-xl font-extrabold text-gray-900 dark:text-white">
-                                    HUTANG / PIUTANG
+                                <h2 className="text-md mt-6 text-center font-extrabold  dark:text-white">
+                                    HUTANG/ PIUTANG
                                 </h2>
                             </div>
                         </Link>
                         <Link
                             href={route("cashflows.index")}
-                            className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 shadow-2xl shadow-gray-500/20 transition-all focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
+                            className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 text-gray-800 shadow-2xl shadow-gray-500/20 transition-all hover:bg-gray-800 hover:text-white focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
                         >
-                            <div className="flex w-full flex-col align-middle">
+                            <div className=" w-full text-center">
                                 <FontAwesomeIcon
                                     icon={faMoneyCheckAlt}
-                                    size="5x"
-                                    className="text-orange-400"
+                                    size="3x"
+                                    className="rounded-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-green-200 to-green-500 p-4 text-gray-800"
                                 />
 
-                                <h2 className="mt-6 text-center text-xl font-extrabold text-gray-900 dark:text-white">
-                                    PEMASUKAN / PENGELUARAN
+                                <h2 className="mt-6 text-center text-sm font-extrabold tracking-tighter">
+                                    PEMASUKAN/ PENGELUARAN
                                 </h2>
                             </div>
                         </Link>
                         <Link
-                            href="https://laravel.com/docs"
-                            className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 shadow-2xl shadow-gray-500/20 transition-all focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
+                            href=""
+                            className="duration-250 flex scale-100 rounded-lg bg-white from-gray-700/50 via-transparent p-6 text-gray-800 shadow-2xl shadow-gray-500/20 transition-all hover:bg-gray-800 hover:text-white focus:outline focus:outline-2 focus:outline-red-500 motion-safe:hover:scale-[1.01] dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-white/5"
                         >
-                            <div className="flex w-full flex-col align-middle">
+                            <div className="w-full text-center">
                                 <FontAwesomeIcon
                                     icon={faChartLine}
-                                    size="5x"
-                                    className="text-orange-400"
+                                    size="3x"
+                                    className="rounded-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-green-200 to-green-500 p-4 text-gray-800"
                                 />
 
-                                <h2 className="mt-6 text-center text-xl font-extrabold text-gray-900 dark:text-white">
+                                <h2 className="mt-6 text-center text-sm font-extrabold tracking-tighter">
                                     LAPORAN
                                 </h2>
                             </div>
