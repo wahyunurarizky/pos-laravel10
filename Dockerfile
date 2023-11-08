@@ -51,6 +51,6 @@ RUN npm run build-ssr
 
 # USER $user
 
-# EXPOSE 9000
+EXPOSE 9000
 
-# CMD ["supervisord", "-n"]
+CMD ["supervisord", "-n"]
