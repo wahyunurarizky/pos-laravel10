@@ -53,4 +53,4 @@ RUN php artisan optimize:clear
 
 EXPOSE 9000
 
-# CMD ["supervisord", "-n"]
+CMD ["supervisord", "-n"]

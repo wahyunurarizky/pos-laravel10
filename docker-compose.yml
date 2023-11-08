@@ -20,7 +20,7 @@ services:
     volumes:
     #   - ./:/var/www
       - ./storage:/var/www/storage
-      # - ./docker-compose/supervisor/logs:/var/log/supervisor
+      - ./docker-compose/supervisor/logs:/var/log/supervisor
       - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
@@ -59,12 +59,12 @@ services:
       - ./docker-compose/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - app-network
-  # redis:
-  #   image: redis:latest
-  #   container_name: laravel-redis
-  #   restart: unless-stopped
-  #   networks:
-  #     - app-network
+  redis:
+    image: redis:latest
+    container_name: laravel-redis
+    restart: unless-stopped
+    networks:
+      - app-network
 #Docker Networks
 networks:
   app-network:
