@@ -44,10 +44,10 @@ RUN apt-get install -y nodejs
 WORKDIR /var/www
 
 RUN composer install
-RUN php artisan key:generate
-RUN php artisan optimize:clear
 RUN npm install
 RUN npm run build-ssr
+RUN php artisan key:generate
+RUN php artisan optimize:clear
 
 # USER $user
 
